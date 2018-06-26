@@ -26,6 +26,8 @@ int on_game(int ip) {
 
 void init_globals()
 {
+    setenv("SDL_VIDEO_CENTERED", "SDL_VIDEO_CENTERED", 1);
+    
     if (SDL_Init(SDL_INIT_VIDEO) == -1)
     {
         fprintf(stderr, "Erreur d'initialisation de la SDL : %s\n", SDL_GetError());

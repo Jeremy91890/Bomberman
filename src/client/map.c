@@ -6,17 +6,24 @@
 #include <stdlib.h>
 #include "../server/headers/generate_map.h"
       
-void Afficher(SDL_Surface* screen,char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
+void Afficher(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 {
 	int i,j;
-    SDL_Surface *tileset;
+    SDL_Surface *background_tile, *explodable_block, *solid_block;
 	SDL_Rect Rect_dest;
 	SDL_Rect Rect_source;
 	Rect_source.w = LARGEUR_TILE;
 	Rect_source.h = HAUTEUR_TILE;
+
+    SDL_FillRect(SCREEN, NULL, 0x000000);
     
     printf("before i");
     int n = 0;
+
+    background_tile = IMG_Load("./resources/sprites/blocks/BackgroundTile.png");
+    explodable_block = IMG_Load("./resources/sprites/blocks/ExplodableBlock.png");
+    solid_block = IMG_Load("./resources/sprites/blocks/SolidBlock.png");
+
 	for(i=0;i<195;i+= 15)
 	{
 		for(j=0;j<15;j++)
@@ -28,51 +35,54 @@ void Afficher(SDL_Surface* screen,char map[],int nombre_blocs_largeur,int nombre
             if (map[i+j] == 0b00000111) {
                 // herbe
                 printf("herbe");
-                tileset = IMG_Load("./resources/sprites/blocks/BackgroundTile.png");
+                SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
             }
             else if (map[i+j] == 0b01100111) {
                 // destructible
-                                printf("dest");
-                tileset = IMG_Load("./resources/sprites/blocks/ExplodableBlock.png");
+                printf("dest");
+                SDL_BlitSurface(explodable_block, &Rect_source, SCREEN, &Rect_dest);
             }
             else if (map[i+j] == 0b01000111) {
                 // indestructible
-                                printf("indest");
-                tileset = IMG_Load("./resources/sprites/blocks/SolidBlock.png");
+                printf("indest");
+                SDL_BlitSurface(solid_block, &Rect_source, SCREEN, &Rect_dest);
             }
-            if (!tileset)
-            {
-                printf("Echec de chargement tileset1.bmp\n");
-                SDL_Quit();
-                system("pause");
-                exit(-1);
-            }
-            SDL_BlitSurface(tileset,&Rect_source,screen,&Rect_dest);
 		}
         n++;
 	}
-	SDL_Flip(screen);
+	SDL_Flip(SCREEN);
 }
 
 int draw_map()
 {
-
-    SDL_Surface* screen;
-	screen = SDL_SetVideoMode(LARGEUR_TILE*NOMBRE_BLOCS_LARGEUR, HAUTEUR_TILE*NOMBRE_BLOCS_HAUTEUR, 32,SDL_HWSURFACE|SDL_DOUBLEBUF);
-
     char map[195];
+    int running = 1;
+    SDL_Event event;
     init_map(map);
 
-	Afficher(screen,map,NOMBRE_BLOCS_LARGEUR,NOMBRE_BLOCS_HAUTEUR);
-
-    SDL_Event event;
+	Afficher(map,NOMBRE_BLOCS_LARGEUR,NOMBRE_BLOCS_HAUTEUR);
  
-    do  // attend qu'on appuie sur une touche.
-	{
-		SDL_WaitEvent(&event);
-	} while (event.type!=SDL_KEYDOWN);
-	
-	SDL_FreeSurface(screen);
-	SDL_Quit();
-    return 0;
+    while (running)
+    {
+        SDL_WaitEvent(&event);
+        switch(event.type)
+        {
+            case SDL_QUIT:
+                return GO_QUIT;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_UP:
+                        printf("SDLK_UP");
+                        break;
+                    case SDLK_DOWN:
+                        printf("SDLK_DOWN");
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+    }
+    return GO_QUIT;
 }

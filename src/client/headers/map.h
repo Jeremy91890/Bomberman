@@ -14,7 +14,7 @@
 #define NOMBRE_BLOCS_HAUTEUR 13
 
 int        draw_map();
-void       Afficher(SDL_Surface* screen,char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur);
+void       Afficher(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur);
 /*char randomDestructableBloc();
 void addPlayers(char map[], int pos[]);
 void init(char map[]);*/
