@@ -5,8 +5,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include "../server/headers/generate_map.h"
-      
-void Afficher(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
+
+void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 {
 	int i,j;
     SDL_Surface *background_tile, *explodable_block, *solid_block;
@@ -17,7 +17,6 @@ void Afficher(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 
     SDL_FillRect(SCREEN, NULL, 0x000000);
     
-    printf("before i");
     int n = 0;
 
     background_tile = IMG_Load("./resources/sprites/blocks/BackgroundTile.png");
@@ -33,18 +32,15 @@ void Afficher(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 			Rect_source.x = 0;
 			Rect_source.y = 0;
             if (map[i+j] == 0b00000111) {
-                // herbe
-                printf("herbe");
+                // ground
                 SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
             }
             else if (map[i+j] == 0b01100111) {
-                // destructible
-                printf("dest");
+                // destructable
                 SDL_BlitSurface(explodable_block, &Rect_source, SCREEN, &Rect_dest);
             }
             else if (map[i+j] == 0b01000111) {
-                // indestructible
-                printf("indest");
+                // undestructable
                 SDL_BlitSurface(solid_block, &Rect_source, SCREEN, &Rect_dest);
             }
 		}
@@ -60,7 +56,7 @@ int draw_map()
     SDL_Event event;
     init_map(map);
 
-	Afficher(map,NOMBRE_BLOCS_LARGEUR,NOMBRE_BLOCS_HAUTEUR);
+	display_map(map,NOMBRE_BLOCS_LARGEUR,NOMBRE_BLOCS_HAUTEUR);
  
     while (running)
     {

@@ -1,8 +1,7 @@
-#include <stdio.h>
-#include <time.h>
-#include <stdlib.h>
+#include "./headers/generate_map.h"
+#include "./headers/server.h"
 
-char randomDestructableBloc() {
+char get_random_destructable_bloc() {
   
     int r = rand() % ((2+1) - 1) + 1;
     
@@ -10,15 +9,15 @@ char randomDestructableBloc() {
     
     if (r == 1) {
         // mur destructible
-        return 0b01100111;
+        return DESTRUCTABLE_WALL;
     } else {
         // herbe
-        return 0b00000111;
+        return GROUND;
     }
 }
 
 // Libère les cases autour du joueur
-void addPlayers(char map[], int pos[]) {
+void delete_blocs_around_players(char map[], int pos[]) {
     
     int index = 0;
     
@@ -30,8 +29,8 @@ void addPlayers(char map[], int pos[]) {
         int i = posJoueur - 16;
         
         while (i < (posJoueur + 16)) {
-            if (map[i] != 0b01000111) {
-                map[i] = 0b00000111;
+            if (map[i] == DESTRUCTABLE_WALL) {
+                map[i] = GROUND;
             }
             if (n < 2) {
                 i++;
@@ -50,10 +49,7 @@ void init_map(char map[])
 {
     srand(time(NULL));
 
-    printf("Hello World");
-
     int playerPos[4] = {16, 28, 178, 166};
-    //char map[195];
     int blocPerLine = 15;
     int nbLine = 13;
     int i = 0;
@@ -62,37 +58,35 @@ void init_map(char map[])
     while (i < 195) {
         if (i < blocPerLine || i >= (blocPerLine * (nbLine - 1)) || i == (firstRowBloc + 14)) {
             // incassable
-            map[i] = 0b01000111; 
+            map[i] = UNDESTRUCTABLE_WALL; 
         } else {
             if (i % blocPerLine == 0) {
                 firstRowBloc = i;
                 // incassable
-                map[i] = 0b01000111;
+                map[i] = UNDESTRUCTABLE_WALL;
             } else {
                 if (firstRowBloc % 2 == 0) {
                     if (i % 2 == 0) {
                         // incassable
-                        map[i] = 0b01000111;
+                        map[i] = UNDESTRUCTABLE_WALL;
                     } else {
                         //random
-                        map[i] = randomDestructableBloc(); 
+                        map[i] = get_random_destructable_bloc(); 
                     }
                 } else {
                     //random
-                    map[i] = randomDestructableBloc(); 
+                    map[i] = get_random_destructable_bloc(); 
                 }
             }
         }
         i++;
     }
     map[195] = '\0';
-
-    printf("%s", map);
     
-    addPlayers(map, playerPos);
+    delete_blocs_around_players(map, playerPos);
     
     // AFFICHAGE EN ASCII DE LA MAP, A SUPPRIMER C'EST JUSTE POUR TEST
-    int n = 0;
+    /*int n = 0;
     while (n < 195) {
         if (n % 15 == 0) {
             printf("\n");
@@ -110,5 +104,5 @@ void init_map(char map[])
         
         n++;
     }
-    
+    */
 }

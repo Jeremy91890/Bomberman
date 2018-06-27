@@ -5,8 +5,8 @@
 #include <time.h>
 #include <stdlib.h>
 
-char randomDestructableBloc();
-void addPlayers(char map[], int pos[]);
+char get_random_destructable_bloc();
+void delete_blocs_around_players(char map[], int pos[]);
 void init_map(char map[]);
 
 #endif

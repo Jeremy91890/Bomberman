@@ -1,6 +1,13 @@
 #ifndef     _STRUCTS_H_
 #define     _STRUCTS_H_
 
+typedef enum        bloc_type
+{
+    GROUND = 0b00000111,
+    DESTRUCTABLE_WALL = 0b01100111,
+    UNDESTRUCTABLE_WALL = 0b01000111
+}                   bloc_type;
+
 typedef struct      s_client_request
 {
     unsigned int    magic;
