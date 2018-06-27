@@ -21,7 +21,7 @@ int on_server() {
 int on_game(int ip) {
     if (ip == 0) {
         //return on_enter_ip(&ip);
-                create_client(ip);
+    create_client(ip);
 
     }
     else {
@@ -108,15 +108,17 @@ void create_client(int ip) {
     // Connexion au serveur
     struct hostent *hostinfo = NULL;
     SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
-    const char *hostname = "www.developpez.com";
+    const char *hostname = "10.0.2.15";
 
     hostinfo = gethostbyname(hostname); /* on récupère les informations de l'hôte auquel on veut se connecter */
     if (hostinfo == NULL) /* l'hôte n'existe pas */
     {
-        fprintf (stderr, "Unknown host %s.\n", hostname);
+        fprintf(stderr, "Unknown host %s.\n", hostname);
         exit(EXIT_FAILURE);
     }
 
+    // TODO, problème -> pourquoi l'adresse de l'hote ne s'affiche pas ? 
+    printf("host addr %s\n", hostinfo->h_addr);
     sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
     sin.sin_port = htons(PORT); /* on utilise htons pour le port */
     sin.sin_family = AF_INET;

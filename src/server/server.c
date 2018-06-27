@@ -16,7 +16,7 @@ void *main_server()
     }*/
 
     int sock = init_connection();
-    int actual = 0;
+    int actual = 1;
     int max = sock;
     
     t_game game;
