@@ -10,5 +10,6 @@
 void        init_globals();
 int         on_server();
 int         on_game(int ip);
+void        create_client(int ip);
 
 #endif

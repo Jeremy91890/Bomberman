@@ -4,6 +4,7 @@
 #include "./headers/enter_ip.h"
 #include "../server/headers/server.h"
 #include "./headers/map.h"
+#include "../socket.h"
 
 SDL_Surface *SCREEN;
 TTF_Font *FONT;
@@ -19,7 +20,12 @@ int on_server() {
 
 int on_game(int ip) {
     if (ip == 0) {
-        return on_enter_ip(&ip);
+        //return on_enter_ip(&ip);
+                create_client(ip);
+
+    }
+    else {
+        create_client(ip);
     }
     return GO_QUIT;
 }
@@ -62,8 +68,8 @@ int main(int argc, char *argv[])
                 NEXT_ACTION = on_menu();
                 break;
             case GO_GAME_JOIN:
-                NEXT_ACTION = draw_map();
-                //NEXT_ACTION = on_game(0);
+                //NEXT_ACTION = draw_map();
+                NEXT_ACTION = on_game(0);
                 break;
             case GO_GAME_HOST:
                 NEXT_ACTION = on_game(1);
@@ -87,4 +93,50 @@ int main(int argc, char *argv[])
     SDL_Quit();
 
     return EXIT_SUCCESS;
+}
+
+void create_client(int ip) {
+    
+    // creation du socket client
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    if(sock == INVALID_SOCKET)
+    {
+        perror("socket()");
+        exit(errno);
+    }
+
+    // Connexion au serveur
+    struct hostent *hostinfo = NULL;
+    SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
+    const char *hostname = "www.developpez.com";
+
+    hostinfo = gethostbyname(hostname); /* on récupère les informations de l'hôte auquel on veut se connecter */
+    if (hostinfo == NULL) /* l'hôte n'existe pas */
+    {
+        fprintf (stderr, "Unknown host %s.\n", hostname);
+        exit(EXIT_FAILURE);
+    }
+
+    sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+    sin.sin_port = htons(PORT); /* on utilise htons pour le port */
+    sin.sin_family = AF_INET;
+
+    if(connect(sock,(SOCKADDR *) &sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
+    {
+        perror("connect()");
+        exit(errno);
+    }
+
+    // Envoie de données
+    char buffer[1024];
+
+    if(send(sock, buffer, strlen(buffer), 0) < 0)
+    {
+        perror("send()");
+        exit(errno);
+    }
+
+    // Fermeture
+    closesocket(sock);
+
 }
