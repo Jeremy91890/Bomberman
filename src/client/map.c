@@ -12,8 +12,8 @@ void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
     SDL_Surface *background_tile, *explodable_block, *solid_block;
 	SDL_Rect Rect_dest;
 	SDL_Rect Rect_source;
-	Rect_source.w = LARGEUR_TILE;
-	Rect_source.h = HAUTEUR_TILE;
+	Rect_source.w = TILE_WIDTH;
+	Rect_source.h = TILE_HEIGHT;
 
     SDL_FillRect(SCREEN, NULL, 0x000000);
     
@@ -27,8 +27,8 @@ void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 	{
 		for(j=0;j<15;j++)
 		{
-			Rect_dest.x = j*LARGEUR_TILE;
-			Rect_dest.y = n*HAUTEUR_TILE;
+			Rect_dest.x = j*TILE_WIDTH;
+			Rect_dest.y = n*TILE_HEIGHT;
 			Rect_source.x = 0;
 			Rect_source.y = 0;
             if (map[i+j] == 0b00000111) {
@@ -56,7 +56,7 @@ int draw_map()
     SDL_Event event;
     init_map(map);
 
-	display_map(map,NOMBRE_BLOCS_LARGEUR,NOMBRE_BLOCS_HAUTEUR);
+	display_map(map,NB_BLOCS_WIDTH,NB_BLOCS_HEIGHT);
  
     while (running)
     {

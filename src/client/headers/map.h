@@ -7,11 +7,11 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 
-#define LARGEUR_TILE 64  // hauteur et largeur des tiles.
-#define HAUTEUR_TILE 64 
+#define TILE_WIDTH 64  // hauteur et largeur des tiles.
+#define TILE_HEIGHT 64 
 
-#define NOMBRE_BLOCS_LARGEUR 15  // nombre a afficher en x et y
-#define NOMBRE_BLOCS_HAUTEUR 13
+#define NB_BLOCS_WIDTH 15  // nombre a afficher en x et y
+#define NB_BLOCS_HEIGHT 13
 
 int        draw_map();
 void       display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur);
