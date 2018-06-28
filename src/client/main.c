@@ -131,15 +131,41 @@ void create_client(int ip) {
     // Envoie de données
     t_game game;
 
-    if(send(sock, (void*)&game, sizeof(game), 0) < 0)
-    {
-        printf("send from client");
-        perror("send()");
-        exit(errno);
-    }
+    write_server(sock, game);
+    read_server(sock, game);
+
+    draw_map(game.map);
+    // if(send(sock, (void*)&game, sizeof(game), 0) < 0)
+    // {
+    //     printf("send from client");
+    //     perror("send()");
+    //     exit(errno);
+    // }
 
 //    draw_map();
     // Fermeture
     closesocket(sock);
 
+}
+
+int read_server(SOCKET sock, t_game game)
+{
+   int n = 0;
+
+   if((n = recv(sock, (void*)&game, sizeof(game), 0) < 0))
+   {
+      perror("recvfrom()");
+      exit(errno);
+   }
+
+   return n;
+}
+
+void write_server(SOCKET sock, t_game game)
+{
+   if(send(sock, (void*)&game, sizeof(game), 0) < 0)
+   {
+      perror("sendto()");
+      exit(errno);
+   }
 }

@@ -1,5 +1,4 @@
 #include "./headers/server.h"
-#include "./headers/generate_map.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -21,7 +20,7 @@ void *main_server()
     int max = sock;
     
     t_game game;
-    init_map(game.map);
+   // init_map(game.map);
 
     fd_set rdfs;
     
@@ -31,7 +30,7 @@ void *main_server()
         int i = 0;
         FD_ZERO(&rdfs);
         FD_SET(sock, &rdfs);
-    
+
         for (i = 0 ; i < actual ; i++)
             FD_SET(game.player_infos[i].socket, &rdfs);
     
@@ -41,9 +40,11 @@ void *main_server()
             perror("select()");
             exit(errno);
         }
-    
+
         if (FD_ISSET(sock, &rdfs))
         {
+            printf("isset");
+
             struct sockaddr_in csin;
             socklen_t sinsize = sizeof(csin);
     
@@ -56,6 +57,8 @@ void *main_server()
     
             if(read_player(csock, game) == -1)
             {
+                printf("read player -1");
+
                 /* disconnected */
                 continue;
             }
@@ -70,7 +73,7 @@ void *main_server()
 
             game.player_infos[i] = pi;
             actual++;
-            //send_game_to_all_players
+            //send_game_to_all_players(actual, game);
         }
         else {
             printf("not setted");
@@ -169,7 +172,7 @@ void send_game_to_all_players(int actual, t_game game)
 
 void write_player(SOCKET sock, t_game game)
 {
-    printf("write player");
+   printf("write player");
    if(send(sock, (void*)&game, sizeof(game), 0) < 0)
    {
       perror("send()");
