@@ -1,4 +1,4 @@
-#include "./headers/server.h"
+#include "../headers/server.h"
 
 t_player_infos add_new_player(int index)
 {

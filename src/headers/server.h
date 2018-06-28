@@ -11,7 +11,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
-#include "../../socket.h"
+#include "socket.h"
 
 #define PORT            8083
 #define MAX_PLAYERS     4

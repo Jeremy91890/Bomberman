@@ -6,8 +6,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
-#include "../../server/headers/server.h"
-#include "../../server/headers/structs.h"
+#include "server.h"
+#include "structs.h"
 
 void        init_globals();
 int         on_server();

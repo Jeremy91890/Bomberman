@@ -1,9 +1,9 @@
-#include "./headers/server.h"
+#include "../headers/server.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "../socket.h"
+#include "../headers/socket.h"
 
 void *main_server()
 {
