@@ -15,7 +15,7 @@ void *main_server()
         i = i + 1;
     }*/
 
-    char buffer[1024];
+    //char buffer[1024];
     int sock = init_connection();
     int actual = 0;
     int max = sock;
@@ -53,13 +53,12 @@ void *main_server()
                 continue;
             }
     
-            if(read_client(csock, buffer) == -1)
+            if(read_client(csock, game) == -1)
             {
                 /* disconnected */
                 continue;
             }
 
-            printf("%s", buffer);
             printf("socket received");
             max = csock > max ? csock : max;
             FD_SET(csock, &rdfs);
@@ -106,18 +105,18 @@ int init_connection()
     return s;
 }
 
-int read_client(SOCKET sock, char *buffer)
+int read_client(SOCKET sock, t_game game)
 {
    int n = 0;
 
-   if((n = recv(sock, buffer, strlen(buffer) - 1, 0)) < 0)
+   if((n = recv(sock, (void*)&game, sizeof(game) - 1, 0)) < 0)
    {
       perror("recv()");
       /* if recv error we disonnect the client */
       n = 0;
    }
 
-   buffer[n] = 0;
+   //game[n] = 0;
 
    return n;
 }

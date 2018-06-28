@@ -3,6 +3,7 @@
 #include "./headers/menu.h"
 #include "./headers/enter_ip.h"
 #include "../server/headers/server.h"
+#include "../server/headers/structs.h"
 #include "./headers/map.h"
 #include "../socket.h"
 
@@ -130,11 +131,10 @@ void create_client(int ip) {
     }
 
     // Envoie de données
-    char buffer[1024];
-    buffer[0] = 'h';
-    buffer[1] = 'e';
-    
-    if(send(sock, buffer, strlen(buffer), 0) < 0)
+    //char buffer[1024];
+    t_game game;
+
+    if(send(sock, (void*)&game, sizeof(game), 0) < 0)
     {
         perror("send()");
         exit(errno);
