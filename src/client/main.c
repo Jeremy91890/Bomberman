@@ -118,8 +118,6 @@ void create_client(int ip) {
         exit(EXIT_FAILURE);
     }
 
-    // TODO, problème -> pourquoi l'adresse de l'hote ne s'affiche pas ? 
-    printf("host addr %s\n", hostinfo->h_addr);
     sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
     sin.sin_port = htons(PORT); /* on utilise htons pour le port */
     sin.sin_family = AF_INET;
@@ -131,11 +129,11 @@ void create_client(int ip) {
     }
 
     // Envoie de données
-    //char buffer[1024];
     t_game game;
 
     if(send(sock, (void*)&game, sizeof(game), 0) < 0)
     {
+        printf("send from client");
         perror("send()");
         exit(errno);
     }

@@ -1,9 +1,9 @@
 #include "./headers/server.h"
+#include "./headers/generate_map.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
 #include "../socket.h"
 
 void *main_server()
@@ -21,7 +21,8 @@ void *main_server()
     int max = sock;
     
     t_game game;
-    
+    init_map(game.map);
+
     fd_set rdfs;
     
     while(1)
@@ -53,18 +54,51 @@ void *main_server()
                 continue;
             }
     
-            if(read_client(csock, game) == -1)
+            if(read_player(csock, game) == -1)
             {
                 /* disconnected */
                 continue;
             }
 
             printf("socket received");
+
             max = csock > max ? csock : max;
             FD_SET(csock, &rdfs);
-            //t_player_infos pi = add_new_player(actual);
-           // pi.socket = csock;
+            t_player_infos pi = add_new_player(actual);
+            pi.socket = csock;
+            printf("%d", pi.bombs_left);
+
+            game.player_infos[i] = pi;
+            actual++;
+            //send_game_to_all_players
         }
+        else {
+            printf("not setted");
+            int i = 0;
+            for(i = 0; i < actual; i++)
+            {
+                /* a client is talking */
+                if(FD_ISSET(game.player_infos[i].socket, &rdfs))
+                {
+                    int c = read_player(game.player_infos[i].socket, game);
+                    /* client disconnected */
+                    if(c == 0)
+                    {
+                        closesocket(game.player_infos[i].socket);
+                        //remove_client(clients, i, &actual);
+                        // strncpy(buffer, client.name, BUF_SIZE - 1);
+                        // strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
+                        send_game_to_all_players(actual, game);
+                    }
+                    else
+                    {
+                        send_game_to_all_players(actual, game);
+                    }
+                break;
+                }
+            }
+        }
+
     }
 
     printf("quit");
@@ -105,7 +139,7 @@ int init_connection()
     return s;
 }
 
-int read_client(SOCKET sock, t_game game)
+int read_player(SOCKET sock, t_game game)
 {
    int n = 0;
 
@@ -121,11 +155,24 @@ int read_client(SOCKET sock, t_game game)
    return n;
 }
 
-// static void write_client(SOCKET sock, const char *buffer)
-// {
-//    if(send(sock, buffer, strlen(buffer), 0) < 0)
-//    {
-//       perror("send()");
-//       exit(errno);
-//    }
-// }
+void send_game_to_all_players(int actual, t_game game)
+{
+   printf("send game for all");
+
+   int i = 0;
+
+   for(i = 0; i < actual; i++)
+   {
+        write_player(game.player_infos[i].socket, game);
+   }
+}
+
+void write_player(SOCKET sock, t_game game)
+{
+    printf("write player");
+   if(send(sock, (void*)&game, sizeof(game), 0) < 0)
+   {
+      perror("send()");
+      exit(errno);
+   }
+}

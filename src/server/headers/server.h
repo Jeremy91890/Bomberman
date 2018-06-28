@@ -22,6 +22,8 @@
 void *main_server();
 int init_connection();
 t_player_infos add_new_player(int index);
-int read_client(SOCKET sock, t_game game);
+int read_player(SOCKET sock, t_game game);
+void send_game_to_all_players(int actual, t_game game);
+void write_player(SOCKET sock, t_game game);
 
 #endif
