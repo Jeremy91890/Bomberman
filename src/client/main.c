@@ -131,13 +131,16 @@ void create_client(int ip) {
 
     // Envoie de données
     char buffer[1024];
-
+    buffer[0] = 'h';
+    buffer[1] = 'e';
+    
     if(send(sock, buffer, strlen(buffer), 0) < 0)
     {
         perror("send()");
         exit(errno);
     }
 
+//    draw_map();
     // Fermeture
     closesocket(sock);
 

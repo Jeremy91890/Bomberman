@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
+#include "../../socket.h"
 
 #define PORT            8083
 #define MAX_PLAYERS     4
@@ -21,5 +22,6 @@
 void *main_server();
 int init_connection();
 t_player_infos add_new_player(int index);
+int read_client(SOCKET sock, char *buffer);
 
 #endif
