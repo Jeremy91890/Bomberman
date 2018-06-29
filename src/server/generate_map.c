@@ -1,12 +1,12 @@
 #include "../headers/generate_map.h"
 #include "../headers/server.h"
 
-char get_random_destructable_bloc() {
-  
+char get_random_destructable_bloc()
+{
     int r = rand() % ((2+1) - 1) + 1;
-    
+
     printf("%d\n", r);
-    
+
     if (r == 1) {
         // mur destructible
         return DESTRUCTABLE_WALL;
@@ -17,17 +17,15 @@ char get_random_destructable_bloc() {
 }
 
 // Libère les cases autour du joueur
-void delete_blocs_around_players(char map[], int pos[]) {
-    
+void delete_blocs_around_players(char map[], int pos[])
+{
     int index = 0;
-    
-    while (index < 4) {
-        
-        int posJoueur = pos[index];
 
+    while (index < 4) {
+        int posJoueur = pos[index];
         int n = 0;
         int i = posJoueur - 16;
-        
+
         while (i < (posJoueur + 16)) {
             if (map[i] == DESTRUCTABLE_WALL) {
                 map[i] = GROUND;
@@ -54,7 +52,7 @@ void init_map(char map[])
     int nbLine = 13;
     int i = 0;
     int firstRowBloc = 0;
-    
+
     while (i < 195) {
         if (i < blocPerLine || i >= (blocPerLine * (nbLine - 1)) || i == (firstRowBloc + 14)) {
             // incassable
