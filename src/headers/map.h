@@ -13,7 +13,7 @@
 #define NB_BLOCS_WIDTH 15  // nombre a afficher en x et y
 #define NB_BLOCS_HEIGHT 13
 
-int        draw_map();
+int        draw_map(char map[]);
 void       display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur);
 
 #endif

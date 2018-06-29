@@ -6,9 +6,14 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
+#include "server.h"
+#include "structs.h"
 
 void        init_globals();
 int         on_server();
 int         on_game(int ip);
+void        create_client(int ip);
+int         read_server(SOCKET sock, t_game game);
+void        write_server(SOCKET sock, t_game game);
 
 #endif

@@ -1,10 +1,10 @@
-#include "./headers/menu.h"
-#include "./headers/globals.h"
-#include "./headers/map.h"
+#include "../headers/menu.h"
+#include "../headers/globals.h"
+#include "../headers/map.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "../server/headers/generate_map.h"
+#include "../headers/generate_map.h"
 
 void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 {
@@ -49,9 +49,9 @@ void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 	SDL_Flip(SCREEN);
 }
 
-int draw_map()
+int draw_map(char map[])
 {
-    char map[195];
+   //char map[195];
     int running = 1;
     SDL_Event event;
     init_map(map);
