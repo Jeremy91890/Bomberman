@@ -62,7 +62,7 @@ void display_character(t_player_infos *player_infos)
     sprite_Bman_01_B = IMG_Load("./resources/sprites/bomberman/Back/Bman01_B_f00.png");
     sprite_Bman_01_F = IMG_Load("./resources/sprites/bomberman/Front/Bman01_F_f00.png");
     sprite_Bman_01_L = IMG_Load("./resources/sprites/bomberman/Left/Bman01_L_f00.png");
-    //sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
+    sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
 
     sprite_Bman_02_B = IMG_Load("./resources/sprites/bomberman/Back/Bman02_B_f00.png");
     sprite_Bman_02_F = IMG_Load("./resources/sprites/bomberman/Front/Bman02_F_f00.png");
@@ -91,7 +91,6 @@ void display_character(t_player_infos *player_infos)
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
 			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
-                        sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
                         SDL_BlitSurface(sprite_Bman_01_R, NULL, SCREEN, &Rect_dest);
                         break;
                     case 2:
