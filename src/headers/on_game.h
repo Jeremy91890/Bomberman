@@ -1,5 +1,5 @@
-#ifndef     _MAIN_H_
-#define     _MAIN_H_
+#ifndef     _ON_GAME_H_
+#define     _ON_GAME_H_
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -9,7 +9,7 @@
 #include "server.h"
 #include "structs.h"
 
-void        init_globals();
-int         on_server();
+int         on_game(char *ip_text);
+void        read_server(SOCKET sock, t_game *game);
 
 #endif

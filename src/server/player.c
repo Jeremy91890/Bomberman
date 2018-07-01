@@ -9,6 +9,10 @@ t_player_infos add_new_player(int index)
     pi.bombs_left = 10;
     pi.frags = 0;
     //ToComplete
+    //1 : Right
+    //2 : Down -> Front
+    //3 : Left
+    //4 : Top -> Back
 
     switch (index) {
         case 0:

@@ -5,8 +5,9 @@
 #include <time.h>
 #include <stdlib.h>
 #include "../headers/generate_map.h"
+#include "../headers/structs.h"
 
-void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
+void display_map(char map[])
 {
 	int i,j;
     SDL_Surface *background_tile, *explodable_block, *solid_block;
@@ -27,10 +28,10 @@ void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 	{
 		for(j=0;j<15;j++)
 		{
-			Rect_dest.x = j*TILE_WIDTH;
-			Rect_dest.y = n*TILE_HEIGHT;
 			Rect_source.x = 0;
 			Rect_source.y = 0;
+            Rect_dest.x = j*TILE_WIDTH;
+			Rect_dest.y = n*TILE_HEIGHT;
             if (map[i+j] == 0b00000111) {
                 // ground
                 SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
@@ -49,36 +50,151 @@ void display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur)
 	SDL_Flip(SCREEN);
 }
 
-int draw_map(char map[])
+void display_character(t_player_infos *player_infos)
 {
-   //char map[195];
-    int running = 1;
-    SDL_Event event;
-    init_map(map);
+    SDL_Surface *sprite_Bman_01_B, *sprite_Bman_01_F, *sprite_Bman_01_L, *sprite_Bman_01_R;
+    SDL_Surface *sprite_Bman_02_B, *sprite_Bman_02_F, *sprite_Bman_02_L, *sprite_Bman_02_R;
+    SDL_Surface *sprite_Bman_03_B, *sprite_Bman_03_F, *sprite_Bman_03_L, *sprite_Bman_03_R;
+    SDL_Surface *sprite_Bman_04_B, *sprite_Bman_04_F, *sprite_Bman_04_L, *sprite_Bman_04_R;
+    SDL_Rect Rect_dest;
 
-	display_map(map,NB_BLOCS_WIDTH,NB_BLOCS_HEIGHT);
- 
-    while (running)
-    {
-        SDL_WaitEvent(&event);
-        switch(event.type)
-        {
-            case SDL_QUIT:
-                return GO_QUIT;
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_UP:
-                        printf("SDLK_UP");
+    //A terme -> mettre dans un init et en global pour pas avoir à les recharger
+    sprite_Bman_01_B = IMG_Load("./resources/sprites/bomberman/Back/Bman01_B_f00.png");
+    sprite_Bman_01_F = IMG_Load("./resources/sprites/bomberman/Front/Bman01_F_f00.png");
+    sprite_Bman_01_L = IMG_Load("./resources/sprites/bomberman/Left/Bman01_L_f00.png");
+    //sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
+
+    sprite_Bman_02_B = IMG_Load("./resources/sprites/bomberman/Back/Bman02_B_f00.png");
+    sprite_Bman_02_F = IMG_Load("./resources/sprites/bomberman/Front/Bman02_F_f00.png");
+    sprite_Bman_02_L = IMG_Load("./resources/sprites/bomberman/Left/Bman02_L_f00.png");
+    sprite_Bman_02_R = IMG_Load("./resources/sprites/bomberman/Right/Bman02_R_f00.png");
+
+    sprite_Bman_03_B = IMG_Load("./resources/sprites/bomberman/Back/Bman03_B_f00.png");
+    sprite_Bman_03_F = IMG_Load("./resources/sprites/bomberman/Front/Bman03_F_f00.png");
+    sprite_Bman_03_L = IMG_Load("./resources/sprites/bomberman/Left/Bman03_L_f00.png");
+    sprite_Bman_03_R = IMG_Load("./resources/sprites/bomberman/Right/Bman03_R_f00.png");
+
+    sprite_Bman_04_B = IMG_Load("./resources/sprites/bomberman/Back/Bman04_B_f00.png");
+    sprite_Bman_04_F = IMG_Load("./resources/sprites/bomberman/Front/Bman04_F_f00.png");
+    sprite_Bman_04_L = IMG_Load("./resources/sprites/bomberman/Left/Bman04_L_f00.png");
+    sprite_Bman_04_R = IMG_Load("./resources/sprites/bomberman/Right/Bman04_R_f00.png");
+
+    int i = 0;
+    while(i < 4) {
+        printf("enter while affichage players\n");
+    
+        //Un switch bien moche -> a terme le decouper
+        switch(i) {
+            case 0:
+                printf("case 0\n");
+                switch(player_infos[i].current_dir) {
+                    case 1:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
+                        SDL_BlitSurface(sprite_Bman_01_R, NULL, SCREEN, &Rect_dest);
                         break;
-                    case SDLK_DOWN:
-                        printf("SDLK_DOWN");
+                    case 2:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_01_F, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 3:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_01_L, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 4:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_01_B, NULL, SCREEN, &Rect_dest);
                         break;
                     default:
                         break;
                 }
                 break;
+            case 1:
+                switch(player_infos[i].current_dir) {
+                    case 1:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_02_R, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 2:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_02_F, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 3:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_02_L, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 4:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_02_B, NULL, SCREEN, &Rect_dest);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case 2:
+                switch(player_infos[i].current_dir) {
+                    case 1:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_03_R, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 2:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_03_F, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 3:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_03_L, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 4:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_03_B, NULL, SCREEN, &Rect_dest);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            case 3:
+                switch(player_infos[i].current_dir) {
+                    case 1:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_04_R, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 2:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_04_F, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 3:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_04_L, NULL, SCREEN, &Rect_dest);
+                        break;
+                    case 4:
+                        Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
+			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+                        SDL_BlitSurface(sprite_Bman_04_B, NULL, SCREEN, &Rect_dest);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
         }
+        i = i + 1;
     }
-    return GO_QUIT;
+    SDL_Flip(SCREEN);
 }

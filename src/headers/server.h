@@ -14,8 +14,7 @@
 #include "socket.h"
 
 #define PORT            8083
-#define MAX_PLAYERS     4
-#define MAP_SIZE        195
+
 
 #include "structs.h"
 

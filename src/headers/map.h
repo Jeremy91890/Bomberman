@@ -7,13 +7,18 @@
 #include <SDL/SDL_image.h>
 #include <SDL/SDL_ttf.h>
 
+#include "structs.h"
+
 #define TILE_WIDTH 64  // hauteur et largeur des tiles.
 #define TILE_HEIGHT 64 
+
+#define BMAN_WIDTH 64  // hauteur et largeur des tiles.
+#define BMAN_HEIGHT 128
 
 #define NB_BLOCS_WIDTH 15  // nombre a afficher en x et y
 #define NB_BLOCS_HEIGHT 13
 
-int        draw_map(char map[]);
-void       display_map(char map[],int nombre_blocs_largeur,int nombre_blocs_hauteur);
+void        display_map(char map[]);
+void        display_character(t_player_infos *player_infos);
 
 #endif

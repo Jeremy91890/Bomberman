@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "structs.h": "c",
+        "cstdlib": "c",
+        "generate_map.h": "c",
+        "stdio.h": "c"
+    }
+}

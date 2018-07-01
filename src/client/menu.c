@@ -136,9 +136,9 @@ int on_menu()
     switch (menu_selection)
     {
         case 0:
-            printf("Go play\n");
+            printf("Go enter ip\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
-            return GO_GAME_JOIN;
+            return GO_ENTER_IP;
         case 1:
             printf("Go server\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);

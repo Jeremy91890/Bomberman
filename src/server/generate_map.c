@@ -5,7 +5,7 @@ char get_random_destructable_bloc()
 {
     int r = rand() % ((2+1) - 1) + 1;
 
-    printf("%d\n", r);
+    //printf("%d\n", r);
 
     if (r == 1) {
         // mur destructible

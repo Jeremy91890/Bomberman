@@ -18,6 +18,7 @@ static const int SCREEN_HEIGHT = 832;
 
 enum NEXT_ACTION {
     GO_MENU,
+    GO_ENTER_IP,
     GO_GAME_JOIN,
     GO_GAME_HOST,
     GO_SERVER,

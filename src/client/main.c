@@ -6,6 +6,7 @@
 #include "../headers/server.h"
 #include "../headers/map.h"
 #include "../headers/socket.h"
+#include "../headers/on_game.h"
 
 SDL_Surface *SCREEN;
 TTF_Font *FONT;
@@ -16,19 +17,10 @@ int on_server() {
         perror("pthread_create");
         return EXIT_FAILURE;
     }
-    return GO_MENU;
-}
-
-int on_game(int ip) {
-    if (ip == 0) {
-        //return on_enter_ip(&ip);
-    create_client(ip);
-
-    }
-    else {
-        create_client(ip);
-    }
-    return GO_QUIT;
+    //On sleep 1 seconde pour laisser le temps au server de d'init
+    //Si pas assez mettre 2
+    sleep(1);
+    return GO_GAME_HOST;
 }
 
 void init_globals()
@@ -59,6 +51,7 @@ int main(int argc, char *argv[])
 {
     int run = 1;
     int NEXT_ACTION = GO_MENU;
+    char *ip_text = strdup("");
 
     init_globals();
 
@@ -68,12 +61,15 @@ int main(int argc, char *argv[])
             case GO_MENU:
                 NEXT_ACTION = on_menu();
                 break;
+            case GO_ENTER_IP:
+                NEXT_ACTION = on_enter_ip(&ip_text);
+                break;
             case GO_GAME_JOIN:
                 //NEXT_ACTION = draw_map();
-                NEXT_ACTION = on_game(0);
+                NEXT_ACTION = on_game(ip_text);
                 break;
             case GO_GAME_HOST:
-                NEXT_ACTION = on_game(1);
+                NEXT_ACTION = on_game("127.0.0.1");
                 break;
             case GO_SERVER:
                 NEXT_ACTION = on_server();
@@ -96,76 +92,3 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-void create_client(int ip) {
-    
-    // creation du socket client
-    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(sock == INVALID_SOCKET)
-    {
-        perror("socket()");
-        exit(errno);
-    }
-
-    // Connexion au serveur
-    struct hostent *hostinfo = NULL;
-    SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
-    const char *hostname = "10.0.2.15";
-
-    hostinfo = gethostbyname(hostname); /* on récupère les informations de l'hôte auquel on veut se connecter */
-    if (hostinfo == NULL) /* l'hôte n'existe pas */
-    {
-        fprintf(stderr, "Unknown host %s.\n", hostname);
-        exit(EXIT_FAILURE);
-    }
-
-    sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
-    sin.sin_port = htons(PORT); /* on utilise htons pour le port */
-    sin.sin_family = AF_INET;
-
-    if(connect(sock,(SOCKADDR *) &sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
-    {
-        perror("connect()");
-        exit(errno);
-    }
-
-    // Envoie de données
-    t_game game;
-
-    write_server(sock, game);
-    read_server(sock, game);
-
-    draw_map(game.map);
-    // if(send(sock, (void*)&game, sizeof(game), 0) < 0)
-    // {
-    //     printf("send from client");
-    //     perror("send()");
-    //     exit(errno);
-    // }
-
-//    draw_map();
-    // Fermeture
-    closesocket(sock);
-
-}
-
-int read_server(SOCKET sock, t_game game)
-{
-   int n = 0;
-
-   if((n = recv(sock, (void*)&game, sizeof(game), 0) < 0))
-   {
-      perror("recvfrom()");
-      exit(errno);
-   }
-
-   return n;
-}
-
-void write_server(SOCKET sock, t_game game)
-{
-   if(send(sock, (void*)&game, sizeof(game), 0) < 0)
-   {
-      perror("sendto()");
-      exit(errno);
-   }
-}

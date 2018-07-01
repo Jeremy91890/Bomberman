@@ -1,6 +1,9 @@
 #ifndef     _STRUCTS_H_
 #define     _STRUCTS_H_
 
+#define MAX_PLAYERS     4
+#define MAP_SIZE        195
+
 typedef enum        bloc_type
 {
     GROUND = 0b00000111,
