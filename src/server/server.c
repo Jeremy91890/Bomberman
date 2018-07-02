@@ -81,7 +81,7 @@ void *main_server()
             printf("\n");
             t_player_infos player_infos = add_new_player(actual);
             player_infos.socket = csock;
-            game.player_infos[i] = player_infos;
+            game.player_infos[actual] = player_infos;
             
             actual++;
         }
