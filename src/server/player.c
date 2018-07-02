@@ -16,23 +16,23 @@ t_player_infos add_new_player(int index)
 
     switch (index) {
         case 0:
-            pi.x_pos = 0;
-            pi.y_pos = 0;
+            pi.x_pos = 1;
+            pi.y_pos = 1;
             pi.current_dir = 1;
             break;
         case 1:
-            pi.x_pos = 14;
-            pi.y_pos = 0;
+            pi.x_pos = 13;
+            pi.y_pos = 1;
             pi.current_dir = 2;
             break;
         case 2:
-            pi.x_pos = 14;
-            pi.y_pos = 12;
+            pi.x_pos = 13;
+            pi.y_pos = 11;
             pi.current_dir = 3;
             break;
         case 3:
-            pi.x_pos = 0;
-            pi.y_pos = 12;
+            pi.x_pos = 1;
+            pi.y_pos = 11;
             pi.current_dir = 4;
             break;
     }

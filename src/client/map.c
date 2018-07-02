@@ -80,8 +80,9 @@ void display_character(t_player_infos *player_infos)
     sprite_Bman_04_R = IMG_Load("./resources/sprites/bomberman/Right/Bman04_R_f00.png");
 
     int i = 0;
-    while(i < 4) {
+    while(i < (MAX_PLAYERS)) {
         printf("enter while affichage players\n");
+        printf("%d", player_infos[i].connected);
     
         //Un switch bien moche -> a terme le decouper
         switch(i) {
@@ -90,22 +91,22 @@ void display_character(t_player_infos *player_infos)
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_R, NULL, SCREEN, &Rect_dest);
                         break;
                     case 2:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_F, NULL, SCREEN, &Rect_dest);
                         break;
                     case 3:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_L, NULL, SCREEN, &Rect_dest);
                         break;
                     case 4:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_B, NULL, SCREEN, &Rect_dest);
                         break;
                     default:
@@ -113,25 +114,26 @@ void display_character(t_player_infos *player_infos)
                 }
                 break;
             case 1:
+                printf("case 1\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_02_R, NULL, SCREEN, &Rect_dest);
                         break;
                     case 2:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_02_F, NULL, SCREEN, &Rect_dest);
                         break;
                     case 3:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_02_L, NULL, SCREEN, &Rect_dest);
                         break;
                     case 4:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_02_B, NULL, SCREEN, &Rect_dest);
                         break;
                     default:
@@ -139,25 +141,26 @@ void display_character(t_player_infos *player_infos)
                 }
                 break;
             case 2:
+                printf("case 2\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_03_R, NULL, SCREEN, &Rect_dest);
                         break;
                     case 2:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_03_F, NULL, SCREEN, &Rect_dest);
                         break;
                     case 3:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_03_L, NULL, SCREEN, &Rect_dest);
                         break;
                     case 4:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_03_B, NULL, SCREEN, &Rect_dest);
                         break;
                     default:
@@ -165,25 +168,26 @@ void display_character(t_player_infos *player_infos)
                 }
                 break;
             case 3:
+                printf("case 3\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_04_R, NULL, SCREEN, &Rect_dest);
                         break;
                     case 2:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_04_F, NULL, SCREEN, &Rect_dest);
                         break;
                     case 3:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_04_L, NULL, SCREEN, &Rect_dest);
                         break;
                     case 4:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
-			            Rect_dest.y = player_infos[i].y_pos * BMAN_HEIGHT;
+			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_04_B, NULL, SCREEN, &Rect_dest);
                         break;
                     default:
