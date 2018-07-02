@@ -23,8 +23,7 @@ void *main_server()
         n = n + 1;
     }
 
-    while(1)
-    {
+    while(1) {
         int i = 0;
         FD_ZERO(&rdfs);
 
@@ -35,40 +34,33 @@ void *main_server()
         FD_SET(sock, &rdfs);
 
         /* add socket of each client */
-        for(i = 0; i < actual; i++)
-        {
+        for(i = 0; i < actual; i++) {
             FD_SET(game.player_infos[i].socket, &rdfs);
         }
 
-        if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1)
-        {
+        if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1) {
             perror("select()");
             exit(errno);
         }
 
         /* something from standard input : i.e keyboard */
-        if(FD_ISSET(STDIN_FILENO, &rdfs))
-        {
+        if(FD_ISSET(STDIN_FILENO, &rdfs)) {
             /* stop process when type on keyboard */
             break;
-        }
-        else if(FD_ISSET(sock, &rdfs))
-        {
+        } else if(FD_ISSET(sock, &rdfs)) {
             /* new client */
             struct sockaddr_in csin = { 0 };
             socklen_t sinsize = sizeof(csin);
             int csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
-            if(csock == SOCKET_ERROR)
-            {
-            perror("accept()");
-            continue;
+            if(csock == SOCKET_ERROR) {
+                perror("accept()");
+                continue;
             }
 
             /* after connecting the client sends its name */
-            if(read_player(csock, game) == -1)
-            {
-            /* disconnected */
-            continue;
+            if(read_player(csock, game) == -1) {
+                /* disconnected */
+                continue;
             }
 
             /* what is the new maximum fd ? */
@@ -84,28 +76,20 @@ void *main_server()
             game.player_infos[actual] = player_infos;
             
             actual++;
-        }
-        else
-        {
+        } else {
             int i = 0;
-            for(i = 0; i < actual; i++)
-            {
+            for(i = 0; i < actual; i++) {
                 /* a client is talking */
-                if(FD_ISSET(game.player_infos[i].socket, &rdfs))
-                {
-                    
+                if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
                     int c = read_player(game.player_infos[i].socket, game);
                     /* client disconnected */
-                    if(c == 0)
-                    {
+                    if(c == 0) {
                         //closesocket(clients[i].sock);
                         //remove_client(clients, i, &actual);
                         //strncpy(buffer, client.name, BUF_SIZE - 1);
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
                         send_game_to_all_players(actual, game);
-                    }
-                    else
-                    {
+                    } else {
                         send_game_to_all_players(actual, game);
                     }
                     break;
@@ -124,60 +108,56 @@ void *main_server()
 
 int init_connection()
 {
-   SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-   SOCKADDR_IN sin = { 0 };
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    SOCKADDR_IN sin = { 0 };
 
-   if(sock == INVALID_SOCKET)
-   {
-      perror("socket()");
-      exit(errno);
-   }
+    if(sock == INVALID_SOCKET) {
+        perror("socket()");
+        exit(errno);
+    }
 
-   sin.sin_addr.s_addr = htonl(INADDR_ANY);
-   sin.sin_port = htons(PORT);
-   sin.sin_family = AF_INET;
+    sin.sin_addr.s_addr = htonl(INADDR_ANY);
+    sin.sin_port = htons(PORT);
+    sin.sin_family = AF_INET;
 
-   if(bind(sock,(SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR)
-   {
-      perror("bind()");
-      exit(errno);
-   }
+    if(bind(sock,(SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR) {
+        perror("bind()");
+        exit(errno);
+    }
 
-   if(listen(sock, MAX_PLAYERS) == SOCKET_ERROR)
-   {
-      perror("listen()");
-      exit(errno);
-   }
+    if(listen(sock, MAX_PLAYERS) == SOCKET_ERROR) {
+        perror("listen()");
+        exit(errno);
+    }
 
-   return sock;
+    return sock;
 }
 
 int read_player(SOCKET sock, t_game game)
 {
-   int n = 0;
+    int n = 0;
 
-   if((n = recv(sock, &game, sizeof(game) - 1, 0)) < 0) {
-      perror("recv()");
-      /* if recv error we disonnect the client */
-      n = 0;
-   }
+    if((n = recv(sock, &game, sizeof(game) - 1, 0)) < 0) {
+        perror("recv()");
+        /* if recv error we disonnect the client */
+        n = 0;
+    }
 
-   //game[n] = 0;
+    //game[n] = 0;
 
-   return n;
+    return n;
 }
 
 void send_game_to_all_players(int actual, t_game game)
 {
-   printf("send game for all\n");
+    printf("send game for all\n");
 
-   int i = 0;
+    int i = 0;
 
-   for(i = 0; i < actual; i++)
-   {
+    for(i = 0; i < actual; i++) {
         printf("for(i = 0; i < actual; i++) de send game\n");
         write_player(game.player_infos[i].socket, game);
-   }
+    }
 }
 
 void write_player(SOCKET sock, t_game game)
