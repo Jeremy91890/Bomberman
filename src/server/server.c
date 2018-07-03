@@ -101,8 +101,9 @@ void *main_server()
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
                         send_game_to_all_players(actual, game);
                     } else {
-                        printf("YOLO\n");
-                        game = go_logique_server(game, actual, req);
+                        printf("CurrDir : %d\n", game.player_infos[actual].current_dir);
+                        printf("WantDir : %d\n", req.dir);
+                        go_logique_server(&game, actual, &req);
                         send_game_to_all_players(actual, game);
                     }
                     break;

@@ -104,7 +104,7 @@ int on_game(char *ip_text) {
                 {
                     case SDLK_UP:
                         printf("SDLK_UP");
-                        dir_pressed(&player, TOP);
+                        //dir_pressed(&player, TOP);
                         // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
 
                         //game.player_infos[0] = player;
@@ -112,7 +112,7 @@ int on_game(char *ip_text) {
                         //display_character(game.player_infos);
                         break;
                     case SDLK_DOWN:
-                        dir_pressed(&player, DOWN);
+                        dir_pressed(sock, &player, DOWN);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -127,7 +127,7 @@ int on_game(char *ip_text) {
                         }
                         break;
                     case SDLK_LEFT:
-                        dir_pressed(&player, LEFT);
+                        //dir_pressed(&player, LEFT);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -135,7 +135,7 @@ int on_game(char *ip_text) {
                         printf("SDLK_LEFT");
                         break;
                     case SDLK_RIGHT:
-                        dir_pressed(&player, RIGHT);
+                        //dir_pressed(&player, RIGHT);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -159,12 +159,21 @@ int on_game(char *ip_text) {
 }
 
 // Quand une flèche est pressée
-void dir_pressed(t_player_infos *player, int dir) {
+void dir_pressed(int sock, t_player_infos *player, int dir) {
     // si le perso ne regarde deja dans direction on le fait avancer
     if(change_dir(player, dir) == 0) {
         move(player, dir);
     }
-
+    t_client_request client_request;
+    client_request.x_pos = player->x_pos;
+    client_request.y_pos = player->y_pos;
+    client_request.dir = player->current_dir;
+    client_request.magic = player->socket;
+    if(send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
+        perror("send()");
+        exit(errno);
+    }
 }
 
 // retourne 1 si la direction a changée
@@ -172,15 +181,7 @@ int change_dir(t_player_infos *player, int dir) {
     if(player->current_dir == dir) {
         return 0;
     }
-    //player->current_dir = dir;
-    t_client_request client_request;
-    client_request.x_pos = player->x_pos;
-    client_request.y_pos = player->y_pos;
-    if(send(player->socket, &client_request, sizeof(client_request), 0) < 0)
-    {
-        perror("send()");
-        exit(errno);
-    }
+    player->current_dir = dir;
     return 1;
 }
 
