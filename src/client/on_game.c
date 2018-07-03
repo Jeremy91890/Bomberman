@@ -74,7 +74,9 @@ int on_game(char *ip_text) {
     printf("\nSOCKET player 3 \n %d", game.player_infos[3].socket);
 
     for(i = 0; i < 4; i++) {
-        if(game.player_infos[i].socket == sock) {
+        // je fais sock + 1 juste pour que ça marche que pour le joueur 1 et pas rester bloqué, 
+        //il faut trouver le problème des sockets stockées dans la struct player_info
+        if(game.player_infos[i].socket == sock + 1) {
             player = game.player_infos[i];
             printf("i = \n %d", i);
             printf("first x pos \n%d", game.player_infos[i].x_pos);
@@ -96,25 +98,36 @@ int on_game(char *ip_text) {
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_UP:
-                         printf("x pos \n%d", player.x_pos);
-                         printf("y pos \n%d", player.y_pos);
-                    
-                         printf("x pos game \n%d", game.player_infos[0].x_pos);
-                         printf("y pos game \n%d", game.player_infos[0].y_pos);
-                        if(change_dir(&player, TOP) == 1) {
-                            game.player_infos[0] = player;
-                           // display_map(game.map);
-                            display_character(game.player_infos);
-                        }
                         printf("SDLK_UP");
+                        dir_pressed(&player, TOP);
+                        // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
+                        game.player_infos[0] = player;
+                        display_map(game.map);
+                        display_character(game.player_infos);
                         break;
                     case SDLK_DOWN:
-                        if(change_dir(&player, DOWN) == 1) {
-                            game.player_infos[0] = player;
-                            //display_map(game.map);
-                            display_character(game.player_infos);
-                        }
+                        dir_pressed(&player, DOWN);
+                        // Pour tester sans le serveur
+                        game.player_infos[0] = player;
+                        display_map(game.map);
+                        display_character(game.player_infos);
                         printf("SDLK_DOWN");
+                        break;
+                    case SDLK_LEFT:
+                        dir_pressed(&player, LEFT);
+                        // Pour tester sans le serveur
+                        game.player_infos[0] = player;
+                        display_map(game.map);
+                        display_character(game.player_infos);
+                        printf("SDLK_LEFT");
+                        break;
+                    case SDLK_RIGHT:
+                        dir_pressed(&player, RIGHT);
+                        // Pour tester sans le serveur
+                        game.player_infos[0] = player;
+                        display_map(game.map);
+                        display_character(game.player_infos);
+                        printf("SDLK_RIGHT");
                         break;
                     default:
                         break;
@@ -134,6 +147,15 @@ int on_game(char *ip_text) {
     return GO_QUIT;
 }
 
+// Quand une flèche est pressée
+void dir_pressed(t_player_infos *player, int dir) {
+    // si le perso ne regarde deja dans direction on le fait avancer
+    if(change_dir(player, dir) == 0) {
+        move(player, dir);
+    }
+    
+}
+
 // retourne 1 si la direction a changée
 int change_dir(t_player_infos *player, int dir) {
     if(player->current_dir == dir) {
@@ -143,6 +165,22 @@ int change_dir(t_player_infos *player, int dir) {
     return 1;
 }
 
-// void move(int dir) {
-
-// }
+void move(t_player_infos *player, int dir) {
+    switch (dir)
+    {
+        case DOWN:
+            player->y_pos += 1;
+            break;
+        case TOP:
+            player->y_pos -= 1;
+            break;
+        case RIGHT:
+            player->x_pos += 1;
+            break;
+        case LEFT:
+            player->x_pos -= 1;
+            break;
+        default:
+            break;
+    }
+}

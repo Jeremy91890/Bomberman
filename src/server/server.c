@@ -52,6 +52,9 @@ void *main_server()
             struct sockaddr_in csin = { 0 };
             socklen_t sinsize = sizeof(csin);
             int csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
+            printf("\n server client Socket %d", sock);
+            printf("\n server csock %d", csock);
+
             if(csock == SOCKET_ERROR) {
                 perror("accept()");
                 continue;
