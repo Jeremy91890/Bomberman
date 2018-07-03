@@ -43,15 +43,17 @@ int on_game(char *ip_text) {
     }
     // --- end
 
-    t_game game;
+    t_client_request client_request;
 
-    if(send(sock, &game, sizeof(game), 0) < 0)
+    if(send(sock, &client_request, sizeof(client_request), 0) < 0)
     {
         perror("send()");
         exit(errno);
     }
 
     int n = 0;
+
+    t_game game;
 
     if((n = recv(sock, &game, sizeof(game), 0)) < 0)
     {
@@ -82,6 +84,7 @@ int on_game(char *ip_text) {
             printf("first x pos \n%d", game.player_infos[i].x_pos);
         }
     }
+
 
     int running = 1;
     SDL_Event event;

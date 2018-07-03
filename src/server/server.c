@@ -153,7 +153,7 @@ int read_player(SOCKET sock, t_client_request req)
         n = 0;
     }
 
-    printf("player server \n %d", game.player_infos[0].x_pos);
+    //printf("player server \n %d", game.player_infos[0].x_pos);
     //game[n] = 0;
 
     return n;
