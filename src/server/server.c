@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "../headers/socket.h"
 #include "../headers/generate_map.h"
+#include "../headers/game.h"
 
 void *main_server()
 {
@@ -15,6 +16,7 @@ void *main_server()
 
     fd_set rdfs;
 
+    t_client_request req;
     t_game game;
     init_map(game.map);
     int n = 0;
@@ -62,7 +64,7 @@ void *main_server()
             }
 
             /* after connecting the client sends its name */
-            if(read_player(csock, game) == -1) {
+            if(read_player(csock, req) == -1) {
                 /* disconnected */
                 continue;
             }
@@ -85,7 +87,7 @@ void *main_server()
             for(i = 0; i < actual; i++) {
                 /* a client is talking */
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
-                    int c = read_player(game.player_infos[i].socket, game);
+                    int c = read_player(game.player_infos[i].socket, req);
                     /* client disconnected */
                     if(c == 0) {
                         //closesocket(clients[i].sock);
@@ -94,6 +96,7 @@ void *main_server()
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
                         send_game_to_all_players(actual, game);
                     } else {
+                        game = go_logique_server(game, actual, req);
                         send_game_to_all_players(actual, game);
                     }
                     break;
@@ -137,11 +140,11 @@ int init_connection()
     return sock;
 }
 
-int read_player(SOCKET sock, t_game game)
+int read_player(SOCKET sock, t_client_request req)
 {
     int n = 0;
 
-    if((n = recv(sock, &game, sizeof(game) - 1, 0)) < 0) {
+    if((n = recv(sock, &req, sizeof(req) - 1, 0)) < 0) {
         perror("recv()");
         /* if recv error we disonnect the client */
         n = 0;
