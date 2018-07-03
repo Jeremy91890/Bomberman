@@ -56,6 +56,10 @@ void *main_server()
                 perror("accept()");
                 continue;
             }
+            else if(actual >= MAX_PLAYERS) {
+                close(csock);
+                continue;
+            }
 
             /* after connecting the client sends its name */
             if(read_player(csock, game) == -1) {
@@ -74,7 +78,7 @@ void *main_server()
             t_player_infos player_infos = add_new_player(actual);
             player_infos.socket = csock;
             game.player_infos[actual] = player_infos;
-            
+
             actual++;
         } else {
             int i = 0;
@@ -168,5 +172,3 @@ void write_player(SOCKET sock, t_game game)
         exit(errno);
     }
 }
-
-
