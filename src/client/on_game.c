@@ -69,19 +69,19 @@ int on_game(char *ip_text) {
 
     // On récupère le bon joueur dans la liste des joueurs connectés
     int i;
-    printf("\nSOCKET client \n %d", sock);
-    printf("\nSOCKET player 0 \n %d", game.player_infos[0].socket);
-    printf("\nSOCKET player 1 \n %d", game.player_infos[1].socket);
-    printf("\nSOCKET player 2 \n %d", game.player_infos[2].socket);
-    printf("\nSOCKET player 3 \n %d", game.player_infos[3].socket);
+    printf("SOCKET client : %d\n", sock);
+    printf("SOCKET player 0 : %d\n", game.player_infos[0].socket);
+    printf("SOCKET player 1 : %d\n", game.player_infos[1].socket);
+    printf("SOCKET player 2 : %d\n", game.player_infos[2].socket);
+    printf("SOCKET player 3 : %d\n", game.player_infos[3].socket);
 
     for(i = 0; i < 4; i++) {
-        // je fais sock + 1 juste pour que ça marche que pour le joueur 1 et pas rester bloqué, 
+        // je fais sock + 1 juste pour que ça marche que pour le joueur 1 et pas rester bloqué,
         //il faut trouver le problème des sockets stockées dans la struct player_info
         if(game.player_infos[i].socket == sock + 1) {
             player = game.player_infos[i];
-            printf("i = \n %d", i);
-            printf("first x pos \n%d", game.player_infos[i].x_pos);
+            printf("i = %d\n", i);
+            printf("first x pos : %d\n", game.player_infos[i].x_pos);
         }
     }
 
@@ -118,6 +118,13 @@ int on_game(char *ip_text) {
                         //display_map(game.map);
                         //display_character(game.player_infos);
                         printf("SDLK_DOWN");
+                        int n = 0;
+
+                        if((n = recv(sock, &game, sizeof(game), 0)) < 0)
+                        {
+                            perror("recv()");
+                            exit(errno);
+                        }
                         break;
                     case SDLK_LEFT:
                         dir_pressed(&player, LEFT);
@@ -141,13 +148,7 @@ int on_game(char *ip_text) {
                 break;
         }
         //Attention cette fonction bloque l'affichage car on est en attente de la réponse du serv
-        int n = 0;
 
-        if((n = recv(sock, &game, sizeof(game), 0)) < 0)
-        {
-            perror("recv()");
-            exit(errno);
-        }
         display_map(game.map);
         display_character(game.player_infos);
     }
@@ -163,7 +164,7 @@ void dir_pressed(t_player_infos *player, int dir) {
     if(change_dir(player, dir) == 0) {
         move(player, dir);
     }
-    
+
 }
 
 // retourne 1 si la direction a changée

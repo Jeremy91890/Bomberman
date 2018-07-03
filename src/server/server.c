@@ -26,6 +26,7 @@ void *main_server()
     }
 
     while(1) {
+        printf("Viens !!\n");
         int i = 0;
         FD_ZERO(&rdfs);
 
@@ -54,8 +55,8 @@ void *main_server()
             struct sockaddr_in csin = { 0 };
             socklen_t sinsize = sizeof(csin);
             int csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
-            printf("\n server client Socket %d", sock);
-            printf("\n server csock %d", csock);
+            printf("server client Socket %d\n", sock);
+            printf("server csock %d\n", csock);
 
             if(csock == SOCKET_ERROR) {
                 perror("accept()");
@@ -90,6 +91,7 @@ void *main_server()
             for(i = 0; i < actual; i++) {
                 /* a client is talking */
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
+                    printf("YOLOOOO\n");
                     int c = read_player(game.player_infos[i].socket, req);
                     /* client disconnected */
                     if(c == 0) {
@@ -99,6 +101,7 @@ void *main_server()
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
                         send_game_to_all_players(actual, game);
                     } else {
+                        printf("YOLO\n");
                         game = go_logique_server(game, actual, req);
                         send_game_to_all_players(actual, game);
                     }
@@ -106,6 +109,7 @@ void *main_server()
                 }
             }
         }
+        printf("Pars !!\n");
     }
 
     //clear_clients(clients, actual);
@@ -153,6 +157,7 @@ int read_player(SOCKET sock, t_client_request req)
         n = 0;
     }
 
+    printf("dir wanted : %d\n", req.dir);
     //printf("player server \n %d", game.player_infos[0].x_pos);
     //game[n] = 0;
 
