@@ -63,6 +63,18 @@ int on_game(char *ip_text) {
     display_character(game.player_infos);
     //A terme la fonction draw_map va devoir afficher tout quelque soit l'élement
 
+    t_player_infos player;
+
+    // On récupère le bon joueur dans la liste des joueurs connectés
+    int i;
+    for(i = 0; i < sizeof(game.player_infos); i++) {
+        if(game.player_infos[i].socket == sock) {
+            player = game.player_infos[i];
+            printf("first x pos \n%d", game.player_infos[i].x_pos);
+
+        }
+    }
+
     int running = 1;
     SDL_Event event;
     while (running)
@@ -78,9 +90,24 @@ int on_game(char *ip_text) {
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_UP:
+                         printf("x pos \n%d", player.x_pos);
+                         printf("y pos \n%d", player.y_pos);
+                    
+                         printf("x pos game \n%d", game.player_infos[0].x_pos);
+                         printf("y pos game \n%d", game.player_infos[0].y_pos);
+                        if(change_dir(&player, TOP) == 1) {
+                            game.player_infos[0] = player;
+                           // display_map(game.map);
+                            display_character(game.player_infos);
+                        }
                         printf("SDLK_UP");
                         break;
                     case SDLK_DOWN:
+                        if(change_dir(&player, DOWN) == 1) {
+                            game.player_infos[0] = player;
+                            //display_map(game.map);
+                            display_character(game.player_infos);
+                        }
                         printf("SDLK_DOWN");
                         break;
                     default:
@@ -100,3 +127,16 @@ int on_game(char *ip_text) {
 
     return GO_QUIT;
 }
+
+// retourne 1 si la direction a changée
+int change_dir(t_player_infos *player, int dir) {
+    if(player->current_dir == dir) {
+        return 0;
+    }
+    player->current_dir = dir;
+    return 1;
+}
+
+// void move(int dir) {
+
+// }
