@@ -37,12 +37,11 @@ t_game move_player(t_game game, int actual, t_client_request req) {
         else if (wanted_y - current_y = -1)
             next_dir = 4;
     }
+    game.player_infos[actual].current_dir = next_dir;
 
     if (game.map[wanted_index] == 0b00000111) {
-        //OK
-    }
-    else {
-        //KO
+        game.player_infos[actual].x_pos = wanted_x;
+        game.player_infos[actual].y_pos = wanted_y;
     }
 
     return game;
