@@ -85,6 +85,8 @@ int on_game(char *ip_text) {
         }
     }
 
+    //t_client_request client_request;
+
 
     int running = 1;
     SDL_Event event;
@@ -104,32 +106,33 @@ int on_game(char *ip_text) {
                         printf("SDLK_UP");
                         dir_pressed(&player, TOP);
                         // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
-                        game.player_infos[0] = player;
-                        display_map(game.map);
-                        display_character(game.player_infos);
+
+                        //game.player_infos[0] = player;
+                        //display_map(game.map);
+                        //display_character(game.player_infos);
                         break;
                     case SDLK_DOWN:
                         dir_pressed(&player, DOWN);
                         // Pour tester sans le serveur
-                        game.player_infos[0] = player;
-                        display_map(game.map);
-                        display_character(game.player_infos);
+                        //game.player_infos[0] = player;
+                        //display_map(game.map);
+                        //display_character(game.player_infos);
                         printf("SDLK_DOWN");
                         break;
                     case SDLK_LEFT:
                         dir_pressed(&player, LEFT);
                         // Pour tester sans le serveur
-                        game.player_infos[0] = player;
-                        display_map(game.map);
-                        display_character(game.player_infos);
+                        //game.player_infos[0] = player;
+                        //display_map(game.map);
+                        //display_character(game.player_infos);
                         printf("SDLK_LEFT");
                         break;
                     case SDLK_RIGHT:
                         dir_pressed(&player, RIGHT);
                         // Pour tester sans le serveur
-                        game.player_infos[0] = player;
-                        display_map(game.map);
-                        display_character(game.player_infos);
+                        //game.player_infos[0] = player;
+                        //display_map(game.map);
+                        //display_character(game.player_infos);
                         printf("SDLK_RIGHT");
                         break;
                     default:
@@ -138,11 +141,15 @@ int on_game(char *ip_text) {
                 break;
         }
         //Attention cette fonction bloque l'affichage car on est en attente de la réponse du serv
-        /*if((n = recv(sock, &game, sizeof(game), 0)) < 0)
+        int n = 0;
+
+        if((n = recv(sock, &game, sizeof(game), 0)) < 0)
         {
             perror("recv()");
             exit(errno);
-        }*/
+        }
+        display_map(game.map);
+        display_character(game.player_infos);
     }
 
     closesocket(sock);
@@ -164,7 +171,15 @@ int change_dir(t_player_infos *player, int dir) {
     if(player->current_dir == dir) {
         return 0;
     }
-    player->current_dir = dir;
+    //player->current_dir = dir;
+    t_client_request client_request;
+    client_request.x_pos = player->x_pos;
+    client_request.y_pos = player->y_pos;
+    if(send(player->socket, &client_request, sizeof(client_request), 0) < 0)
+    {
+        perror("send()");
+        exit(errno);
+    }
     return 1;
 }
 

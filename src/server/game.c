@@ -26,7 +26,7 @@ t_game move_player(t_game game, int actual, t_client_request req) {
 
     int wanted_x = req.x_pos;
     int wanted_y = req.y_pos;
-    // int wanted_index = NB_BLOCS_WIDTH * wanted_y + wanted_x;
+    int wanted_index = NB_BLOCS_WIDTH * wanted_y + wanted_x;
 
     // if (wanted_x - current_x == 1)
     //     next_dir = 1;
