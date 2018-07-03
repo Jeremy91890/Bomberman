@@ -67,11 +67,17 @@ int on_game(char *ip_text) {
 
     // On récupère le bon joueur dans la liste des joueurs connectés
     int i;
-    for(i = 0; i < sizeof(game.player_infos); i++) {
+    printf("SOCKET \n %d", sock);
+    printf("SOCKET player 0 \n %d", game.player_infos[0].socket);
+    printf("SOCKET player 1 \n %d", game.player_infos[1].socket);
+    printf("SOCKET player 2 \n %d", game.player_infos[2].socket);
+    printf("SOCKET player 3 \n %d", game.player_infos[3].socket);
+
+    for(i = 0; i < 4; i++) {
         if(game.player_infos[i].socket == sock) {
             player = game.player_infos[i];
+            printf("i = \n %d", i);
             printf("first x pos \n%d", game.player_infos[i].x_pos);
-
         }
     }
 
