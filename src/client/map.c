@@ -81,34 +81,34 @@ void display_character(t_player_infos *player_infos)
 
     int i = 0;
     while(i < (MAX_PLAYERS)) {
-        printf("enter while affichage players : %d\n", player_infos[i].connected);
+        //printf("enter while affichage players : %d\n", player_infos[i].connected);
 
         //Un switch bien moche -> a terme le decouper
         switch(i) {
             case 0:
-                printf("case 0\n");
+                //printf("case 0\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
-                        printf("player info x pos : %d\n", player_infos[i].x_pos);
+                        //printf("player info x pos : %d\n", player_infos[i].x_pos);
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
 			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_R, NULL, SCREEN, &Rect_dest);
                         break;
                     case 2:
-                                            printf("player info x pos : %d\n", player_infos[i].x_pos);
+                                            //printf("player info x pos : %d\n", player_infos[i].x_pos);
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
 			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_F, NULL, SCREEN, &Rect_dest);
                         break;
                     case 3:
-                                            printf("player info x pos : %d\n", player_infos[i].x_pos);
+                                            //printf("player info x pos : %d\n", player_infos[i].x_pos);
 
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
 			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
                         SDL_BlitSurface(sprite_Bman_01_L, NULL, SCREEN, &Rect_dest);
                         break;
                     case 4:
-                                            printf("player info x pos : %d\n", player_infos[i].x_pos);
+                                            //printf("player info x pos : %d\n", player_infos[i].x_pos);
 
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
 			            Rect_dest.y = (player_infos[i].y_pos * (BMAN_HEIGHT / 2)) - (BMAN_HEIGHT / 2);
@@ -119,7 +119,7 @@ void display_character(t_player_infos *player_infos)
                 }
                 break;
             case 1:
-                printf("case 1\n");
+                //printf("case 1\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
@@ -146,7 +146,7 @@ void display_character(t_player_infos *player_infos)
                 }
                 break;
             case 2:
-                printf("case 2\n");
+                //printf("case 2\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
@@ -173,7 +173,7 @@ void display_character(t_player_infos *player_infos)
                 }
                 break;
             case 3:
-                printf("case 3\n");
+                //printf("case 3\n");
                 switch(player_infos[i].current_dir) {
                     case 1:
                         Rect_dest.x = player_infos[i].x_pos * BMAN_WIDTH;
