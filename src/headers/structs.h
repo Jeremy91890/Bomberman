@@ -19,6 +19,12 @@ typedef enum        bloc_type
     UNDESTRUCTABLE_WALL = 0b01000111
 }                   bloc_type;
 
+typedef struct      s_bomb_timer
+{
+    int             bomb_index;
+    int             explosion_time;
+}                   t_bomb_timer;
+
 typedef struct      s_client_request
 {
     unsigned int    magic;

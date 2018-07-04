@@ -7,12 +7,17 @@
 #include "../headers/generate_map.h"
 #include "../headers/game.h"
 
+//struct t_bomb_timer *bomb_timers;
+
 void *main_server()
 {
     SOCKET sock = init_connection();
     /* the index for the array */
     int actual = 0;
     int max = sock;
+
+    //bomb_timers = malloc(195 * sizeof(t_bomb_timer));
+
 
     fd_set rdfs;
 
@@ -126,6 +131,9 @@ void *main_server()
                     }
                     break;
                 }
+                //Ici check si bomb explose
+
+
             }
         }
         //printf("Pars !!\n");
