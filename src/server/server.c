@@ -29,7 +29,7 @@ void *main_server()
     }
 
     while(1) {
-        printf("Viens !!\n");
+        //printf("Viens !!\n");
         int i = 0;
         FD_ZERO(&rdfs);
 
@@ -128,7 +128,7 @@ void *main_server()
                 }
             }
         }
-        printf("Pars !!\n");
+        //printf("Pars !!\n");
     }
 
     //clear_clients(clients, actual);

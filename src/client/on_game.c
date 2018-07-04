@@ -134,7 +134,7 @@ int on_game(char *ip_text) {
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_UP:
-                        printf("SDLK_UP");
+                        printf("SDLK_UP\n");
                         dir_pressed(sock, &player, TOP);
                         // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
 
@@ -148,7 +148,7 @@ int on_game(char *ip_text) {
                         //game.player_infos[0] = player;
                         //display_map(game.map);
                         //display_character(game.player_infos);
-                        printf("SDLK_DOWN");
+                        printf("SDLK_DOWN\n");
                         break;
                     case SDLK_LEFT:
                         dir_pressed(sock, &player, LEFT);
@@ -156,7 +156,7 @@ int on_game(char *ip_text) {
                         //game.player_infos[0] = player;
                         //display_map(game.map);
                         //display_character(game.player_infos);
-                        printf("SDLK_LEFT");
+                        printf("SDLK_LEFT\n");
                         break;
                     case SDLK_RIGHT:
                         dir_pressed(sock, &player, RIGHT);
@@ -164,7 +164,11 @@ int on_game(char *ip_text) {
                         //game.player_infos[0] = player;
                         //display_map(game.map);
                         //display_character(game.player_infos);
-                        printf("SDLK_RIGHT");
+                        printf("SDLK_RIGHT\n");
+                        break;
+                    case SDLK_SPACE:
+                        bomb_pressed(sock, &player);
+                        printf("SDLK_BOMB\n");
                         break;
                     default:
                         break;
@@ -178,6 +182,21 @@ int on_game(char *ip_text) {
     closesocket(sock);
 
     return GO_QUIT;
+}
+
+void bomb_pressed(int sock, t_player_infos *player) {
+    // si le perso ne regarde deja dans direction on le fait avancer
+    t_client_request client_request;
+    client_request.x_pos = player->x_pos;
+    client_request.y_pos = player->y_pos;
+    client_request.dir = player->current_dir;
+    client_request.magic = player->socket;
+    client_request.command = 1;
+    if(send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
+        perror("send()");
+        exit(errno);
+    }
 }
 
 // Quand une flèche est pressée
