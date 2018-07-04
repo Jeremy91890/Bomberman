@@ -25,6 +25,12 @@ typedef struct      s_bomb_timer
     int             explosion_time;
 }                   t_bomb_timer;
 
+typedef struct      s_bomb_timers
+{
+    t_bomb_timer    bomb_timer[195];
+    int             number_of_bombs;
+}                   t_bomb_timers;
+
 typedef struct      s_client_request
 {
     unsigned int    magic;

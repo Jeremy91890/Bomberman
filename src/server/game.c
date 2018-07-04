@@ -51,6 +51,11 @@ t_game place_bomb(t_game game, int actual, t_client_request req) {
     if (game.player_infos[actual].bombs_left > 0 && game.map[wanted_bomb_index] != 0b00010111) {
         game.player_infos[actual].bombs_left -= 1;
         game.map[wanted_bomb_index] = 0b00010111;
+        
+        /*bomb_timers.number_of_bombs = bomb_timers.number_of_bombs + 1;
+        bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
+        bomb_timers.bomb_timer[bomb_timers.number_of_bombs].bomb_index = wanted_bomb_index;
+        bomb_timers.bomb_timer[bomb_timers.number_of_bombs].explosion_time = (unsigned)time(NULL) + BOMB_SEC;*/
     }
     return game;
 }

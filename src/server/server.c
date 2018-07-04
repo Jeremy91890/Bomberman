@@ -7,7 +7,7 @@
 #include "../headers/generate_map.h"
 #include "../headers/game.h"
 
-//struct t_bomb_timer *bomb_timers;
+t_bomb_timers bomb_timers;
 
 void *main_server()
 {
@@ -16,8 +16,24 @@ void *main_server()
     int actual = 0;
     int max = sock;
 
-    //bomb_timers = malloc(195 * sizeof(t_bomb_timer));
+    
+    bomb_timers.number_of_bombs = 0;
+    //bomb_timers.bomb_timer = malloc(bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
 
+    /*t_bomb_timer bomb_timer;
+    bomb_timer.bomb_index = 1;
+    bomb_timer.explosion_time = 1;*/
+
+    /*bomb_timers->number_of_bombs = 1;
+    bomb_timers = malloc(bomb_timers->number_of_bombs * sizeof(t_bomb_timers));
+    bomb_timers->bomb_timer[bomb_timers->number_of_bombs].bomb_index = 1;
+    bomb_timers->bomb_timer[bomb_timers->number_of_bombs].explosion_time = 1;*/
+
+
+    /*bomb_timers[1].bomb_index = 1;
+    bomb_timers[1].explosion_time = 1;*/
+
+   
 
     fd_set rdfs;
 
@@ -132,7 +148,32 @@ void *main_server()
                     break;
                 }
                 //Ici check si bomb explose
+                bomb_timers.number_of_bombs = bomb_timers.number_of_bombs + 1;
+                //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
+                //t_bomb_timer bomb_timer;
+                //bomb_timer.bomb_index = 1;
+                //bomb_timer.explosion_time = (unsigned)time(NULL) + BOMB_SEC;
+                //bomb_timers.bomb_timer[bomb_timers.number_of_bombs] = bomb_timer;
+                bomb_timers.bomb_timer[bomb_timers.number_of_bombs].bomb_index = 1;
+                bomb_timers.bomb_timer[bomb_timers.number_of_bombs].explosion_time = (unsigned)time(NULL) + BOMB_SEC;
+                //add_bomb(&bomb_timers, 1, (unsigned)time(NULL) + BOMB_SEC);
 
+                int b = 0;
+                for (b = 0; b < bomb_timers.number_of_bombs; b++) {
+                    printf("ENTER FOR BOMB\n");
+                    //Temps actuel egal ou sup a l explosion prevu
+                    fprintf(stdout, "%u\n", (unsigned)time(NULL));
+                    fprintf(stdout, "%u\n", bomb_timers.bomb_timer[b].explosion_time);
+                    printf("%d\n", bomb_timers.bomb_timer[b].bomb_index);
+                    if ((unsigned)time(NULL) >= bomb_timers.bomb_timer[b].explosion_time) {
+                        printf("EXPLOSIONSSSS\n");
+                        //bomb_timers.bomb_timer[b].bomb_index = NULL;
+                        //bomb_timers.bomb_timer[b].explosion_time = NULL;
+                        bomb_timers.number_of_bombs = bomb_timers.number_of_bombs - 1;
+                        //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
+                        sleep(1000);
+                    }
+                }
 
             }
         }
@@ -145,6 +186,13 @@ void *main_server()
     printf("quit\n");
     //destroy the warning
     pthread_exit(NULL);
+}
+
+void add_bomb(t_bomb_timers *bomb_timers, int bomb_index, int explosion_time) {
+    bomb_timers->number_of_bombs = bomb_timers->number_of_bombs + 1;
+    //bomb_timers->bomb_timer = realloc(bomb_timers->bomb_timer, bomb_timers->number_of_bombs * sizeof(bomb_timers->bomb_timer));
+    bomb_timers->bomb_timer[bomb_timers->number_of_bombs].bomb_index = bomb_index;
+    bomb_timers->bomb_timer[bomb_timers->number_of_bombs].explosion_time = explosion_time;
 }
 
 int init_connection()
