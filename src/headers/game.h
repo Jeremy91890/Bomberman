@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include "structs.h"
 
-void go_logique_server(t_game *game, int actual, t_client_request *req);
-void turn_player(t_game *game, int actual, t_client_request *req);
+t_game go_logique_server(t_game game, int actual, t_client_request req);
+t_game turn_player(t_game game, int actual, t_client_request req);
 // t_game move_player(t_game game, int actual, t_client_request req);
 // t_game put_bomb(t_game game, int actual, t_client_request req);
 

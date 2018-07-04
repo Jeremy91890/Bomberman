@@ -2,24 +2,27 @@
 #include "../headers/server.h"
 #include "../headers/map.h"
 
-void go_logique_server(t_game *game, int actual, t_client_request *req) {
+t_game go_logique_server(t_game game, int actual, t_client_request req) {
     printf("Actual : %d\n", actual);
-    t_player_infos pi = game->player_infos[actual];
+    t_player_infos pi = game.player_infos[actual];
     printf("Current dir : %d\n", pi.current_dir);
-    printf("Wanted dir : %d\n", req->dir);
+    printf("Wanted dir : %d\n", req.dir);
 
-    if (req->dir != pi.current_dir)
-        turn_player(game, actual, req);
+    if (req.dir != 0 && req.dir != pi.current_dir)
+        game = turn_player(game, actual, req);
     // else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos)
     //     game = move_player(game, actual, req);
     // else if (req.command == 1)
     //     game = put_bomb(game, actual, req);
 
     //TODO : Check map fire, explosion, player HP, ...
+
+    return game;
 }
 
-void turn_player(t_game *game, int actual, t_client_request *req) {
-    game->player_infos[actual].current_dir = req->dir;
+t_game turn_player(t_game game, int actual, t_client_request req) {
+    game.player_infos[actual].current_dir = req.dir;
+    return game;
 }
 
 // t_game move_player(t_game game, int actual, t_client_request req) {

@@ -110,7 +110,7 @@ void *main_server()
                     } else {
                         printf("CurrDir : %d\n", game.player_infos[i].current_dir);
                         printf("WantDir : %d\n", req.dir);
-                        go_logique_server(&game, i, &req);
+                        game = go_logique_server(game, i, req);
                         send_game_to_all_players(actual, game);
                     }
                     break;
