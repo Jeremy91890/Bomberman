@@ -18,6 +18,9 @@ void *main_server()
 
     t_client_request req;
     t_game game;
+    int i;
+    for (i = 0 ; i < MAX_PLAYERS ; i++)
+        game.player_infos[i].socket = 0;
     init_map(game.map);
     int n = 0;
     while(n < sizeof(game.map)) {

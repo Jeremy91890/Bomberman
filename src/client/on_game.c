@@ -68,22 +68,26 @@ int on_game(char *ip_text) {
     t_player_infos player;
 
     // On récupère le bon joueur dans la liste des joueurs connectés
-    int i;
     printf("SOCKET client : %d\n", sock);
     printf("SOCKET player 0 : %d\n", game.player_infos[0].socket);
     printf("SOCKET player 1 : %d\n", game.player_infos[1].socket);
     printf("SOCKET player 2 : %d\n", game.player_infos[2].socket);
     printf("SOCKET player 3 : %d\n", game.player_infos[3].socket);
 
+    int actual_index;
+
+    int i;
     for(i = 0; i < 4; i++) {
         // je fais sock + 1 juste pour que ça marche que pour le joueur 1 et pas rester bloqué,
         //il faut trouver le problème des sockets stockées dans la struct player_info
-        if(game.player_infos[i].socket == sock + 1) {
-            player = game.player_infos[i];
-            printf("i = %d\n", i);
-            printf("first x pos : %d\n", game.player_infos[i].x_pos);
+        if(game.player_infos[i].socket != 0) {
+            actual_index = i;
         }
     }
+
+    printf("Je suis Joueur : %d\n", actual_index);
+
+    player = game.player_infos[actual_index];
 
     //t_client_request client_request;
 
@@ -112,7 +116,7 @@ int on_game(char *ip_text) {
                         //display_character(game.player_infos);
                         break;
                     case SDLK_DOWN:
-                        dir_pressed(sock, &player, DOWN);
+                        dir_pressed(sock, player, DOWN);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -125,6 +129,7 @@ int on_game(char *ip_text) {
                             perror("recv()");
                             exit(errno);
                         }
+                        player = game.player_infos[actual_index];
                         break;
                     case SDLK_LEFT:
                         //dir_pressed(sock, &player, LEFT);
@@ -163,16 +168,16 @@ int on_game(char *ip_text) {
 }
 
 // Quand une flèche est pressée
-void dir_pressed(int sock, t_player_infos *player, int dir) {
+void dir_pressed(int sock, t_player_infos player, int dir) {
     // si le perso ne regarde deja dans direction on le fait avancer
-    if(change_dir(player, dir) == 0) {
-        move(player, dir);
+    if(change_dir(&player, dir) == 0) {
+        move(&player, dir);
     }
     t_client_request client_request;
-    client_request.x_pos = player->x_pos;
-    client_request.y_pos = player->y_pos;
-    client_request.dir = player->current_dir;
-    client_request.magic = player->socket;
+    client_request.x_pos = player.x_pos;
+    client_request.y_pos = player.y_pos;
+    client_request.dir = player.current_dir;
+    client_request.magic = player.socket;
     if(send(sock, &client_request, sizeof(client_request), 0) < 0)
     {
         perror("send()");
