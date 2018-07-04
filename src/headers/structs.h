@@ -4,6 +4,14 @@
 #define MAX_PLAYERS     4
 #define MAP_SIZE        195
 
+typedef enum        direction
+{
+    RIGHT = 1,
+    DOWN = 2,
+    LEFT = 3,
+    TOP = 4
+}                   direction;
+
 typedef enum        bloc_type
 {
     GROUND = 0b00000111,

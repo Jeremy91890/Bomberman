@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include "../headers/socket.h"
 #include "../headers/generate_map.h"
+#include "../headers/game.h"
 
 void *main_server()
 {
@@ -15,7 +16,11 @@ void *main_server()
 
     fd_set rdfs;
 
+    t_client_request req;
     t_game game;
+    int i;
+    for (i = 0 ; i < MAX_PLAYERS ; i++)
+        game.player_infos[i].socket = 0;
     init_map(game.map);
     int n = 0;
     while(n < sizeof(game.map)) {
@@ -24,6 +29,7 @@ void *main_server()
     }
 
     while(1) {
+        printf("Viens !!\n");
         int i = 0;
         FD_ZERO(&rdfs);
 
@@ -38,7 +44,11 @@ void *main_server()
             FD_SET(game.player_infos[i].socket, &rdfs);
         }
 
-        if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1) {
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 1000;
+
+        if(select(max + 1, &rdfs, NULL, NULL, &tv) == -1) {
             perror("select()");
             exit(errno);
         }
@@ -52,6 +62,9 @@ void *main_server()
             struct sockaddr_in csin = { 0 };
             socklen_t sinsize = sizeof(csin);
             int csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
+            printf("server client Socket %d\n", sock);
+            printf("server csock %d\n", csock);
+
             if(csock == SOCKET_ERROR) {
                 perror("accept()");
                 continue;
@@ -62,10 +75,10 @@ void *main_server()
             }
 
             /* after connecting the client sends its name */
-            if(read_player(csock, game) == -1) {
-                /* disconnected */
-                continue;
-            }
+            // if(read_player(csock, req) == -1) {
+            //     /* disconnected */
+            //     continue;
+            // }
 
             /* what is the new maximum fd ? */
             max = csock > max ? csock : max;
@@ -80,26 +93,42 @@ void *main_server()
             game.player_infos[actual] = player_infos;
 
             actual++;
+            send_game_to_all_players(actual, game);
         } else {
             int i = 0;
             for(i = 0; i < actual; i++) {
                 /* a client is talking */
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
-                    int c = read_player(game.player_infos[i].socket, game);
+                    //int c = read_player(game.player_infos[i].socket, req);
+
+                    printf("\ndir actual : %d\n", game.player_infos[i].current_dir);
+                    printf("x actual : %d\n", game.player_infos[i].x_pos);
+                    printf("y actual : %d\n\n", game.player_infos[i].y_pos);
+                    int n = 0;
+                    if((n = recv(game.player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0) {
+                        perror("recv()");
+                        /* if recv error we disonnect the client */
+                        n = 0;
+                    }
+                    printf("\ndir wanted : %d\n", req.dir);
+                    printf("x wanted : %d\n", req.x_pos);
+                    printf("y wanted : %d\n\n", req.y_pos);
                     /* client disconnected */
-                    if(c == 0) {
+                    if(n == 0) {
                         //closesocket(clients[i].sock);
                         //remove_client(clients, i, &actual);
                         //strncpy(buffer, client.name, BUF_SIZE - 1);
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
                         send_game_to_all_players(actual, game);
                     } else {
+                        game = go_logique_server(game, i, req);
                         send_game_to_all_players(actual, game);
                     }
                     break;
                 }
             }
         }
+        printf("Pars !!\n");
     }
 
     //clear_clients(clients, actual);
@@ -137,16 +166,16 @@ int init_connection()
     return sock;
 }
 
-int read_player(SOCKET sock, t_game game)
+int read_player(SOCKET sock, t_client_request req)
 {
     int n = 0;
 
-    if((n = recv(sock, &game, sizeof(game) - 1, 0)) < 0) {
+    if((n = recv(sock, &req, sizeof(req) - 1, 0)) < 0) {
         perror("recv()");
         /* if recv error we disonnect the client */
         n = 0;
     }
-
+    //printf("player server \n %d", game.player_infos[0].x_pos);
     //game[n] = 0;
 
     return n;
