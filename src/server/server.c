@@ -68,10 +68,10 @@ void *main_server()
             }
 
             /* after connecting the client sends its name */
-            if(read_player(csock, req) == -1) {
-                /* disconnected */
-                continue;
-            }
+            // if(read_player(csock, req) == -1) {
+            //     /* disconnected */
+            //     continue;
+            // }
 
             /* what is the new maximum fd ? */
             max = csock > max ? csock : max;

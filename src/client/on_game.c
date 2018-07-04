@@ -43,13 +43,13 @@ int on_game(char *ip_text) {
     }
     // --- end
 
-    t_client_request client_request;
-
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0)
-    {
-        perror("send()");
-        exit(errno);
-    }
+    // t_client_request client_request;
+    //
+    // if(send(sock, &client_request, sizeof(client_request), 0) < 0)
+    // {
+    //     perror("send()");
+    //     exit(errno);
+    // }
 
     int n = 0;
 
