@@ -28,6 +28,6 @@ t_player_infos add_new_player(int index);
 int read_player(SOCKET sock, t_client_request req);
 void send_game_to_all_players(int actual, t_game game);
 void write_player(SOCKET sock, t_game game);
-void add_bomb(t_bomb_timers *bomb_timers, int bomb_index, int explosion_time);
+
 
 #endif
