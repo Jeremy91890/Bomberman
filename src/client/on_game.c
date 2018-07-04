@@ -104,7 +104,7 @@ int on_game(char *ip_text) {
                 {
                     case SDLK_UP:
                         printf("SDLK_UP");
-                        //dir_pressed(&player, TOP);
+                        dir_pressed(sock, &player, TOP);
                         // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
 
                         //game.player_infos[0] = player;
@@ -118,16 +118,9 @@ int on_game(char *ip_text) {
                         //display_map(game.map);
                         //display_character(game.player_infos);
                         printf("SDLK_DOWN");
-                        int n = 0;
-
-                        if((n = recv(sock, &game, sizeof(game), 0)) < 0)
-                        {
-                            perror("recv()");
-                            exit(errno);
-                        }
                         break;
                     case SDLK_LEFT:
-                        //dir_pressed(&player, LEFT);
+                        dir_pressed(sock, &player, LEFT);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -135,7 +128,7 @@ int on_game(char *ip_text) {
                         printf("SDLK_LEFT");
                         break;
                     case SDLK_RIGHT:
-                        //dir_pressed(&player, RIGHT);
+                        dir_pressed(sock, &player, RIGHT);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -144,10 +137,20 @@ int on_game(char *ip_text) {
                         break;
                     default:
                         break;
+
+                }
+                int n = 0;
+
+                if((n = recv(sock, &game, sizeof(game), 0)) < 0)
+                {
+                    perror("recv()");
+                    exit(errno);
                 }
                 break;
         }
         //Attention cette fonction bloque l'affichage car on est en attente de la réponse du serv
+
+
 
         display_map(game.map);
         display_character(game.player_infos);

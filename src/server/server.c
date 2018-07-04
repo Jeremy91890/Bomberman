@@ -92,7 +92,6 @@ void *main_server()
             for(i = 0; i < actual; i++) {
                 /* a client is talking */
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
-                    printf("YOLOOOO\n");
                     //int c = read_player(game.player_infos[i].socket, req);
                     int n = 0;
                     if((n = recv(game.player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0) {
@@ -108,8 +107,6 @@ void *main_server()
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
                         send_game_to_all_players(actual, game);
                     } else {
-                        printf("CurrDir : %d\n", game.player_infos[i].current_dir);
-                        printf("WantDir : %d\n", req.dir);
                         game = go_logique_server(game, i, req);
                         send_game_to_all_players(actual, game);
                     }
@@ -166,6 +163,8 @@ int read_player(SOCKET sock, t_client_request req)
     }
 
     printf("dir wanted : %d\n", req.dir);
+    printf("x wanted : %d\n", req.x_pos);
+    printf("y wanted : %d\n", req.y_pos);
     //printf("player server \n %d", game.player_infos[0].x_pos);
     //game[n] = 0;
 
