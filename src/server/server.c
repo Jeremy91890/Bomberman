@@ -44,7 +44,11 @@ void *main_server()
             FD_SET(game.player_infos[i].socket, &rdfs);
         }
 
-        if(select(max + 1, &rdfs, NULL, NULL, NULL) == -1) {
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 1000;
+
+        if(select(max + 1, &rdfs, NULL, NULL, &tv) == -1) {
             perror("select()");
             exit(errno);
         }

@@ -91,21 +91,38 @@ int on_game(char *ip_text) {
 
     //t_client_request client_request;
 
+    fd_set rdfs;
 
     int running = 1;
     SDL_Event event;
     while (running)
     {
-        t_client_request client_request;
-        client_request.x_pos = player.x_pos;
-        client_request.y_pos = player.y_pos;
-        client_request.dir = player.current_dir;
-        client_request.magic = player.socket;
-        if(send(sock, &client_request, sizeof(client_request), 0) < 0)
-        {
-            perror("send()");
+        FD_ZERO(&rdfs);
+        FD_SET(sock, &rdfs);
+
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 1000;
+
+        if (select(sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
+            perror("select()");
             exit(errno);
         }
+
+        if (FD_ISSET(sock, &rdfs)) {
+            int n = 0;
+            if((n = recv(sock, &game, sizeof(game), 0)) < 0)
+            {
+                perror("recv()");
+                exit(errno);
+            }
+            player = game.player_infos[actual_index];
+            // printf("\nCli Actual x : %d\n", player.x_pos);
+            // printf("Cli Actual y : %d\n\n", player.y_pos);
+            display_map(game.map);
+            display_character(game.player_infos);
+        }
+
         //Dans ce block logique event, send action au serv, ...
         SDL_WaitEvent(&event);
         switch(event.type)
@@ -118,7 +135,7 @@ int on_game(char *ip_text) {
                 {
                     case SDLK_UP:
                         printf("SDLK_UP");
-                        //dir_pressed(sock, &player, TOP);
+                        dir_pressed(sock, &player, TOP);
                         // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
 
                         //game.player_infos[0] = player;
@@ -134,7 +151,7 @@ int on_game(char *ip_text) {
                         printf("SDLK_DOWN");
                         break;
                     case SDLK_LEFT:
-                        //dir_pressed(sock, &player, LEFT);
+                        dir_pressed(sock, &player, LEFT);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -142,7 +159,7 @@ int on_game(char *ip_text) {
                         printf("SDLK_LEFT");
                         break;
                     case SDLK_RIGHT:
-                        //dir_pressed(sock, &player, RIGHT);
+                        dir_pressed(sock, &player, RIGHT);
                         // Pour tester sans le serveur
                         //game.player_infos[0] = player;
                         //display_map(game.map);
@@ -156,18 +173,6 @@ int on_game(char *ip_text) {
 
                 break;
         }
-        //Attention cette fonction bloque l'affichage car on est en attente de la réponse du serv
-
-        int n = 0;
-        if((n = recv(sock, &game, sizeof(game), 0)) < 0)
-        {
-            perror("recv()");
-            exit(errno);
-        }
-        //player = game.player_infos[actual_index];
-
-        display_map(game.map);
-        display_character(game.player_infos);
     }
 
     closesocket(sock);
@@ -180,6 +185,16 @@ void dir_pressed(int sock, t_player_infos *player, int dir) {
     // si le perso ne regarde deja dans direction on le fait avancer
     if(change_dir(player, dir) == 0) {
         move(player, dir);
+    }
+    t_client_request client_request;
+    client_request.x_pos = player->x_pos;
+    client_request.y_pos = player->y_pos;
+    client_request.dir = player->current_dir;
+    client_request.magic = player->socket;
+    if(send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
+        perror("send()");
+        exit(errno);
     }
 }
 
