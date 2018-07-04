@@ -93,12 +93,19 @@ void *main_server()
                 /* a client is talking */
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
                     //int c = read_player(game.player_infos[i].socket, req);
+
+                    printf("\ndir actual : %d\n", game.player_infos[i].current_dir);
+                    printf("x actual : %d\n", game.player_infos[i].x_pos);
+                    printf("y actual : %d\n\n", game.player_infos[i].y_pos);
                     int n = 0;
                     if((n = recv(game.player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0) {
                         perror("recv()");
                         /* if recv error we disonnect the client */
                         n = 0;
                     }
+                    printf("\ndir wanted : %d\n", req.dir);
+                    printf("x wanted : %d\n", req.x_pos);
+                    printf("y wanted : %d\n\n", req.y_pos);
                     /* client disconnected */
                     if(n == 0) {
                         //closesocket(clients[i].sock);
@@ -161,10 +168,6 @@ int read_player(SOCKET sock, t_client_request req)
         /* if recv error we disonnect the client */
         n = 0;
     }
-
-    printf("dir wanted : %d\n", req.dir);
-    printf("x wanted : %d\n", req.x_pos);
-    printf("y wanted : %d\n", req.y_pos);
     //printf("player server \n %d", game.player_infos[0].x_pos);
     //game[n] = 0;
 
