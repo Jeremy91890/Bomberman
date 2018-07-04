@@ -164,7 +164,7 @@ void *main_server()
                         /*
                         Ici logique explosion bombe puis renvois de la game aux client
                         */
-                        bomb_timers.bomb_timer[b] =  bomb_timers.bomb_timer[b+1];
+                        bomb_timers.bomb_timer[b] = bomb_timers.bomb_timer[b+1];
                         int c;
                         for (c = b; c < bomb_timers.number_of_bombs; c++) {
                             bomb_timers.bomb_timer[c] = bomb_timers.bomb_timer[c + 1];
