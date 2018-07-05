@@ -26,8 +26,8 @@ int on_game(char *ip_text) {
     //Connection au server
     struct hostent *hostinfo = NULL;
     SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
-    const char *hostname = "127.0.0.1"; //ICI METTRE IP_TEXT POUR UTILISER L'IP ENTREE PAR LE USER
-    //const char *hostname = ip_text;
+    //const char *hostname = "127.0.0.1"; //ICI METTRE IP_TEXT POUR UTILISER L'IP ENTREE PAR LE USER
+    const char *hostname = ip_text;
 
     hostinfo = gethostbyname(hostname); /* on récupère les informations de l'hôte auquel on veut se connecter */
     if (hostinfo == NULL) /* l'hôte n'existe pas */

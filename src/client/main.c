@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 {
     int run = 1;
     int NEXT_ACTION = GO_MENU;
-    char *ip_text = strdup("");
+    char ip_text[16] = "\0";
 
     init_globals();
 
@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
                 NEXT_ACTION = on_menu();
                 break;
             case GO_ENTER_IP:
-                NEXT_ACTION = on_enter_ip(&ip_text);
+                NEXT_ACTION = on_enter_ip(ip_text);
                 break;
             case GO_GAME_JOIN:
                 //NEXT_ACTION = draw_map();

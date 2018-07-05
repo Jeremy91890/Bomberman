@@ -48,13 +48,13 @@ void free_enter_ip(SDL_Surface *img_title, SDL_Surface *ENTER_IP_TEXT_IP, SDL_Su
     SDL_FreeSurface(ENTER_IP_TEXT_BACK);
 }
 
-void update_value_ip(char **ip_text, char *c) {
-    if (strlen(*ip_text) < 15) {
-         strncat(*ip_text, c, strlen(*ip_text) + strlen(c));
+void update_value_ip(char *ip_text, char *c) {
+    if (strlen(ip_text) < 15) {
+        strcat(ip_text, c);
     }
 }
 
-int on_enter_ip(char **ip_text) {
+int on_enter_ip(char ip_text[]) {
     SDL_Surface *img_title = NULL;
     SDL_Rect pos_title;
 
@@ -134,51 +134,51 @@ int on_enter_ip(char **ip_text) {
                         }
                     case SDLK_KP_PERIOD:
                         update_value_ip(ip_text, ".");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP0:
                         update_value_ip(ip_text, "0");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP1:
                         update_value_ip(ip_text, "1");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP2:
                         update_value_ip(ip_text, "2");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP3:
                         update_value_ip(ip_text, "3");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP4:
                         update_value_ip(ip_text, "4");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP5:
                         update_value_ip(ip_text, "5");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP6:
                         update_value_ip(ip_text, "6");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP7:
                         update_value_ip(ip_text, "7");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP8:
                         update_value_ip(ip_text, "8");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_KP9:
                         update_value_ip(ip_text, "9");
-                        refresh_text_ip(*ip_text);
+                        refresh_text_ip(ip_text);
                         break;
                     case SDLK_BACKSPACE:
-                        *ip_text[strlen(*ip_text)-1] = 0;
-                        refresh_text_ip(*ip_text);
+                        ip_text[strlen(ip_text)-1] = '\0';
+                        refresh_text_ip(ip_text);
                         break;
                     default:
                         break;
