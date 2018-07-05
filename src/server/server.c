@@ -143,11 +143,10 @@ void *main_server()
                         //remove_client(clients, i, &actual);
                         //strncpy(buffer, client.name, BUF_SIZE - 1);
                         //strncat(buffer, " disconnected !", BUF_SIZE - strlen(buffer) - 1);
-                        send_game_to_all_players(actual, game);
                     } else {
                         game = go_logique_server(game, i, req);
-                        send_game_to_all_players(actual, game);
                     }
+                    send_game_to_all_players(actual, game);
                     break;
                 }
 
