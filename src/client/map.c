@@ -55,7 +55,7 @@ void display_map(char map[])
             }
             else if (map[i+j] == 0) {
                 // case en flamme
-                printf("FFFFFFFFFFFFFFFFFFFFFFLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAMMMMMMMMMMMMMMMMMMMMMMMMMMMMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                //printf("FFFFFFFFFFFFFFFFFFFFFFLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAMMMMMMMMMMMMMMMMMMMMMMMMMMMMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                 SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
                 Rect_dest.x =  Rect_dest.x + 8;
                 Rect_dest.y = Rect_dest.y + 8;

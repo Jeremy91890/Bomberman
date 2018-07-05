@@ -34,7 +34,7 @@ void *main_server()
     /*bomb_timers[1].bomb_index = 1;
     bomb_timers[1].explosion_time = 1;*/
 
-   
+
 
     fd_set rdfs;
     t_client_request req;
@@ -151,13 +151,13 @@ void *main_server()
                 }
 
                 int f = 1;
-                
+
                 for (f = 1; f <= flam_timers.number_of_flams; f++) {
                     //Temps actuel egal ou sup a l explosion prevu
                     if ((unsigned)time(NULL) >= flam_timers.flam_timer[f].display_time) {
-                        
+
                         game.map[flam_timers.flam_timer[f].flam_index] = 0b00000111;
-                                        
+
                         /*
                         Ici logique explosion bombe puis renvois de la game aux client
                         */
@@ -167,6 +167,7 @@ void *main_server()
                             flam_timers.flam_timer[c] = flam_timers.flam_timer[c + 1];
                         }
                         flam_timers.number_of_flams = flam_timers.number_of_flams - 1;
+                        send_game_to_all_players(actual, game);
                     }
                 }
                 //Ici check si bomb explose
@@ -178,13 +179,13 @@ void *main_server()
                 for (b = 1; b <= bomb_timers.number_of_bombs; b++) {
                     //Temps actuel egal ou sup a l explosion prevu
                     if ((unsigned)time(NULL) >= bomb_timers.bomb_timer[b].explosion_time) {
-                        printf("EXPLOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSIONSSSS\n");
+                        //printf("EXPLOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSIONSSSS\n");
                         fprintf(stdout, "%u\n", (unsigned)time(NULL));
                         printf("%d", bomb_timers.bomb_timer[b].explosion_time);
                         //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
                         game.map[bomb_timers.bomb_timer[b].bomb_index] = 0b00000111;
-                        
-                        // Affichage du feu       
+
+                        // Affichage du feu
                         int index;
 
                         index = bomb_timers.bomb_timer[b].bomb_index;
@@ -201,9 +202,10 @@ void *main_server()
                             bomb_timers.bomb_timer[c] = bomb_timers.bomb_timer[c + 1];
                         }
                         bomb_timers.number_of_bombs = bomb_timers.number_of_bombs - 1;
+                        send_game_to_all_players(actual, game);
                     }
                 }
-                
+
 
             }
         }
