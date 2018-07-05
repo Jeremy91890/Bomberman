@@ -63,7 +63,8 @@ typedef struct      s_game
 {
     t_player_infos  player_infos[MAX_PLAYERS];
     t_map           map;
-    //t_other         infos;
+    int             game_state;
+    int             time;
 }                   t_game;
 
 #endif

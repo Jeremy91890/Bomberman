@@ -136,40 +136,33 @@ int on_game(char *ip_text) {
                 {
                     case SDLK_UP:
                         printf("SDLK_UP\n");
-                        dir_pressed(sock, &player, TOP);
-                        // Pour tester sans le serveur, quand le serveur sera pres, le player devient de type client_request
-
-                        //game.player_infos[0] = player;
-                        //display_map(game.map);
-                        //display_character(game.player_infos);
+                        if (game.game_state == 1)
+                            dir_pressed(sock, &player, TOP);
                         break;
                     case SDLK_DOWN:
-                        dir_pressed(sock, &player, DOWN);
-                        // Pour tester sans le serveur
-                        //game.player_infos[0] = player;
-                        //display_map(game.map);
-                        //display_character(game.player_infos);
+                        if (game.game_state == 1)
+                            dir_pressed(sock, &player, DOWN);
                         printf("SDLK_DOWN\n");
                         break;
                     case SDLK_LEFT:
-                        dir_pressed(sock, &player, LEFT);
-                        // Pour tester sans le serveur
-                        //game.player_infos[0] = player;
-                        //display_map(game.map);
-                        //display_character(game.player_infos);
+                        if (game.game_state == 1)
+                            dir_pressed(sock, &player, LEFT);
                         printf("SDLK_LEFT\n");
                         break;
                     case SDLK_RIGHT:
-                        dir_pressed(sock, &player, RIGHT);
-                        // Pour tester sans le serveur
-                        //game.player_infos[0] = player;
-                        //display_map(game.map);
-                        //display_character(game.player_infos);
+                        if (game.game_state == 1)
+                            dir_pressed(sock, &player, RIGHT);
                         printf("SDLK_RIGHT\n");
                         break;
                     case SDLK_SPACE:
-                        bomb_pressed(sock, &player);
-                        printf("SDLK_BOMB\n");
+                        if (game.game_state == 1)
+                            bomb_pressed(sock, &player);
+                        printf("SDLK_SPACE\n");
+                        break;
+                    case SDLK_RETURN:
+                        if (game.game_state == 0)
+                            enter_pressed(sock, &player);
+                        printf("SDLK_RETURN\n");
                         break;
                     default:
                         break;
@@ -183,6 +176,17 @@ int on_game(char *ip_text) {
     closesocket(sock);
 
     return GO_QUIT;
+}
+
+void enter_pressed(int sock, t_player_infos *player) {
+    t_client_request client_request;
+    client_request.command = 2;
+    client_request.magic = player->socket;
+    if(send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
+        perror("send()");
+        exit(errno);
+    }
 }
 
 void bomb_pressed(int sock, t_player_infos *player) {

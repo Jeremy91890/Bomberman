@@ -16,7 +16,6 @@ void *main_server()
     int actual = 0;
     int max = sock;
 
-    
     bomb_timers.number_of_bombs = 0;
     //bomb_timers.bomb_timer = malloc(bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
 
@@ -36,9 +35,11 @@ void *main_server()
    
 
     fd_set rdfs;
-
     t_client_request req;
     t_game game;
+    // state à 0 pour dire que la partie n'a pas encore commencé
+    game.game_state = 0;
+
     int i;
     for (i = 0 ; i < MAX_PLAYERS ; i++)
         game.player_infos[i].socket = 0;

@@ -13,6 +13,8 @@ t_game go_logique_server(t_game game, int actual, t_client_request req) {
         game = move_player(game, actual, req);
     else if (req.command == 1) 
         game = place_bomb(game, actual, req);
+    else if (req.command == 2)
+        game = start_game(game, actual, req);
 
     //TODO : Check map fire, explosion, player HP, ...
 
@@ -58,4 +60,26 @@ t_game place_bomb(t_game game, int actual, t_client_request req) {
         bomb_timers.bomb_timer[bomb_timers.number_of_bombs].explosion_time = (unsigned)time(NULL) + BOMB_SEC;
     }
     return game;
+}
+
+t_game start_game(t_game game, int actual, t_client_request req) {
+
+    // check if user == host and if more than 1 user
+    if (actual == 0 && get_nb_players(game) > 1) {
+        game.game_state = 1;
+    }
+    return game;
+}
+
+int get_nb_players(t_game game) {
+    int i;
+    int nb;
+    nb = 0;
+
+    for (i = 0; i < MAX_PLAYERS; i++) {
+        if (game.player_infos[i].socket != 0)
+            nb += 1; 
+    }
+
+    return nb;
 }
