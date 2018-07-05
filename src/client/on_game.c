@@ -125,31 +125,25 @@ int on_game(char *ip_text) {
                 {
                     case SDLK_UP:
                         printf("SDLK_UP\n");
-                        if (game.game_state == 0)
                             dir_pressed(sock, &player, TOP);
                         break;
                     case SDLK_DOWN:
-                        if (game.game_state == 0)
                             dir_pressed(sock, &player, DOWN);
                         printf("SDLK_DOWN\n");
                         break;
                     case SDLK_LEFT:
-                        if (game.game_state == 0)
                             dir_pressed(sock, &player, LEFT);
                         printf("SDLK_LEFT\n");
                         break;
                     case SDLK_RIGHT:
-                        if (game.game_state == 0)
                             dir_pressed(sock, &player, RIGHT);
                         printf("SDLK_RIGHT\n");
                         break;
                     case SDLK_SPACE:
-                        if (game.game_state == 0)
                             bomb_pressed(sock, &player);
                         printf("SDLK_SPACE\n");
                         break;
                     case SDLK_RETURN:
-                        if (game.game_state == 0)
                             enter_pressed(sock, &player);
                         printf("SDLK_RETURN\n");
                         break;
@@ -175,6 +169,9 @@ void enter_pressed(int sock, t_player_infos *player) {
     t_client_request client_request;
     client_request.command = 2;
     client_request.magic = player->socket;
+    client_request.x_pos = player->x_pos;
+    client_request.y_pos = player->y_pos;
+    client_request.dir = player->current_dir;
     if(send(sock, &client_request, sizeof(client_request), 0) < 0)
     {
         perror("send()");

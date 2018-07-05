@@ -6,17 +6,20 @@ t_game go_logique_server(t_game game, int actual, t_client_request req) {
     //printf("Actual : %d\n", actual);
     t_player_infos pi = game.player_infos[actual];
 
-    if (req.command == 2)
-        game = start_game(game, actual, req);
-    if (req.dir != 0 && req.dir != pi.current_dir)
-        game = turn_player(game, actual, req);
-    else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos)
-        game = move_player(game, actual, req);
-    else if (req.command == 1)
-        game = place_bomb(game, actual, req);
-
-
-    //TODO : Check map fire, explosion, player HP, ...
+    if (pi.alive == 1) {
+        //printf("ENTER ALIVE");
+        if (game.game_state == 1) {
+            //printf("ENTER GAME STATE == 1");
+            if (req.dir != 0 && req.dir != pi.current_dir)
+                game = turn_player(game, actual, req);
+            else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos)
+                game = move_player(game, actual, req);
+            else if (req.command == 1)
+                game = place_bomb(game, actual, req);
+        } else if (req.command == 2 && actual == 0 && game.game_state == 0) {
+            game = start_game(game);
+        }
+    }
 
     return game;
 }
@@ -62,12 +65,14 @@ t_game place_bomb(t_game game, int actual, t_client_request req) {
     return game;
 }
 
-t_game start_game(t_game game, int actual, t_client_request req) {
+t_game start_game(t_game game) {
 
     // check if user == host and if more than 1 user
-    if (actual == 0 && get_nb_players(game) > 1) {
+    printf("GGGGGGO11111111111\n");
+    if (get_nb_players(game) > 1) {
         printf("change game state");
         game.game_state = 1;
+        printf("GGGGGGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
     }
     return game;
 }

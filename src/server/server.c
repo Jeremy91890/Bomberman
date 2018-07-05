@@ -97,7 +97,7 @@ void *main_server()
                 perror("accept()");
                 continue;
             }
-            else if(actual >= MAX_PLAYERS) {
+            else if(actual >= MAX_PLAYERS || game.game_state != 0) {
                 close(csock);
                 continue;
             }
@@ -210,7 +210,21 @@ void *main_server()
                     }
                 }
 
-
+                //Gestion fin partie
+                if (game.game_state == 1) {
+                    int i;
+                    int n = 0;
+                    for (i = 0; i < MAX_PLAYERS; i++) {
+                        if (game.player_infos[i].alive == 1) {
+                            n++;
+                        }
+                    }
+                    if (n <= 1) {
+                        game.game_state = 2;
+                        send_game_to_all_players(actual, game);
+                    }
+                }
+                //fin gestion fin partie
             }
         }
         //printf("Pars !!\n");
