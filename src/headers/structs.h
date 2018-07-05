@@ -19,6 +19,30 @@ typedef enum        bloc_type
     UNDESTRUCTABLE_WALL = 0b01000111
 }                   bloc_type;
 
+typedef struct      s_bomb_timer
+{
+    int             bomb_index;
+    int             explosion_time;
+}                   t_bomb_timer;
+
+typedef struct      s_bomb_timers
+{
+    t_bomb_timer    bomb_timer[195];
+    int             number_of_bombs;
+}                   t_bomb_timers;
+
+typedef struct      s_flam_timer
+{
+    int             flam_index;
+    int             display_time;
+}                   t_flam_timer;
+
+typedef struct      s_flam_timers
+{
+    t_flam_timer    flam_timer[195];
+    int             number_of_flams;
+}                   t_flam_timers;
+
 typedef struct      s_client_request
 {
     unsigned int    magic;
@@ -51,7 +75,8 @@ typedef struct      s_game
 {
     t_player_infos  player_infos[MAX_PLAYERS];
     t_map           map;
-    //t_other         infos;
+    int             game_state;
+    int             time;
 }                   t_game;
 
 #endif

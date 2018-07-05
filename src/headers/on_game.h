@@ -14,5 +14,7 @@ void        read_server(SOCKET sock, t_game *game);
 int         change_dir(t_player_infos *player, int dir);
 void        move(t_player_infos *player, int dir);
 void        dir_pressed(int sock, t_player_infos *player, int dir);
+void        bomb_pressed(int sock, t_player_infos *player);
+void        enter_pressed(int sock, t_player_infos *player);
 
 #endif

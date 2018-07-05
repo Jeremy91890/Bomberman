@@ -10,7 +10,7 @@
 void display_map(char map[])
 {
 	int i,j;
-    SDL_Surface *background_tile, *explodable_block, *solid_block;
+    SDL_Surface *background_tile, *explodable_block, *solid_block, *bomb_block, *fire_block;
 	SDL_Rect Rect_dest;
 	SDL_Rect Rect_source;
 	Rect_source.w = TILE_WIDTH;
@@ -23,6 +23,8 @@ void display_map(char map[])
     background_tile = IMG_Load("./resources/sprites/blocks/BackgroundTile.png");
     explodable_block = IMG_Load("./resources/sprites/blocks/ExplodableBlock.png");
     solid_block = IMG_Load("./resources/sprites/blocks/SolidBlock.png");
+    bomb_block = IMG_Load("./resources/sprites/bomb/Bomb_f01.png");
+    fire_block = IMG_Load("./resources/sprites/flame/Flame_f00.png");
 
 	for(i=0;i<195;i+= 15)
 	{
@@ -43,6 +45,21 @@ void display_map(char map[])
             else if (map[i+j] == 0b01000111) {
                 // undestructable
                 SDL_BlitSurface(solid_block, &Rect_source, SCREEN, &Rect_dest);
+            }
+            else if (map[i+j] == 0b00010111) {
+                // bomb sur case
+                SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
+                Rect_dest.x =  Rect_dest.x + 8;
+                Rect_dest.y = Rect_dest.y + 8;
+                SDL_BlitSurface(bomb_block, &Rect_source, SCREEN, &Rect_dest);
+            }
+            else if (map[i+j] == 0) {
+                // case en flamme
+                printf("FFFFFFFFFFFFFFFFFFFFFFLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAMMMMMMMMMMMMMMMMMMMMMMMMMMMMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
+                Rect_dest.x =  Rect_dest.x + 8;
+                Rect_dest.y = Rect_dest.y + 8;
+                SDL_BlitSurface(fire_block, &Rect_source, SCREEN, &Rect_dest);
             }
 		}
         n++;

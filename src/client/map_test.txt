@@ -16,10 +16,11 @@ char map[195] = {
 
 Ceci est une map avec juste les murs incassables et les espaces (herbe) entre pour marcher
 
-Bonus nombre bombe : 00001010 -> Decimal : 10 -> Hexa : 0x0A
-Mur indestructible : 01000111 -> Decimal : 71 -> Hexa : 0x47
-Case en feu :        10000111 -> Decimal : 135 -> Hexa : 0x87
-Herbe :              00000111 -> Decimal : 7 -> Hexa : 0x07
+Bonus nombre bombe : 	00001010 -> Decimal : 10 -> Hexa : 0x0A
+Mur indestructible : 	01000111 -> Decimal : 71 -> Hexa : 0x47
+Case en feu :        	10000111 -> Decimal : 135 -> Hexa : 0x87
+Herbe :              	00000111 -> Decimal : 7 -> Hexa : 0x07
+Case avec bomb dessus : 00010111 -> Decimal : 23 -> Hexa 0x17
 
 Pour affiché la variable map :
 
