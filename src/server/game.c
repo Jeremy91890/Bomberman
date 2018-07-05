@@ -12,9 +12,9 @@ t_game go_logique_server(t_game game, int actual, t_client_request req) {
         game = turn_player(game, actual, req);
     else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos)
         game = move_player(game, actual, req);
-    else if (req.command == 1) 
+    else if (req.command == 1)
         game = place_bomb(game, actual, req);
-    
+
 
     //TODO : Check map fire, explosion, player HP, ...
 
@@ -38,7 +38,7 @@ t_game move_player(t_game game, int actual, t_client_request req) {
     printf("Wanted x : %d\n", req.x_pos);
     printf("Wanted y : %d\n", req.y_pos);
 
-    if (game.map[wanted_index] == 0b00000111) {
+    if (game.map[wanted_index] != 0b01100111 && game.map[wanted_index] != 0b01000111) {
         game.player_infos[actual].x_pos = wanted_x;
         game.player_infos[actual].y_pos = wanted_y;
     }
@@ -53,7 +53,7 @@ t_game place_bomb(t_game game, int actual, t_client_request req) {
     if (game.player_infos[actual].bombs_left > 0 && game.map[wanted_bomb_index] != 0b00010111) {
         game.player_infos[actual].bombs_left -= 1;
         game.map[wanted_bomb_index] = 0b00010111;
-        
+
         bomb_timers.number_of_bombs = bomb_timers.number_of_bombs + 1;
         //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
         bomb_timers.bomb_timer[bomb_timers.number_of_bombs].bomb_index = wanted_bomb_index;
@@ -79,7 +79,7 @@ int get_nb_players(t_game game) {
 
     for (i = 0; i < MAX_PLAYERS; i++) {
         if (game.player_infos[i].socket != 0)
-            nb += 1; 
+            nb += 1;
     }
 
     return nb;
@@ -118,8 +118,8 @@ void add_flames(int bomb_index, char *map, int nb_case, int max_index, int itera
                 break;
             if (i == max_index)
                 break;
-        }         
-    }   
+        }
+    }
     else {
         for (i = 0; i >= max_index; i+= iterator) {
             if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
@@ -139,7 +139,7 @@ void add_flames(int bomb_index, char *map, int nb_case, int max_index, int itera
                 break;
             if (i == max_index)
                 break;
-        }         
+        }
     }
-    
+
 }

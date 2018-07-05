@@ -116,6 +116,7 @@ int on_game(char *ip_text) {
         switch(event.type)
         {
             case SDL_QUIT:
+                pthread_cancel(MAP_THREAD);
                 closesocket(sock);
                 return GO_QUIT;
             case SDL_KEYDOWN:
@@ -160,7 +161,10 @@ int on_game(char *ip_text) {
         }
     }
 
-    pthread_cancel(MAP_THREAD);
+    if (pthread_join(MAP_THREAD, NULL)) {
+        perror("pthread_join");
+        return EXIT_FAILURE;
+    }
     closesocket(sock);
 
     return GO_QUIT;
