@@ -20,6 +20,7 @@
 
 #include "structs.h"
 
+extern t_flam_timers flam_timers;
 extern t_bomb_timers bomb_timers;
 
 void *main_server();

@@ -31,6 +31,18 @@ typedef struct      s_bomb_timers
     int             number_of_bombs;
 }                   t_bomb_timers;
 
+typedef struct      s_flam_timer
+{
+    int             flam_index;
+    int             display_time;
+}                   t_flam_timer;
+
+typedef struct      s_flam_timers
+{
+    t_flam_timer    flam_timer[195];
+    int             number_of_flams;
+}                   t_flam_timers;
+
 typedef struct      s_client_request
 {
     unsigned int    magic;
