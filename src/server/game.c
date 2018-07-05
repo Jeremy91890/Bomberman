@@ -101,44 +101,48 @@ void add_flames(int bomb_index, char *map, int nb_case, int max_index, int itera
 
     if (max_index > 0) {
         for (i = 0; i <= max_index; i+= iterator) {
-            if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
-                map[bomb_index + i] = 0;
-                flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
-                flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
-                flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
-                i = max_index;
+            if (map[bomb_index + i] != 0b00010111) {
+                if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
+                    map[bomb_index + i] = 0;
+                    flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
+                    i = max_index;
+                }
+                else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                    map[bomb_index + i] = 0;
+                    flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
+                }
+                else
+                    break;
+                if (i == max_index)
+                    break;
             }
-            else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
-                map[bomb_index + i] = 0;
-                flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
-                flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
-                flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
-            }
-            else
-                break;
-            if (i == max_index)
-                break;
         }
     }
     else {
         for (i = 0; i >= max_index; i+= iterator) {
-            if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
-                map[bomb_index + i] = 0;
-                flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
-                flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
-                flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
-                i = max_index;
+            if (map[bomb_index + i] != 0b00010111) {
+                if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
+                    map[bomb_index + i] = 0;
+                    flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
+                    i = max_index;
+                }
+                else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                    map[bomb_index + i] = 0;
+                    flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
+                    flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
+                }
+                else
+                    break;
+                if (i == max_index)
+                    break;
             }
-            else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
-                map[bomb_index + i] = 0;
-                flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
-                flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
-                flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
-            }
-            else
-                break;
-            if (i == max_index)
-                break;
         }
     }
 
