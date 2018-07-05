@@ -242,7 +242,7 @@ void move(t_player_infos *player, int dir) {
 void *map_update_process(void *args) {
     t_thread_params *actual_args = args;
 
-    while (actual_args->game->game_state == 1) {
+    while (actual_args->game->game_state != 2) {
         fd_set rdfs;
 
         FD_ZERO(&rdfs);
@@ -273,4 +273,5 @@ void *map_update_process(void *args) {
     }
 
     free(actual_args);
+    pthread_exit(NULL);
 }
