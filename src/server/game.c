@@ -38,7 +38,7 @@ t_game move_player(t_game game, int actual, t_client_request req) {
     printf("Wanted x : %d\n", req.x_pos);
     printf("Wanted y : %d\n", req.y_pos);
 
-    if (game.map[wanted_index] != 0b01100111 && game.map[wanted_index] != 0b01000111) {
+    if (game.map[wanted_index] != 0b01100111 && game.map[wanted_index] != 0b01000111 && game.map[wanted_index] != 0b00010111) {
         game.player_infos[actual].x_pos = wanted_x;
         game.player_infos[actual].y_pos = wanted_y;
     }
