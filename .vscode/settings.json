@@ -3,6 +3,9 @@
         "structs.h": "c",
         "cstdlib": "c",
         "generate_map.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "menu.h": "c",
+        "on_game.h": "c",
+        "socket.h": "c"
     }
 }

@@ -14,7 +14,7 @@ static const SDL_Color COLOR_TEXT_SELECTED = {255, 220, 0};
 static const SDL_Color COLOR_TEXT_UNSELECTED = {255, 255, 255};
 static const SDL_Color COLOR_TEXT_INPUT = {200, 200, 200};
 static const int SCREEN_WIDTH = 960;
-static const int SCREEN_HEIGHT = 832;
+static const int SCREEN_HEIGHT = 892;
 
 enum NEXT_ACTION {
     GO_MENU,

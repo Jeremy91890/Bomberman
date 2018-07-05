@@ -7,6 +7,7 @@
 #include "../headers/map.h"
 #include "../headers/socket.h"
 #include "../headers/on_game.h"
+#include "../headers/infos.h"
 
 pthread_t MAP_THREAD;
 
@@ -273,6 +274,7 @@ void *map_update_process(void *args) {
             // printf("Cli Actual y : %d\n\n", player.y_pos);
             display_map(actual_args->game->map);
             display_character(actual_args->game->player_infos);
+            display_bomb_left(actual_args->player);
         }
     }
 
