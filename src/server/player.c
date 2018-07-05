@@ -5,8 +5,8 @@ t_player_infos add_new_player(int index)
     t_player_infos pi;
     pi.alive = 1;
     pi.connected = 1;
-    pi.bombs_capacity = 10;
-    pi.bombs_left = 10;
+    pi.bombs_capacity = 100;
+    pi.bombs_left = 100;
     pi.frags = 0;
     //ToComplete
     //1 : Right
