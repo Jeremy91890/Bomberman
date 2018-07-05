@@ -79,4 +79,13 @@ typedef struct      s_game
     int             time;
 }                   t_game;
 
+typedef struct      s_thread_params
+{
+    int             sock;
+    t_game          *game;
+    int             game_size;
+    t_player_infos  *player;
+    int             actual_index;
+}                   t_thread_params;
+
 #endif

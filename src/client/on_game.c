@@ -8,6 +8,8 @@
 #include "../headers/socket.h"
 #include "../headers/on_game.h"
 
+pthread_t MAP_THREAD;
+
 int on_game(char *ip_text) {
     printf(ip_text);
 
@@ -25,7 +27,7 @@ int on_game(char *ip_text) {
     SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
     const char *hostname = "127.0.0.1"; //ICI METTRE IP_TEXT POUR UTILISER L'IP ENTREE PAR LE USER
     //const char *hostname = ip_text;
-    
+
     hostinfo = gethostbyname(hostname); /* on récupère les informations de l'hôte auquel on veut se connecter */
     if (hostinfo == NULL) /* l'hôte n'existe pas */
     {
@@ -92,38 +94,23 @@ int on_game(char *ip_text) {
 
     //t_client_request client_request;
 
-    fd_set rdfs;
+    t_thread_params *args = malloc(sizeof(t_thread_params));
+    args->sock = sock;
+    args->game = &game;
+    args->game_size = sizeof(game);
+    args->player = &player;
+    args->actual_index = actual_index;
+
+    if (pthread_create(&MAP_THREAD, NULL, map_update_process, args)) {
+        free(args);
+        perror("pthread_create");
+        return EXIT_FAILURE;
+    }
 
     int running = 1;
     SDL_Event event;
     while (running)
     {
-        FD_ZERO(&rdfs);
-        FD_SET(sock, &rdfs);
-
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 1000;
-
-        if (select(sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
-            perror("select()");
-            exit(errno);
-        }
-
-        if (FD_ISSET(sock, &rdfs)) {
-            int n = 0;
-            if((n = recv(sock, &game, sizeof(game), 0)) < 0)
-            {
-                perror("recv()");
-                exit(errno);
-            }
-            player = game.player_infos[actual_index];
-            // printf("\nCli Actual x : %d\n", player.x_pos);
-            // printf("Cli Actual y : %d\n\n", player.y_pos);
-            display_map(game.map);
-            display_character(game.player_infos);
-        }
-
         //Dans ce block logique event, send action au serv, ...
         SDL_WaitEvent(&event);
         switch(event.type)
@@ -173,6 +160,7 @@ int on_game(char *ip_text) {
         }
     }
 
+    pthread_cancel(MAP_THREAD);
     closesocket(sock);
 
     return GO_QUIT;
@@ -249,4 +237,40 @@ void move(t_player_infos *player, int dir) {
         default:
             break;
     }
+}
+
+void *map_update_process(void *args) {
+    t_thread_params *actual_args = args;
+
+    while (actual_args->game->game_state == 1) {
+        fd_set rdfs;
+
+        FD_ZERO(&rdfs);
+        FD_SET(actual_args->sock, &rdfs);
+
+        struct timeval tv;
+        tv.tv_sec = 0;
+        tv.tv_usec = 1000;
+
+        if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
+            perror("select()");
+            exit(errno);
+        }
+
+        if (FD_ISSET(actual_args->sock, &rdfs)) {
+            int n = 0;
+            if((n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0)) < 0)
+            {
+                perror("recv()");
+                exit(errno);
+            }
+            *actual_args->player = actual_args->game->player_infos[actual_args->actual_index];
+            // printf("\nCli Actual x : %d\n", player.x_pos);
+            // printf("Cli Actual y : %d\n\n", player.y_pos);
+            display_map(actual_args->game->map);
+            display_character(actual_args->game->player_infos);
+        }
+    }
+
+    free(actual_args);
 }
