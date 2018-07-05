@@ -84,3 +84,50 @@ int get_nb_players(t_game game) {
 
     return nb;
 }
+
+void display_explosion(int bomb_index, char *map, int nb_case)
+{
+    // ajout de chaque direction
+    add_flames(bomb_index, map, nb_case, -nb_case, -1);
+    add_flames(bomb_index, map, nb_case, nb_case, 1);
+    add_flames(bomb_index, map, nb_case, nb_case * (-15), -15);
+    add_flames(bomb_index, map, nb_case, nb_case * 15, 15);
+
+}
+
+void add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator)
+{
+    int i;
+
+    if (max_index > 0) {
+        for (i = 0; i <= max_index; i+= iterator) {
+            if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+                i = max_index;
+            }
+            else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+            }
+            else
+                break;
+            if (i == max_index)
+                break;
+        }         
+    }   
+    else {
+        for (i = 0; i >= max_index; i+= iterator) {
+            if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+                i = max_index;
+            }
+            else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+            }
+            else
+                break;
+            if (i == max_index)
+                break;
+        }         
+    }
+    
+}
