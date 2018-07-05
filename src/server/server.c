@@ -66,6 +66,10 @@ void *main_server()
         /* add socket of each client */
         for(i = 0; i < actual; i++) {
             FD_SET(game.player_infos[i].socket, &rdfs);
+            // Check si le joueur est sur une flamme il meurt
+            if (game.map[15 * game.player_infos[i].y_pos + game.player_infos[i].x_pos] == 0) {
+              game.player_infos[i].alive = 0;
+            }
         }
 
         struct timeval tv;
