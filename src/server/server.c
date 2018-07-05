@@ -165,56 +165,57 @@ void *main_server()
                         // Affichage du feu       
 
                         int index;
-                        int i;
+                        //int i;
 
                         index = bomb_timers.bomb_timer[b].bomb_index;
-                        for (i = 0; i >= -3; i--) {
-                            if (game.map[index + i] == DESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                                i = -3;
-                            }
-                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                            }
-                            else
-                                i = -3;
-                        }          
+                        display_explosion(index, game.map, 3);
+                        // for (i = 0; i >= -3; i--) {
+                        //     if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //         i = -3;
+                        //     }
+                        //     else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //     }
+                        //     else
+                        //         i = -3;
+                        // }          
 
-                        for (i = 1; i <= 3; i++) {
-                            if (game.map[index + i] == DESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                                i = 3;
-                            }
-                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                            }
-                            else
-                                i = 3;
-                        }
+                        // for (i = 1; i <= 3; i++) {
+                        //     if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //         i = 3;
+                        //     }
+                        //     else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //     }
+                        //     else
+                        //         i = 3;
+                        // }
 
-                        for (i = 0; i >= -45; i-= 15) {
-                           if (game.map[index + i] == DESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                                i = -45;
-                            }
-                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                            }
-                            else
-                                i = -45;
-                        }          
+                        // for (i = 0; i >= -45; i-= 15) {
+                        //    if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //         i = -45;
+                        //     }
+                        //     else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //     }
+                        //     else
+                        //         i = -45;
+                        // }          
 
-                        for (i = 15; i <= 45; i+= 15) {
-                            if (game.map[index + i] == DESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                                i = 45;
-                            }
-                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
-                                game.map[index + i] = 0;
-                            }
-                            else
-                                i = 45;
-                        }
+                        // for (i = 15; i <= 45; i+= 15) {
+                        //     if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //         i = 45;
+                        //     }
+                        //     else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                        //         game.map[index + i] = 0;
+                        //     }
+                        //     else
+                        //         i = 45;
+                        // }
                         
                         // game.map[bomb_timers.bomb_timer[b].bomb_index + 1] = 0;
                         // game.map[bomb_timers.bomb_timer[b].bomb_index - 1] = 0;
@@ -312,4 +313,51 @@ void write_player(SOCKET sock, t_game game)
         perror("send()");
         exit(errno);
     }
+}
+
+void display_explosion(int bomb_index, char *map, int nb_case)
+{
+    // ajout de chaque direction
+    add_flames(bomb_index, map, nb_case, -nb_case, -1);
+    add_flames(bomb_index, map, nb_case, nb_case, 1);
+    add_flames(bomb_index, map, nb_case, nb_case * (-15), -15);
+    add_flames(bomb_index, map, nb_case, nb_case * 15, 15);
+
+}
+
+void add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator)
+{
+    int i;
+
+    if (max_index > 0) {
+        for (i = 0; i <= max_index; i+= iterator) {
+            if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+                i = max_index;
+            }
+            else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+            }
+            else
+                break;
+            if (i == max_index)
+                break;
+        }         
+    }   
+    else {
+        for (i = 0; i >= max_index; i+= iterator) {
+            if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+                i = max_index;
+            }
+            else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                map[bomb_index + i] = 0;
+            }
+            else
+                break;
+            if (i == max_index)
+                break;
+        }         
+    }
+    
 }

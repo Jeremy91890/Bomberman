@@ -28,6 +28,7 @@ t_player_infos add_new_player(int index);
 int read_player(SOCKET sock, t_client_request req);
 void send_game_to_all_players(int actual, t_game game);
 void write_player(SOCKET sock, t_game game);
-
+void add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator);
+void display_explosion(int bomb_index, char *map, int nb_case);
 
 #endif
