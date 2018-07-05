@@ -13,7 +13,7 @@ SDL_Rect POS_INFO_TEXT_BOMB_LEFT;
 void display_bomb_left(t_player_infos *player_infos) {
 
     int width_text_bomb_left;
-    char text_to_display[14];
+    char text_to_display[16];
     char char_bomb_left[4];
     
     
