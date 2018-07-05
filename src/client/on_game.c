@@ -136,26 +136,26 @@ int on_game(char *ip_text) {
                 {
                     case SDLK_UP:
                         printf("SDLK_UP\n");
-                        if (game.game_state == 1)
+                        if (game.game_state == 0)
                             dir_pressed(sock, &player, TOP);
                         break;
                     case SDLK_DOWN:
-                        if (game.game_state == 1)
+                        if (game.game_state == 0)
                             dir_pressed(sock, &player, DOWN);
                         printf("SDLK_DOWN\n");
                         break;
                     case SDLK_LEFT:
-                        if (game.game_state == 1)
+                        if (game.game_state == 0)
                             dir_pressed(sock, &player, LEFT);
                         printf("SDLK_LEFT\n");
                         break;
                     case SDLK_RIGHT:
-                        if (game.game_state == 1)
+                        if (game.game_state == 0)
                             dir_pressed(sock, &player, RIGHT);
                         printf("SDLK_RIGHT\n");
                         break;
                     case SDLK_SPACE:
-                        if (game.game_state == 1)
+                        if (game.game_state == 0)
                             bomb_pressed(sock, &player);
                         printf("SDLK_SPACE\n");
                         break;

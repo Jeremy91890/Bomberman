@@ -157,11 +157,75 @@ void *main_server()
                 for (b = 1; b <= bomb_timers.number_of_bombs; b++) {
                     //Temps actuel egal ou sup a l explosion prevu
                     if ((unsigned)time(NULL) >= bomb_timers.bomb_timer[b].explosion_time) {
-                        printf("EXPLOSIONSSSS\n");
+                        printf("EXPLOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSIONSSSS\n");
                         fprintf(stdout, "%u\n", (unsigned)time(NULL));
                         printf("%d", bomb_timers.bomb_timer[b].explosion_time);
                         //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
                         game.map[bomb_timers.bomb_timer[b].bomb_index] = 0b00000111;
+                        // Affichage du feu       
+
+                        int index;
+                        int i;
+
+                        index = bomb_timers.bomb_timer[b].bomb_index;
+                        for (i = 0; i >= -3; i--) {
+                            if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                                i = -3;
+                            }
+                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                            }
+                            else
+                                i = -3;
+                        }          
+
+                        for (i = 1; i <= 3; i++) {
+                            if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                                i = 3;
+                            }
+                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                            }
+                            else
+                                i = 3;
+                        }
+
+                        for (i = 0; i >= -45; i-= 15) {
+                           if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                                i = -45;
+                            }
+                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                            }
+                            else
+                                i = -45;
+                        }          
+
+                        for (i = 15; i <= 45; i+= 15) {
+                            if (game.map[index + i] == DESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                                i = 45;
+                            }
+                            else if (game.map[index + i] != UNDESTRUCTABLE_WALL) {
+                                game.map[index + i] = 0;
+                            }
+                            else
+                                i = 45;
+                        }
+                        
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index + 1] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index - 1] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index + 15] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index - 15] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index + 2] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index - 2] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index + 30] = 0;
+                        // game.map[bomb_timers.bomb_timer[b].bomb_index - 30] = 0;
+
+                        // Fin d'affichage du feu
                         /*
                         Ici logique explosion bombe puis renvois de la game aux client
                         */

@@ -53,8 +53,10 @@ void display_map(char map[])
                 Rect_dest.y = Rect_dest.y + 8;
                 SDL_BlitSurface(bomb_block, &Rect_source, SCREEN, &Rect_dest);
             }
-            else if (map[i+j] == 0b10000111) {
+            else if (map[i+j] == 0) {
                 // case en flamme
+                printf("FFFFFFFFFFFFFFFFFFFFFFLLLLLLLLLLLLLLLLLLLLLAAAAAAAAAAAAAAAAAAAAMMMMMMMMMMMMMMMMMMMMMMMMMMMMEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                SDL_BlitSurface(background_tile, &Rect_source, SCREEN, &Rect_dest);
                 Rect_dest.x =  Rect_dest.x + 8;
                 Rect_dest.y = Rect_dest.y + 8;
                 SDL_BlitSurface(fire_block, &Rect_source, SCREEN, &Rect_dest);
