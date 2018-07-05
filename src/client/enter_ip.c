@@ -180,6 +180,50 @@ int on_enter_ip(char ip_text[]) {
                         ip_text[strlen(ip_text)-1] = '\0';
                         refresh_text_ip(ip_text);
                         break;
+                    case SDLK_SEMICOLON:
+                        update_value_ip(ip_text, ".");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_p:
+                        update_value_ip(ip_text, "0");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_a:
+                        update_value_ip(ip_text, "1");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_z:
+                        update_value_ip(ip_text, "2");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_e:
+                        update_value_ip(ip_text, "3");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_r:
+                        update_value_ip(ip_text, "4");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_t:
+                        update_value_ip(ip_text, "5");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_y:
+                        update_value_ip(ip_text, "6");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_u:
+                        update_value_ip(ip_text, "7");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_i:
+                        update_value_ip(ip_text, "8");
+                        refresh_text_ip(ip_text);
+                        break;
+                    case SDLK_o:
+                        update_value_ip(ip_text, "9");
+                        refresh_text_ip(ip_text);
+                        break;
                     default:
                         break;
                 }
