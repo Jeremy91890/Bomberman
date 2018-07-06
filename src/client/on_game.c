@@ -272,6 +272,8 @@ void *map_update_process(void *args) {
             display_map(actual_args->game->map);
             display_character(actual_args->game->player_infos);
             display_bomb_left(actual_args->player);
+            display_game_state(actual_args->game);
+            display_result_fight(actual_args->game, actual_args->player);
         }
     }
 
