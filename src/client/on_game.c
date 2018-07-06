@@ -252,7 +252,7 @@ void *map_update_process(void *args) {
 
         struct timeval tv;
         tv.tv_sec = 0;
-        tv.tv_usec = 1000;
+        tv.tv_usec = 1;
 
         if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
             perror("select()");

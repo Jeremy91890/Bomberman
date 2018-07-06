@@ -74,7 +74,7 @@ void *main_server()
 
         struct timeval tv;
         tv.tv_sec = 0;
-        tv.tv_usec = 1000;
+        tv.tv_usec = 1;
 
         if(select(max + 1, &rdfs, NULL, NULL, &tv) == -1) {
             perror("select()");
