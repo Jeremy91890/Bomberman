@@ -15,10 +15,10 @@ void display_bomb_left(t_player_infos *player_infos) {
     int width_text_bomb_left;
     char text_to_display[16];
     char char_bomb_left[4];
-    
-    
+
+
     sprintf(char_bomb_left,"%d",player_infos->bombs_left);
-    
+
     strcpy(text_to_display, "Bomb left : ");
     strcat(text_to_display, char_bomb_left);
 
@@ -37,7 +37,7 @@ void display_bomb_left(t_player_infos *player_infos) {
 void display_game_state(t_game *game) {
     int width_text_game_state;
     char text_to_display[8] = "waiting\0";
-    
+
     if (game->game_state == 1) {
         strcpy(text_to_display,"fight");
     } else if (game->game_state == 2) {
@@ -58,10 +58,10 @@ void display_game_state(t_game *game) {
 void display_result_fight(t_game *game, t_player_infos *player_infos) {
     int width_text_result_fight;
     char text_to_display[7] = "\0";
-    
+
     if (game->game_state == 2 && player_infos->alive == 1) {
         strcpy(text_to_display,"winner");
-    } else if (game->game_state == 2 && player_infos->alive == 0) {
+    } else if (player_infos->alive == 0) {
         strcpy(text_to_display,"loser");
     }
 

@@ -34,7 +34,7 @@ void refresh_text_ip(char *ip_text)
     TTF_SizeText(FONT, ip_text, &width_text_ip, NULL);
 
     POS_ENTER_IP_TEXT_IP.x = ((SCREEN_WIDTH / 2) - (width_text_ip / 2));
-    
+
     ENTER_IP_TEXT_IP = TTF_RenderText_Blended(FONT, ip_text, COLOR_TEXT_INPUT);
     SDL_BlitSurface(ENTER_IP_TEXT_IP, NULL, SCREEN, &POS_ENTER_IP_TEXT_IP);
 
@@ -85,7 +85,7 @@ int on_enter_ip(char ip_text[]) {
     ENTER_IP_TEXT_IP = TTF_RenderText_Blended(FONT, "Enter an IP", COLOR_TEXT_INPUT);
     SDL_BlitSurface(ENTER_IP_TEXT_IP, NULL, SCREEN, &POS_ENTER_IP_TEXT_IP);
 
-    
+
     ENTER_IP_TEXT_PLAY = TTF_RenderText_Blended(FONT, "Play", COLOR_TEXT_SELECTED);
     SDL_BlitSurface(ENTER_IP_TEXT_PLAY, NULL, SCREEN, &POS_ENTER_IP_TEXT_PLAY);
 
@@ -95,7 +95,7 @@ int on_enter_ip(char ip_text[]) {
     SDL_Flip(SCREEN);
 
     SDL_Event event;
- 
+
     while (running)
     {
         SDL_WaitEvent(&event);
@@ -124,11 +124,11 @@ int on_enter_ip(char ip_text[]) {
                         switch (enter_ip_selection)
                         {
                             case 0:
-                                printf("Go game join\n");
+                                // printf("Go game join\n");
                                 free_enter_ip(img_title, ENTER_IP_TEXT_IP, ENTER_IP_TEXT_PLAY, ENTER_IP_TEXT_BACK);
                                 return GO_GAME_JOIN;
                             case 1:
-                                printf("Go back to menu\n");
+                                // printf("Go back to menu\n");
                                 free_enter_ip(img_title, ENTER_IP_TEXT_IP, ENTER_IP_TEXT_PLAY, ENTER_IP_TEXT_BACK);
                                 return GO_MENU;
                         }

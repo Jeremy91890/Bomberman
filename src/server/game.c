@@ -25,8 +25,8 @@ t_game go_logique_server(t_game game, int actual, t_client_request req) {
 }
 
 t_game turn_player(t_game game, int actual, t_client_request req) {
-    printf("Current dir : %d\n", game.player_infos[actual].current_dir);
-    printf("Wanted dir : %d\n", req.dir);
+    // printf("Current dir : %d\n", game.player_infos[actual].current_dir);
+    // printf("Wanted dir : %d\n", req.dir);
     game.player_infos[actual].current_dir = req.dir;
     return game;
 }
@@ -36,10 +36,10 @@ t_game move_player(t_game game, int actual, t_client_request req) {
     int wanted_y = req.y_pos;
     int wanted_index = NB_BLOCS_WIDTH * wanted_y + wanted_x;
 
-    printf("Current x : %d\n", game.player_infos[actual].x_pos);
-    printf("Current y : %d\n", game.player_infos[actual].y_pos);
-    printf("Wanted x : %d\n", req.x_pos);
-    printf("Wanted y : %d\n", req.y_pos);
+    // printf("Current x : %d\n", game.player_infos[actual].x_pos);
+    // printf("Current y : %d\n", game.player_infos[actual].y_pos);
+    // printf("Wanted x : %d\n", req.x_pos);
+    // printf("Wanted y : %d\n", req.y_pos);
 
     if (game.map[wanted_index] != 0b01100111 && game.map[wanted_index] != 0b01000111 && game.map[wanted_index] != 0b00010111) {
         game.player_infos[actual].x_pos = wanted_x;
@@ -51,8 +51,8 @@ t_game move_player(t_game game, int actual, t_client_request req) {
 
 t_game place_bomb(t_game game, int actual, t_client_request req) {
     int wanted_bomb_index = NB_BLOCS_WIDTH * game.player_infos[actual].y_pos + game.player_infos[actual].x_pos;
-    printf("Bomb left : ");
-    printf("%d\n", game.player_infos[actual].bombs_left);
+    // printf("Bomb left : ");
+    // printf("%d\n", game.player_infos[actual].bombs_left);
     if (game.player_infos[actual].bombs_left > 0 && game.map[wanted_bomb_index] != 0b00010111) {
         game.player_infos[actual].bombs_left -= 1;
         game.map[wanted_bomb_index] = 0b00010111;
@@ -68,11 +68,11 @@ t_game place_bomb(t_game game, int actual, t_client_request req) {
 t_game start_game(t_game game) {
 
     // check if user == host and if more than 1 user
-    printf("GGGGGGO11111111111\n");
+    // printf("GGGGGGO11111111111\n");
     if (get_nb_players(game) > 1) {
-        printf("change game state");
+        // printf("change game state");
         game.game_state = 1;
-        printf("GGGGGGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
+        // printf("GGGGGGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
     }
     return game;
 }

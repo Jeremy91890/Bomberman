@@ -47,7 +47,7 @@ int get_menu_event(int menu_selection)
 {
     int running = 1;
     SDL_Event event;
- 
+
     while (running)
     {
         SDL_WaitEvent(&event);
@@ -130,24 +130,24 @@ int on_menu()
 
     SDL_Flip(SCREEN);
 
-    
+
     menu_selection = get_menu_event(menu_selection);
 
     switch (menu_selection)
     {
         case 0:
-            printf("Go enter ip\n");
+            // printf("Go enter ip\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
             return GO_ENTER_IP;
         case 1:
-            printf("Go server\n");
+            // printf("Go server\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
             return GO_SERVER;
         case 2:
-            printf("Go quit\n");
+            // printf("Go quit\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
             return GO_QUIT;
     }
-    
+
     return GO_QUIT;
 }

@@ -12,7 +12,7 @@
 pthread_t MAP_THREAD;
 
 int on_game(char *ip_text) {
-    printf(ip_text);
+    // printf(ip_text);
 
     // creation du socket client
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -72,11 +72,11 @@ int on_game(char *ip_text) {
     t_player_infos player;
 
     // On récupère le bon joueur dans la liste des joueurs connectés
-    printf("SOCKET client : %d\n", sock);
-    printf("SOCKET player 0 : %d\n", game.player_infos[0].socket);
-    printf("SOCKET player 1 : %d\n", game.player_infos[1].socket);
-    printf("SOCKET player 2 : %d\n", game.player_infos[2].socket);
-    printf("SOCKET player 3 : %d\n", game.player_infos[3].socket);
+    // printf("SOCKET client : %d\n", sock);
+    // printf("SOCKET player 0 : %d\n", game.player_infos[0].socket);
+    // printf("SOCKET player 1 : %d\n", game.player_infos[1].socket);
+    // printf("SOCKET player 2 : %d\n", game.player_infos[2].socket);
+    // printf("SOCKET player 3 : %d\n", game.player_infos[3].socket);
 
     int actual_index;
 
@@ -89,7 +89,7 @@ int on_game(char *ip_text) {
         }
     }
 
-    printf("Je suis Joueur : %d\n", actual_index);
+    // printf("Je suis Joueur : %d\n", actual_index);
 
     player = game.player_infos[actual_index];
 
@@ -124,28 +124,28 @@ int on_game(char *ip_text) {
                 switch (event.key.keysym.sym)
                 {
                     case SDLK_UP:
-                        printf("SDLK_UP\n");
+                        // printf("SDLK_UP\n");
                             dir_pressed(sock, &player, TOP);
                         break;
                     case SDLK_DOWN:
                             dir_pressed(sock, &player, DOWN);
-                        printf("SDLK_DOWN\n");
+                        // printf("SDLK_DOWN\n");
                         break;
                     case SDLK_LEFT:
                             dir_pressed(sock, &player, LEFT);
-                        printf("SDLK_LEFT\n");
+                        // printf("SDLK_LEFT\n");
                         break;
                     case SDLK_RIGHT:
                             dir_pressed(sock, &player, RIGHT);
-                        printf("SDLK_RIGHT\n");
+                        // printf("SDLK_RIGHT\n");
                         break;
                     case SDLK_SPACE:
                             bomb_pressed(sock, &player);
-                        printf("SDLK_SPACE\n");
+                        // printf("SDLK_SPACE\n");
                         break;
                     case SDLK_RETURN:
                             enter_pressed(sock, &player);
-                        printf("SDLK_RETURN\n");
+                        // printf("SDLK_RETURN\n");
                         break;
                     default:
                         break;

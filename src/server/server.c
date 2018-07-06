@@ -46,11 +46,11 @@ void *main_server()
     for (i = 0 ; i < MAX_PLAYERS ; i++)
         game.player_infos[i].socket = 0;
     init_map(game.map);
-    int n = 0;
-    while(n < sizeof(game.map)) {
-        printf("%d ", game.map[n]);
-        n = n + 1;
-    }
+    // int n = 0;
+    // while(n < sizeof(game.map)) {
+    //     printf("%d ", game.map[n]);
+    //     n = n + 1;
+    // }
 
     while(1) {
         //printf("Viens !!\n");
@@ -90,8 +90,8 @@ void *main_server()
             struct sockaddr_in csin = { 0 };
             socklen_t sinsize = sizeof(csin);
             int csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
-            printf("server client Socket %d\n", sock);
-            printf("server csock %d\n", csock);
+            // printf("server client Socket %d\n", sock);
+            // printf("server csock %d\n", csock);
 
             if(csock == SOCKET_ERROR) {
                 perror("accept()");
@@ -113,9 +113,9 @@ void *main_server()
 
             FD_SET(csock, &rdfs);
 
-            printf("t_player_infos player_infos = add_new_player(actual); actual : ");
-            printf("%d", actual);
-            printf("\n");
+            // printf("t_player_infos player_infos = add_new_player(actual); actual : ");
+            // printf("%d", actual);
+            // printf("\n");
             t_player_infos player_infos = add_new_player(actual);
             player_infos.socket = csock;
             game.player_infos[actual] = player_infos;
@@ -129,18 +129,18 @@ void *main_server()
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
                     //int c = read_player(game.player_infos[i].socket, req);
 
-                    printf("\ndir actual : %d\n", game.player_infos[i].current_dir);
-                    printf("x actual : %d\n", game.player_infos[i].x_pos);
-                    printf("y actual : %d\n\n", game.player_infos[i].y_pos);
+                    // printf("\ndir actual : %d\n", game.player_infos[i].current_dir);
+                    // printf("x actual : %d\n", game.player_infos[i].x_pos);
+                    // printf("y actual : %d\n\n", game.player_infos[i].y_pos);
                     int n = 0;
                     if((n = recv(game.player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0) {
                         perror("recv()");
                         /* if recv error we disonnect the client */
                         n = 0;
                     }
-                    printf("\ndir wanted : %d\n", req.dir);
-                    printf("x wanted : %d\n", req.x_pos);
-                    printf("y wanted : %d\n\n", req.y_pos);
+                    // printf("\ndir wanted : %d\n", req.dir);
+                    // printf("x wanted : %d\n", req.x_pos);
+                    // printf("y wanted : %d\n\n", req.y_pos);
                     /* client disconnected */
                     if(n == 0) {
                         //closesocket(clients[i].sock);
@@ -184,8 +184,8 @@ void *main_server()
                     //Temps actuel egal ou sup a l explosion prevu
                     if ((unsigned)time(NULL) >= bomb_timers.bomb_timer[b].explosion_time) {
                         //printf("EXPLOOOOOOOOOOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSIONSSSS\n");
-                        fprintf(stdout, "%u\n", (unsigned)time(NULL));
-                        printf("%d", bomb_timers.bomb_timer[b].explosion_time);
+                        // fprintf(stdout, "%u\n", (unsigned)time(NULL));
+                        // printf("%d", bomb_timers.bomb_timer[b].explosion_time);
                         //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
                         game.map[bomb_timers.bomb_timer[b].bomb_index] = 0b00000111;
 
@@ -233,7 +233,7 @@ void *main_server()
     //clear_clients(clients, actual);
     //end_connection(sock);
 
-    printf("quit\n");
+    // printf("quit\n");
     //destroy the warning
     pthread_exit(NULL);
 }
@@ -282,19 +282,19 @@ int read_player(SOCKET sock, t_client_request req)
 
 void send_game_to_all_players(int actual, t_game game)
 {
-    printf("send game for all\n");
+    // printf("send game for all\n");
 
     int i = 0;
 
     for(i = 0; i < actual; i++) {
-        printf("for(i = 0; i < actual; i++) de send game\n");
+        // printf("for(i = 0; i < actual; i++) de send game\n");
         write_player(game.player_infos[i].socket, game);
     }
 }
 
 void write_player(SOCKET sock, t_game game)
 {
-    printf("write player\n");
+    // printf("write player\n");
     if(send(sock, &game, sizeof(game), 0) < 0) {
         perror("send()");
         exit(errno);
