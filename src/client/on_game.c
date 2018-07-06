@@ -64,7 +64,7 @@ int on_game(char *ip_text) {
         perror("recv()");
         exit(errno);
     }
-
+    init_sprites();
     display_map(game.map);
     display_character(game.player_infos);
     //A terme la fonction draw_map va devoir afficher tout quelque soit l'élement

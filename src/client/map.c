@@ -7,10 +7,46 @@
 #include "../headers/generate_map.h"
 #include "../headers/structs.h"
 
+SDL_Surface *background_tile, *explodable_block, *solid_block, *bomb_block, *fire_block;
+
+SDL_Surface *sprite_Bman_01_B, *sprite_Bman_01_F, *sprite_Bman_01_L, *sprite_Bman_01_R;
+SDL_Surface *sprite_Bman_02_B, *sprite_Bman_02_F, *sprite_Bman_02_L, *sprite_Bman_02_R;
+SDL_Surface *sprite_Bman_03_B, *sprite_Bman_03_F, *sprite_Bman_03_L, *sprite_Bman_03_R;
+SDL_Surface *sprite_Bman_04_B, *sprite_Bman_04_F, *sprite_Bman_04_L, *sprite_Bman_04_R;
+
+
+void init_sprites() {
+    background_tile = IMG_Load("./resources/sprites/blocks/BackgroundTile.png");
+    explodable_block = IMG_Load("./resources/sprites/blocks/ExplodableBlock.png");
+    solid_block = IMG_Load("./resources/sprites/blocks/SolidBlock.png");
+    bomb_block = IMG_Load("./resources/sprites/bomb/Bomb_f01.png");
+    fire_block = IMG_Load("./resources/sprites/flame/Flame_f00.png");
+
+    sprite_Bman_01_B = IMG_Load("./resources/sprites/bomberman/Back/Bman01_B_f00.png");
+    sprite_Bman_01_F = IMG_Load("./resources/sprites/bomberman/Front/Bman01_F_f00.png");
+    sprite_Bman_01_L = IMG_Load("./resources/sprites/bomberman/Left/Bman01_L_f00.png");
+    sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
+
+    sprite_Bman_02_B = IMG_Load("./resources/sprites/bomberman/Back/Bman02_B_f00.png");
+    sprite_Bman_02_F = IMG_Load("./resources/sprites/bomberman/Front/Bman02_F_f00.png");
+    sprite_Bman_02_L = IMG_Load("./resources/sprites/bomberman/Left/Bman02_L_f00.png");
+    sprite_Bman_02_R = IMG_Load("./resources/sprites/bomberman/Right/Bman02_R_f00.png");
+
+    sprite_Bman_03_B = IMG_Load("./resources/sprites/bomberman/Back/Bman03_B_f00.png");
+    sprite_Bman_03_F = IMG_Load("./resources/sprites/bomberman/Front/Bman03_F_f00.png");
+    sprite_Bman_03_L = IMG_Load("./resources/sprites/bomberman/Left/Bman03_L_f00.png");
+    sprite_Bman_03_R = IMG_Load("./resources/sprites/bomberman/Right/Bman03_R_f00.png");
+
+    sprite_Bman_04_B = IMG_Load("./resources/sprites/bomberman/Back/Bman04_B_f00.png");
+    sprite_Bman_04_F = IMG_Load("./resources/sprites/bomberman/Front/Bman04_F_f00.png");
+    sprite_Bman_04_L = IMG_Load("./resources/sprites/bomberman/Left/Bman04_L_f00.png");
+    sprite_Bman_04_R = IMG_Load("./resources/sprites/bomberman/Right/Bman04_R_f00.png");
+}
+
 void display_map(char map[])
 {
 	int i,j;
-    SDL_Surface *background_tile, *explodable_block, *solid_block, *bomb_block, *fire_block;
+    
 	SDL_Rect Rect_dest;
 	SDL_Rect Rect_source;
 	Rect_source.w = TILE_WIDTH;
@@ -20,12 +56,7 @@ void display_map(char map[])
 
     int n = 0;
 
-    background_tile = IMG_Load("./resources/sprites/blocks/BackgroundTile.png");
-    explodable_block = IMG_Load("./resources/sprites/blocks/ExplodableBlock.png");
-    solid_block = IMG_Load("./resources/sprites/blocks/SolidBlock.png");
-    bomb_block = IMG_Load("./resources/sprites/bomb/Bomb_f01.png");
-    fire_block = IMG_Load("./resources/sprites/flame/Flame_f00.png");
-
+    
 	for(i=0;i<195;i+= 15)
 	{
 		for(j=0;j<15;j++)
@@ -69,32 +100,9 @@ void display_map(char map[])
 
 void display_character(t_player_infos *player_infos)
 {
-    SDL_Surface *sprite_Bman_01_B, *sprite_Bman_01_F, *sprite_Bman_01_L, *sprite_Bman_01_R;
-    SDL_Surface *sprite_Bman_02_B, *sprite_Bman_02_F, *sprite_Bman_02_L, *sprite_Bman_02_R;
-    SDL_Surface *sprite_Bman_03_B, *sprite_Bman_03_F, *sprite_Bman_03_L, *sprite_Bman_03_R;
-    SDL_Surface *sprite_Bman_04_B, *sprite_Bman_04_F, *sprite_Bman_04_L, *sprite_Bman_04_R;
     SDL_Rect Rect_dest;
 
     //A terme -> mettre dans un init et en global pour pas avoir à les recharger
-    sprite_Bman_01_B = IMG_Load("./resources/sprites/bomberman/Back/Bman01_B_f00.png");
-    sprite_Bman_01_F = IMG_Load("./resources/sprites/bomberman/Front/Bman01_F_f00.png");
-    sprite_Bman_01_L = IMG_Load("./resources/sprites/bomberman/Left/Bman01_L_f00.png");
-    sprite_Bman_01_R = IMG_Load("./resources/sprites/bomberman/Right/Bman01_R_f00.png");
-
-    sprite_Bman_02_B = IMG_Load("./resources/sprites/bomberman/Back/Bman02_B_f00.png");
-    sprite_Bman_02_F = IMG_Load("./resources/sprites/bomberman/Front/Bman02_F_f00.png");
-    sprite_Bman_02_L = IMG_Load("./resources/sprites/bomberman/Left/Bman02_L_f00.png");
-    sprite_Bman_02_R = IMG_Load("./resources/sprites/bomberman/Right/Bman02_R_f00.png");
-
-    sprite_Bman_03_B = IMG_Load("./resources/sprites/bomberman/Back/Bman03_B_f00.png");
-    sprite_Bman_03_F = IMG_Load("./resources/sprites/bomberman/Front/Bman03_F_f00.png");
-    sprite_Bman_03_L = IMG_Load("./resources/sprites/bomberman/Left/Bman03_L_f00.png");
-    sprite_Bman_03_R = IMG_Load("./resources/sprites/bomberman/Right/Bman03_R_f00.png");
-
-    sprite_Bman_04_B = IMG_Load("./resources/sprites/bomberman/Back/Bman04_B_f00.png");
-    sprite_Bman_04_F = IMG_Load("./resources/sprites/bomberman/Front/Bman04_F_f00.png");
-    sprite_Bman_04_L = IMG_Load("./resources/sprites/bomberman/Left/Bman04_L_f00.png");
-    sprite_Bman_04_R = IMG_Load("./resources/sprites/bomberman/Right/Bman04_R_f00.png");
 
     int i = 0;
     while(i < (MAX_PLAYERS)) {
