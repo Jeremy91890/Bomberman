@@ -2,20 +2,19 @@
 #include "../headers/server.h"
 #include "../headers/map.h"
 
-t_game go_logique_server(t_game game, int actual, t_client_request req) {
-    //printf("Actual : %d\n", actual);
+t_game go_logique_server(t_game game, int actual, t_client_request req)
+{
     t_player_infos pi = game.player_infos[actual];
 
     if (pi.alive == 1) {
-        //printf("ENTER ALIVE");
         if (game.game_state == 1) {
-            //printf("ENTER GAME STATE == 1");
-            if (req.dir != 0 && req.dir != pi.current_dir)
+            if (req.dir != 0 && req.dir != pi.current_dir) {
                 game = turn_player(game, actual, req);
-            else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos)
+            } else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos) {
                 game = move_player(game, actual, req);
-            else if (req.command == 1)
+            } else if (req.command == 1) {
                 game = place_bomb(game, actual, req);
+            }
         } else if (req.command == 2 && actual == 0 && game.game_state == 0) {
             game = start_game(game);
         }
@@ -24,22 +23,17 @@ t_game go_logique_server(t_game game, int actual, t_client_request req) {
     return game;
 }
 
-t_game turn_player(t_game game, int actual, t_client_request req) {
-    // printf("Current dir : %d\n", game.player_infos[actual].current_dir);
-    // printf("Wanted dir : %d\n", req.dir);
+t_game turn_player(t_game game, int actual, t_client_request req)
+{
     game.player_infos[actual].current_dir = req.dir;
     return game;
 }
 
-t_game move_player(t_game game, int actual, t_client_request req) {
+t_game move_player(t_game game, int actual, t_client_request req)
+{
     int wanted_x = req.x_pos;
     int wanted_y = req.y_pos;
     int wanted_index = NB_BLOCS_WIDTH * wanted_y + wanted_x;
-
-    // printf("Current x : %d\n", game.player_infos[actual].x_pos);
-    // printf("Current y : %d\n", game.player_infos[actual].y_pos);
-    // printf("Wanted x : %d\n", req.x_pos);
-    // printf("Wanted y : %d\n", req.y_pos);
 
     if (game.map[wanted_index] != 0b01100111 && game.map[wanted_index] != 0b01000111 && game.map[wanted_index] != 0b00010111) {
         game.player_infos[actual].x_pos = wanted_x;
@@ -51,33 +45,28 @@ t_game move_player(t_game game, int actual, t_client_request req) {
 
 t_game place_bomb(t_game game, int actual, t_client_request req) {
     int wanted_bomb_index = NB_BLOCS_WIDTH * game.player_infos[actual].y_pos + game.player_infos[actual].x_pos;
-    // printf("Bomb left : ");
-    // printf("%d\n", game.player_infos[actual].bombs_left);
+
     if (game.player_infos[actual].bombs_left > 0 && game.map[wanted_bomb_index] != 0b00010111) {
         game.player_infos[actual].bombs_left -= 1;
         game.map[wanted_bomb_index] = 0b00010111;
 
         bomb_timers.number_of_bombs = bomb_timers.number_of_bombs + 1;
-        //bomb_timers.bomb_timer = realloc(bomb_timers.bomb_timer, bomb_timers.number_of_bombs * sizeof(bomb_timers.bomb_timer));
         bomb_timers.bomb_timer[bomb_timers.number_of_bombs].bomb_index = wanted_bomb_index;
         bomb_timers.bomb_timer[bomb_timers.number_of_bombs].explosion_time = (unsigned)time(NULL) + BOMB_SEC;
     }
     return game;
 }
 
-t_game start_game(t_game game) {
-
-    // check if user == host and if more than 1 user
-    // printf("GGGGGGO11111111111\n");
+t_game start_game(t_game game)
+{
     if (get_nb_players(game) > 1) {
-        // printf("change game state");
         game.game_state = 1;
-        // printf("GGGGGGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
     }
     return game;
 }
 
-int get_nb_players(t_game game) {
+int get_nb_players(t_game game)
+{
     int i;
     int nb;
     nb = 0;
@@ -97,7 +86,6 @@ void display_explosion(int bomb_index, char *map, int nb_case)
     add_flames(bomb_index, map, nb_case, nb_case, 1);
     add_flames(bomb_index, map, nb_case, nb_case * (-15), -15);
     add_flames(bomb_index, map, nb_case, nb_case * 15, 15);
-
 }
 
 void add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator)
@@ -113,21 +101,21 @@ void add_flames(int bomb_index, char *map, int nb_case, int max_index, int itera
                     flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
                     flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
                     i = max_index;
-                }
-                else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                } else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
                     map[bomb_index + i] = 0;
                     flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
                     flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
                     flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
+                } else {
+                    break;
                 }
-                else
+
+                if (i == max_index) {
                     break;
-                if (i == max_index)
-                    break;
+                }
             }
         }
-    }
-    else {
+    } else {
         for (i = 0; i >= max_index; i+= iterator) {
             if (map[bomb_index + i] != 0b00010111) {
                 if (map[bomb_index + i] == DESTRUCTABLE_WALL) {
@@ -136,19 +124,18 @@ void add_flames(int bomb_index, char *map, int nb_case, int max_index, int itera
                     flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
                     flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
                     i = max_index;
-                }
-                else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
+                } else if (map[bomb_index + i] != UNDESTRUCTABLE_WALL) {
                     map[bomb_index + i] = 0;
                     flam_timers.number_of_flams = flam_timers.number_of_flams + 1;
                     flam_timers.flam_timer[flam_timers.number_of_flams].flam_index = bomb_index + i;
                     flam_timers.flam_timer[flam_timers.number_of_flams].display_time = (unsigned)time(NULL) + 1;
+                } else {
+                    break;
                 }
-                else
+                if (i == max_index) {
                     break;
-                if (i == max_index)
-                    break;
+                }
             }
         }
     }
-
 }

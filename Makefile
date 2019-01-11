@@ -2,7 +2,7 @@ CC := gcc
 RM := rm -f
 LN_F = ln -f
 
-CFLAGS := -Wall -g3 -Werror -lSDL -lSDL_image -lSDL_ttf -lpthread
+CFLAGS := -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf
 
 EXE_NAME := BombermanExe
 SRCDIRS := src src/client src/server
@@ -23,7 +23,7 @@ create_out_directory := $(foreach dir,  $(SRCDIRS),   $(shell mkdir -p $(OBJDIR)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o "$(TARGET)"
+	$(CC) $(OBJS) $(CFLAGS) -o "$(TARGET)"
 	$(LN_F) $(TARGET) $(EXE_NAME)
 
 $(OBJDIR)/%.o: %.c

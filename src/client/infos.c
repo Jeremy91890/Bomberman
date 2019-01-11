@@ -10,12 +10,11 @@
 SDL_Surface *INFO_TEXT_BOMB_LEFT = NULL, *INFO_TEXT_GAME_STATE = NULL, *INFO_TEXT_RESULT_FIGHT = NULL;
 SDL_Rect POS_INFO_TEXT_BOMB_LEFT, POS_INFO_TEXT_GAME_STATE, POS_INFO_TEXT_RESULT_FIGHT;
 
-void display_bomb_left(t_player_infos *player_infos) {
-
+void display_bomb_left(t_player_infos *player_infos)
+{
     int width_text_bomb_left;
     char text_to_display[16];
     char char_bomb_left[4];
-
 
     sprintf(char_bomb_left,"%d",player_infos->bombs_left);
 
@@ -31,10 +30,10 @@ void display_bomb_left(t_player_infos *player_infos) {
     SDL_BlitSurface(INFO_TEXT_BOMB_LEFT, NULL, SCREEN, &POS_INFO_TEXT_BOMB_LEFT);
 
     SDL_Flip(SCREEN);
-
 }
 
-void display_game_state(t_game *game) {
+void display_game_state(t_game *game)
+{
     int width_text_game_state;
     char text_to_display[8] = "waiting\0";
 
@@ -55,7 +54,8 @@ void display_game_state(t_game *game) {
     SDL_Flip(SCREEN);
 }
 
-void display_result_fight(t_game *game, t_player_infos *player_infos) {
+void display_result_fight(t_game *game, t_player_infos *player_infos)
+{
     int width_text_result_fight;
     char text_to_display[7] = "\0";
 

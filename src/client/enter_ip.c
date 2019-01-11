@@ -15,6 +15,7 @@ void switch_enter_ip_color(int enter_ip_selection)
             ENTER_IP_TEXT_BACK = TTF_RenderText_Blended(FONT, "Back", COLOR_TEXT_UNSELECTED);
             SDL_BlitSurface(ENTER_IP_TEXT_BACK, NULL, SCREEN, &POS_ENTER_IP_TEXT_BACK);
             break;
+
         case 1:
             ENTER_IP_TEXT_PLAY = TTF_RenderText_Blended(FONT, "Play", COLOR_TEXT_UNSELECTED);
             SDL_BlitSurface(ENTER_IP_TEXT_PLAY, NULL, SCREEN, &POS_ENTER_IP_TEXT_PLAY);
@@ -41,20 +42,23 @@ void refresh_text_ip(char *ip_text)
     SDL_Flip(SCREEN);
 }
 
-void free_enter_ip(SDL_Surface *img_title, SDL_Surface *ENTER_IP_TEXT_IP, SDL_Surface *ENTER_IP_TEXT_PLAY, SDL_Surface *ENTER_IP_TEXT_BACK) {
+void free_enter_ip(SDL_Surface *img_title, SDL_Surface *ENTER_IP_TEXT_IP, SDL_Surface *ENTER_IP_TEXT_PLAY, SDL_Surface *ENTER_IP_TEXT_BACK)
+{
     SDL_FreeSurface(img_title);
     SDL_FreeSurface(ENTER_IP_TEXT_IP);
     SDL_FreeSurface(ENTER_IP_TEXT_PLAY);
     SDL_FreeSurface(ENTER_IP_TEXT_BACK);
 }
 
-void update_value_ip(char *ip_text, char *c) {
+void update_value_ip(char *ip_text, char *c)
+{
     if (strlen(ip_text) < 15) {
         strcat(ip_text, c);
     }
 }
 
-int on_enter_ip(char ip_text[]) {
+int on_enter_ip(char ip_text[])
+{
     SDL_Surface *img_title = NULL;
     SDL_Rect pos_title;
 
@@ -96,134 +100,154 @@ int on_enter_ip(char ip_text[]) {
 
     SDL_Event event;
 
-    while (running)
-    {
+    while (running) {
         SDL_WaitEvent(&event);
-        switch(event.type)
-        {
+        switch(event.type) {
             case SDL_QUIT:
                 return GO_MENU;
+
             case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
+                switch (event.key.keysym.sym) {
                     case SDLK_UP:
-                        if (enter_ip_selection > 0)
-                        {
+                        if (enter_ip_selection > 0) {
                             enter_ip_selection -= 1;
                             switch_enter_ip_color(enter_ip_selection);
                         }
                         break;
+
                     case SDLK_DOWN:
-                        if (enter_ip_selection < 1)
-                        {
+                        if (enter_ip_selection < 1) {
                             enter_ip_selection += 1;
                             switch_enter_ip_color(enter_ip_selection);
                         }
                         break;
+
                     case SDLK_RETURN:
-                        switch (enter_ip_selection)
-                        {
+                        switch (enter_ip_selection) {
                             case 0:
-                                // printf("Go game join\n");
                                 free_enter_ip(img_title, ENTER_IP_TEXT_IP, ENTER_IP_TEXT_PLAY, ENTER_IP_TEXT_BACK);
                                 return GO_GAME_JOIN;
+
                             case 1:
-                                // printf("Go back to menu\n");
                                 free_enter_ip(img_title, ENTER_IP_TEXT_IP, ENTER_IP_TEXT_PLAY, ENTER_IP_TEXT_BACK);
                                 return GO_MENU;
                         }
+
                     case SDLK_KP_PERIOD:
                         update_value_ip(ip_text, ".");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP0:
                         update_value_ip(ip_text, "0");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP1:
                         update_value_ip(ip_text, "1");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP2:
                         update_value_ip(ip_text, "2");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP3:
                         update_value_ip(ip_text, "3");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP4:
                         update_value_ip(ip_text, "4");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP5:
                         update_value_ip(ip_text, "5");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP6:
                         update_value_ip(ip_text, "6");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP7:
                         update_value_ip(ip_text, "7");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP8:
                         update_value_ip(ip_text, "8");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_KP9:
                         update_value_ip(ip_text, "9");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_BACKSPACE:
                         ip_text[strlen(ip_text)-1] = '\0';
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_SEMICOLON:
                         update_value_ip(ip_text, ".");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_p:
                         update_value_ip(ip_text, "0");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_a:
                         update_value_ip(ip_text, "1");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_z:
                         update_value_ip(ip_text, "2");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_e:
                         update_value_ip(ip_text, "3");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_r:
                         update_value_ip(ip_text, "4");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_t:
                         update_value_ip(ip_text, "5");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_y:
                         update_value_ip(ip_text, "6");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_u:
                         update_value_ip(ip_text, "7");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_i:
                         update_value_ip(ip_text, "8");
                         refresh_text_ip(ip_text);
                         break;
+
                     case SDLK_o:
                         update_value_ip(ip_text, "9");
                         refresh_text_ip(ip_text);
                         break;
+                        
                     default:
                         break;
                 }
