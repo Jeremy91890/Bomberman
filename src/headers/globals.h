@@ -3,6 +3,7 @@
 
 #include <SDL/SDL.h>
 #include <SDL/SDL_ttf.h>
+#define HAVE_STRUCT_TIMESPEC
 #include <pthread.h>
 
 //Global variables
