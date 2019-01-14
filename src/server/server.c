@@ -214,27 +214,21 @@ int read_player(SOCKET sock, t_client_request req)
         /* if recv error we disonnect the client */
         n = 0;
     }
-    //printf("player server \n %d", game.player_infos[0].x_pos);
-    //game[n] = 0;
 
     return n;
 }
 
 void send_game_to_all_players(int actual, t_game game)
 {
-    // printf("send game for all\n");
-
     int i = 0;
 
     for(i = 0; i < actual; i++) {
-        // printf("for(i = 0; i < actual; i++) de send game\n");
         write_player(game.player_infos[i].socket, game);
     }
 }
 
 void write_player(SOCKET sock, t_game game)
 {
-    // printf("write player\n");
     if(send(sock, &game, sizeof(game), 0) < 0) {
         perror("send()");
         exit(errno);
