@@ -6,13 +6,13 @@
 #include <stdlib.h>
 #include "structs.h"
 
-t_game go_logique_server(t_game game, int actual, t_client_request req);
-t_game turn_player(t_game game, int actual, t_client_request req);
-t_game move_player(t_game game, int actual, t_client_request req);
-t_game place_bomb(t_game game, int actual, t_client_request req);
-t_game start_game(t_game game);
-int get_nb_players(t_game game);
-void add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator);
-void display_explosion(int bomb_index, char *map, int nb_case);
+t_game  go_logique_server(t_game game, int actual, t_client_request req);
+t_game  turn_player(t_game game, int actual, t_client_request req);
+t_game  move_player(t_game game, int actual, t_client_request req);
+t_game  place_bomb(t_game game, int actual, t_client_request req);
+t_game  start_game(t_game game);
+int     get_nb_players(t_game game);
+void    add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator);
+void    display_explosion(int bomb_index, char *map, int nb_case);
 
 #endif

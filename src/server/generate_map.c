@@ -5,8 +5,6 @@ char get_random_destructable_bloc()
 {
     int r = rand() % ((2+1) - 1) + 1;
 
-    //printf("%d\n", r);
-
     if (r == 1) {
         // mur destructible
         return DESTRUCTABLE_WALL;
@@ -82,25 +80,4 @@ void init_map(char map[])
     map[195] = '\0';
     
     delete_blocs_around_players(map, playerPos);
-    
-    // AFFICHAGE EN ASCII DE LA MAP, A SUPPRIMER C'EST JUSTE POUR TEST
-    /*int n = 0;
-    while (n < 195) {
-        if (n % 15 == 0) {
-            printf("\n");
-        }
-        if (map[n] == 0b01000111) {
-            printf("[]");
-            //indestructible
-        } else if (map[n] == 0b00000111) {
-            printf("  ");
-            // herbe
-        } else if (map[n] == 0b01100111) {
-            printf("<>");
-            //destructible
-        }
-        
-        n++;
-    }
-    */
 }

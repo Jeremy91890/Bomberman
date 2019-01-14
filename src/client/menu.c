@@ -7,8 +7,7 @@ SDL_Rect POS_MENU_TEXT_PLAY, POS_MENU_TEXT_SERVER, POS_MENU_TEXT_QUIT;
 
 void switch_menu_color(int menu_selection)
 {
-    switch (menu_selection)
-    {
+    switch (menu_selection){
         case 0:
             MENU_TEXT_PLAY = TTF_RenderText_Blended(FONT, "Play", COLOR_TEXT_SELECTED);
             SDL_BlitSurface(MENU_TEXT_PLAY, NULL, SCREEN, &POS_MENU_TEXT_PLAY);
@@ -19,6 +18,7 @@ void switch_menu_color(int menu_selection)
             MENU_TEXT_QUIT = TTF_RenderText_Blended(FONT, "Quit", COLOR_TEXT_UNSELECTED);
             SDL_BlitSurface(MENU_TEXT_QUIT, NULL, SCREEN, &POS_MENU_TEXT_QUIT);
             break;
+
         case 1:
             MENU_TEXT_PLAY = TTF_RenderText_Blended(FONT, "Play", COLOR_TEXT_UNSELECTED);
             SDL_BlitSurface(MENU_TEXT_PLAY, NULL, SCREEN, &POS_MENU_TEXT_PLAY);
@@ -29,6 +29,7 @@ void switch_menu_color(int menu_selection)
             MENU_TEXT_QUIT = TTF_RenderText_Blended(FONT, "Quit", COLOR_TEXT_UNSELECTED);
             SDL_BlitSurface(MENU_TEXT_QUIT, NULL, SCREEN, &POS_MENU_TEXT_QUIT);
             break;
+
         case 2:
             MENU_TEXT_PLAY = TTF_RenderText_Blended(FONT, "Play", COLOR_TEXT_UNSELECTED);
             SDL_BlitSurface(MENU_TEXT_PLAY, NULL, SCREEN, &POS_MENU_TEXT_PLAY);
@@ -39,41 +40,43 @@ void switch_menu_color(int menu_selection)
             MENU_TEXT_QUIT = TTF_RenderText_Blended(FONT, "Quit", COLOR_TEXT_SELECTED);
             SDL_BlitSurface(MENU_TEXT_QUIT, NULL, SCREEN, &POS_MENU_TEXT_QUIT);
             break;
+
     }
     SDL_Flip(SCREEN);
 }
 
 int get_menu_event(int menu_selection)
 {
-    int running = 1;
+    int running;
     SDL_Event event;
 
-    while (running)
-    {
+    running = 1;
+
+    while (running){
         SDL_WaitEvent(&event);
-        switch(event.type)
-        {
+        switch(event.type) {
             case SDL_QUIT:
                 return 2;
+
             case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
+                switch (event.key.keysym.sym) {
                     case SDLK_UP:
-                        if (menu_selection > 0)
-                        {
+                        if (menu_selection > 0) {
                             menu_selection -= 1;
                             switch_menu_color(menu_selection);
                         }
                         break;
+
                     case SDLK_DOWN:
-                        if (menu_selection < 2)
-                        {
+                        if (menu_selection < 2) {
                             menu_selection += 1;
                             switch_menu_color(menu_selection);
                         }
                         break;
+
                     case SDLK_RETURN:
                         return menu_selection;
+
                     default:
                         break;
                 }
@@ -84,7 +87,8 @@ int get_menu_event(int menu_selection)
 }
 
 
-void free_menu(SDL_Surface *img_title, SDL_Surface *MENU_TEXT_PLAY, SDL_Surface *MENU_TEXT_SERVER, SDL_Surface *MENU_TEXT_QUIT) {
+void free_menu(SDL_Surface *img_title, SDL_Surface *MENU_TEXT_PLAY, SDL_Surface *MENU_TEXT_SERVER, SDL_Surface *MENU_TEXT_QUIT)
+{
     SDL_FreeSurface(img_title);
     SDL_FreeSurface(MENU_TEXT_PLAY);
     SDL_FreeSurface(MENU_TEXT_SERVER);
@@ -130,21 +134,18 @@ int on_menu()
 
     SDL_Flip(SCREEN);
 
-
     menu_selection = get_menu_event(menu_selection);
 
-    switch (menu_selection)
-    {
+    switch (menu_selection) {
         case 0:
-            // printf("Go enter ip\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
             return GO_ENTER_IP;
+            
         case 1:
-            // printf("Go server\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
             return GO_SERVER;
+
         case 2:
-            // printf("Go quit\n");
             free_menu(img_title, MENU_TEXT_PLAY, MENU_TEXT_SERVER, MENU_TEXT_QUIT);
             return GO_QUIT;
     }
