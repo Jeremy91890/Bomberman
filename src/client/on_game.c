@@ -25,35 +25,39 @@ int on_game(char *ip_text)
 
     // creation du socket client
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(sock == INVALID_SOCKET) {
+    if (sock == INVALID_SOCKET)
+    {
         perror("socket()");
         exit(errno);
     }
 
     //Connection au server
     struct hostent *hostinfo = NULL;
-    SOCKADDR_IN sin = { 0 }; /* initialise la structure avec des 0 */
+    SOCKADDR_IN sin = {0}; /* initialise la structure avec des 0 */
     //ICI METTRE IP_TEXT POUR UTILISER L'IP ENTREE PAR LE USER
     const char *hostname = ip_text;
 
     /* on récupère les informations de l'hôte auquel on veut se connecter */
     hostinfo = gethostbyname(hostname);
     /* l'hôte n'existe pas */
-    if (hostinfo == NULL) {
-        fprintf (stderr, "Unknown host %s.\n", hostname);
+    if (hostinfo == NULL)
+    {
+        fprintf(stderr, "Unknown host %s.\n", hostname);
         exit(EXIT_FAILURE);
     }
 
-    sin.sin_addr = *(IN_ADDR *) hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
-    sin.sin_port = htons(PORT); /* on utilise htons pour le port */
+    sin.sin_addr = *(IN_ADDR *)hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
+    sin.sin_port = htons(PORT);                  /* on utilise htons pour le port */
     sin.sin_family = AF_INET;
 
-    if(connect(sock,(SOCKADDR *) &sin, sizeof(SOCKADDR)) == SOCKET_ERROR) {
+    if (connect(sock, (SOCKADDR *)&sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
+    {
         perror("connect()");
         exit(errno);
     }
 
-    if((n = recv(sock, &game, sizeof(game), 0)) < 0) {
+    if ((n = recv(sock, &game, sizeof(game), 0)) < 0)
+    {
         perror("recv()");
         exit(errno);
     }
@@ -62,10 +66,12 @@ int on_game(char *ip_text)
     display_character(game.player_infos);
     //A terme la fonction draw_map va devoir afficher tout quelque soit l'élement
 
-    for(i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++)
+    {
         // je fais sock + 1 juste pour que ça marche que pour le joueur 1 et pas rester bloqué,
         //il faut trouver le problème des sockets stockées dans la struct player_info
-        if(game.player_infos[i].socket != 0) {
+        if (game.player_infos[i].socket != 0)
+        {
             actual_index = i;
         }
     }
@@ -79,59 +85,62 @@ int on_game(char *ip_text)
     args->player = &player;
     args->actual_index = actual_index;
 
-    if (pthread_create(&MAP_THREAD, NULL, map_update_process, args)) {
+    if (pthread_create(&MAP_THREAD, NULL, map_update_process, args))
+    {
         free(args);
         perror("pthread_create");
         return EXIT_FAILURE;
     }
 
     SDL_Event event;
-    while (running) {
+    while (running)
+    {
         //Dans ce block logique event, send action au serv, ...
         SDL_WaitEvent(&event);
-        switch(event.type) {
-            case SDL_QUIT:
-                pthread_cancel(MAP_THREAD);
-                closesocket(sock);
-                return GO_QUIT;
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            pthread_cancel(MAP_THREAD);
+            closesocket(sock);
+            return GO_QUIT;
 
-            case SDL_KEYDOWN:
-                switch (event.key.keysym.sym)
-                {
-                    case SDLK_UP:
-                        dir_pressed(sock, &player, TOP);
-                        break;
-
-                    case SDLK_DOWN:
-                        dir_pressed(sock, &player, DOWN);
-                        break;
-
-                    case SDLK_LEFT:
-                        dir_pressed(sock, &player, LEFT);
-                        break;
-
-                    case SDLK_RIGHT:
-                        dir_pressed(sock, &player, RIGHT);
-                        break;
-
-                    case SDLK_SPACE:
-                        bomb_pressed(sock, &player);
-                        break;
-
-                    case SDLK_RETURN:
-                        enter_pressed(sock, &player);
-                        break;
-
-                    default:
-                        break;
-
-                }
-
+        case SDL_KEYDOWN:
+            switch (event.key.keysym.sym)
+            {
+            case SDLK_UP:
+                dir_pressed(sock, &player, TOP);
                 break;
+
+            case SDLK_DOWN:
+                dir_pressed(sock, &player, DOWN);
+                break;
+
+            case SDLK_LEFT:
+                dir_pressed(sock, &player, LEFT);
+                break;
+
+            case SDLK_RIGHT:
+                dir_pressed(sock, &player, RIGHT);
+                break;
+
+            case SDLK_SPACE:
+                bomb_pressed(sock, &player);
+                break;
+
+            case SDLK_RETURN:
+                enter_pressed(sock, &player);
+                break;
+
+            default:
+                break;
+            }
+
+            break;
         }
     }
 
-    if (pthread_join(MAP_THREAD, NULL)) {
+    if (pthread_join(MAP_THREAD, NULL))
+    {
         perror("pthread_join");
         return EXIT_FAILURE;
     }
@@ -149,7 +158,8 @@ void enter_pressed(int sock, t_player_infos *player)
     client_request.y_pos = player->y_pos;
     client_request.dir = player->current_dir;
 
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0) {
+    if (send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
         perror("send()");
         exit(errno);
     }
@@ -165,7 +175,8 @@ void bomb_pressed(int sock, t_player_infos *player)
     client_request.magic = player->socket;
     client_request.command = 1;
 
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0) {
+    if (send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
         perror("send()");
         exit(errno);
     }
@@ -175,7 +186,8 @@ void bomb_pressed(int sock, t_player_infos *player)
 void dir_pressed(int sock, t_player_infos *player, int dir)
 {
     // si le perso ne regarde deja dans direction on le fait avancer
-    if(change_dir(player, dir) == 0) {
+    if (change_dir(player, dir) == 0)
+    {
         move(player, dir);
     }
     t_client_request client_request;
@@ -184,7 +196,8 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
     client_request.dir = player->current_dir;
     client_request.magic = player->socket;
 
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0) {
+    if (send(sock, &client_request, sizeof(client_request), 0) < 0)
+    {
         perror("send()");
         exit(errno);
     }
@@ -193,7 +206,8 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
 // retourne 1 si la direction a changée
 int change_dir(t_player_infos *player, int dir)
 {
-    if(player->current_dir == dir) {
+    if (player->current_dir == dir)
+    {
         return 0;
     }
     player->current_dir = dir;
@@ -202,21 +216,22 @@ int change_dir(t_player_infos *player, int dir)
 
 void move(t_player_infos *player, int dir)
 {
-    switch (dir) {
-        case DOWN:
-            player->y_pos += 1;
-            break;
-        case TOP:
-            player->y_pos -= 1;
-            break;
-        case RIGHT:
-            player->x_pos += 1;
-            break;
-        case LEFT:
-            player->x_pos -= 1;
-            break;
-        default:
-            break;
+    switch (dir)
+    {
+    case DOWN:
+        player->y_pos += 1;
+        break;
+    case TOP:
+        player->y_pos -= 1;
+        break;
+    case RIGHT:
+        player->x_pos += 1;
+        break;
+    case LEFT:
+        player->x_pos -= 1;
+        break;
+    default:
+        break;
     }
 }
 
@@ -224,7 +239,8 @@ void *map_update_process(void *args)
 {
     t_thread_params *actual_args = args;
 
-    while (actual_args->game->game_state != 2) {
+    while (actual_args->game->game_state != 2)
+    {
         fd_set rdfs;
 
         FD_ZERO(&rdfs);
@@ -234,14 +250,17 @@ void *map_update_process(void *args)
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
+        if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1)
+        {
             perror("select()");
             exit(errno);
         }
 
-        if (FD_ISSET(actual_args->sock, &rdfs)) {
+        if (FD_ISSET(actual_args->sock, &rdfs))
+        {
             int n = 0;
-            if((n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0)) < 0) {
+            if ((n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0)) < 0)
+            {
                 perror("recv()");
                 exit(errno);
             }

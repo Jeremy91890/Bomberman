@@ -22,18 +22,32 @@ void *main_server()
 
     fd_set rdfs;
     t_client_request req;
-    t_game game;
-    // state à 0 pour dire que la partie n'a pas encore commencé
-    game.game_state = 0;
 
-    int i;
-    for (i = 0 ; i < MAX_PLAYERS ; i++) {
-        game.player_infos[i].socket = 0;
+    t_game *game;
+    game = malloc(sizeof(t_game));
+    if (game == NULL)
+        return NULL;
+
+    game->player_infos = malloc(4 * sizeof(t_player_infos));
+    if (game->player_infos == NULL)
+    {
+        free(game);
+        return NULL;
     }
 
-    init_map(game.map);
+    // state à 0 pour dire que la partie n'a pas encore commencé
+    game->game_state = 0;
 
-    while(1) {
+    int i;
+    for (i = 0; i < MAX_PLAYERS; i++)
+    {
+        game->player_infos[i].socket = 0;
+    }
+
+    init_map(game->map);
+
+    while (1)
+    {
         int i = 0;
         FD_ZERO(&rdfs);
 
@@ -44,11 +58,13 @@ void *main_server()
         FD_SET(sock, &rdfs);
 
         /* add socket of each client */
-        for(i = 0; i < actual; i++) {
-            FD_SET(game.player_infos[i].socket, &rdfs);
+        for (i = 0; i < actual; i++)
+        {
+            FD_SET(game->player_infos[i].socket, &rdfs);
             // Check si le joueur est sur une flamme il meurt
-            if (game.map[15 * game.player_infos[i].y_pos + game.player_infos[i].x_pos] == 0) {
-              game.player_infos[i].alive = 0;
+            if (game->map[15 * game->player_infos[i].y_pos + game->player_infos[i].x_pos] == 0)
+            {
+                game->player_infos[i].alive = 0;
             }
         }
 
@@ -56,26 +72,32 @@ void *main_server()
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        if(select(max + 1, &rdfs, NULL, NULL, &tv) == -1) {
+        if (select(max + 1, &rdfs, NULL, NULL, &tv) == -1)
+        {
             perror("select()");
             exit(errno);
         }
 
         /* something from standard input : i.e keyboard */
-        if(FD_ISSET(STDIN_FILENO, &rdfs)) {
+        if (FD_ISSET(STDIN_FILENO, &rdfs))
+        {
             /* stop process when type on keyboard */
             break;
-        } else if(FD_ISSET(sock, &rdfs)) {
+        }
+        else if (FD_ISSET(sock, &rdfs))
+        {
             /* new client */
-            struct sockaddr_in csin = { 0 };
+            struct sockaddr_in csin = {0};
             socklen_t sinsize = sizeof(csin);
             int csock = accept(sock, (SOCKADDR *)&csin, &sinsize);
 
-            if(csock == SOCKET_ERROR) {
+            if (csock == SOCKET_ERROR)
+            {
                 perror("accept()");
                 continue;
             }
-            else if(actual >= MAX_PLAYERS || game.game_state != 0) {
+            else if (actual >= MAX_PLAYERS || game->game_state != 0)
+            {
                 close(csock);
                 continue;
             }
@@ -87,24 +109,30 @@ void *main_server()
 
             t_player_infos player_infos = add_new_player(actual);
             player_infos.socket = csock;
-            game.player_infos[actual] = player_infos;
+            game->player_infos[actual] = player_infos;
 
             actual++;
             send_game_to_all_players(actual, game);
-        } else {
+        }
+        else
+        {
             int i = 0;
-            for(i = 0; i < actual; i++) {
+            for (i = 0; i < actual; i++)
+            {
                 /* a client is talking */
-                if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
+                if (FD_ISSET(game->player_infos[i].socket, &rdfs))
+                {
                     int n = 0;
-                    if((n = recv(game.player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0) {
+                    if ((n = recv(game->player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0)
+                    {
                         perror("recv()");
                         /* if recv error we disonnect the client */
                         n = 0;
                     }
 
-                    if(n != 0) {
-                        game = go_logique_server(game, i, req);
+                    if (n != 0)
+                    {
+                        go_logique_server(game, i, req);
                     }
 
                     send_game_to_all_players(actual, game);
@@ -113,16 +141,19 @@ void *main_server()
 
                 int f = 1;
 
-                for (f = 1; f <= flam_timers.number_of_flams; f++) {
+                for (f = 1; f <= flam_timers.number_of_flams; f++)
+                {
                     //Temps actuel egal ou sup a l explosion prevu
-                    if ((unsigned)time(NULL) >= flam_timers.flam_timer[f].display_time) {
+                    if ((unsigned)time(NULL) >= flam_timers.flam_timer[f].display_time)
+                    {
 
-                        game.map[flam_timers.flam_timer[f].flam_index] = 0b00000111;
+                        game->map[flam_timers.flam_timer[f].flam_index] = 0b00000111;
 
                         /* Ici logique explosion bombe puis renvois de la game aux client */
-                        flam_timers.flam_timer[f] = flam_timers.flam_timer[f+1];
+                        flam_timers.flam_timer[f] = flam_timers.flam_timer[f + 1];
                         int c;
-                        for (c = f; c < flam_timers.number_of_flams; c++) {
+                        for (c = f; c < flam_timers.number_of_flams; c++)
+                        {
                             flam_timers.flam_timer[c] = flam_timers.flam_timer[c + 1];
                         }
                         flam_timers.number_of_flams = flam_timers.number_of_flams - 1;
@@ -131,23 +162,26 @@ void *main_server()
                 }
                 //Ici check si bomb explose
                 int b = 1;
-                for (b = 1; b <= bomb_timers.number_of_bombs; b++) {
+                for (b = 1; b <= bomb_timers.number_of_bombs; b++)
+                {
                     //Temps actuel egal ou sup a l explosion prevu
-                    if ((unsigned)time(NULL) >= bomb_timers.bomb_timer[b].explosion_time) {
-                        game.map[bomb_timers.bomb_timer[b].bomb_index] = 0b00000111;
+                    if ((unsigned)time(NULL) >= bomb_timers.bomb_timer[b].explosion_time)
+                    {
+                        game->map[bomb_timers.bomb_timer[b].bomb_index] = 0b00000111;
 
                         // Affichage du feu
                         int index;
 
                         index = bomb_timers.bomb_timer[b].bomb_index;
-                        display_explosion(index, game.map, 3);
+                        display_explosion(index, game->map, 3);
 
                         // Fin d'affichage du feu
 
                         /* Ici logique explosion bombe puis renvois de la game aux client */
-                        bomb_timers.bomb_timer[b] = bomb_timers.bomb_timer[b+1];
+                        bomb_timers.bomb_timer[b] = bomb_timers.bomb_timer[b + 1];
                         int c;
-                        for (c = b; c < bomb_timers.number_of_bombs; c++) {
+                        for (c = b; c < bomb_timers.number_of_bombs; c++)
+                        {
                             bomb_timers.bomb_timer[c] = bomb_timers.bomb_timer[c + 1];
                         }
                         bomb_timers.number_of_bombs = bomb_timers.number_of_bombs - 1;
@@ -156,16 +190,20 @@ void *main_server()
                 }
 
                 //Gestion fin partie
-                if (game.game_state == 1) {
+                if (game->game_state == 1)
+                {
                     int i;
                     int n = 0;
-                    for (i = 0; i < MAX_PLAYERS; i++) {
-                        if (game.player_infos[i].alive == 1) {
+                    for (i = 0; i < MAX_PLAYERS; i++)
+                    {
+                        if (game->player_infos[i].alive == 1)
+                        {
                             n++;
                         }
                     }
-                    if (n <= 1) {
-                        game.game_state = 2;
+                    if (n <= 1)
+                    {
+                        game->game_state = 2;
                         send_game_to_all_players(actual, game);
                     }
                 }
@@ -181,9 +219,10 @@ void *main_server()
 int init_connection()
 {
     SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-    SOCKADDR_IN sin = { 0 };
+    SOCKADDR_IN sin = {0};
 
-    if(sock == INVALID_SOCKET) {
+    if (sock == INVALID_SOCKET)
+    {
         perror("socket()");
         exit(errno);
     }
@@ -192,12 +231,14 @@ int init_connection()
     sin.sin_port = htons(PORT);
     sin.sin_family = AF_INET;
 
-    if(bind(sock,(SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR) {
+    if (bind(sock, (SOCKADDR *)&sin, sizeof sin) == SOCKET_ERROR)
+    {
         perror("bind()");
         exit(errno);
     }
 
-    if(listen(sock, MAX_PLAYERS) == SOCKET_ERROR) {
+    if (listen(sock, MAX_PLAYERS) == SOCKET_ERROR)
+    {
         perror("listen()");
         exit(errno);
     }
@@ -209,7 +250,8 @@ int read_player(SOCKET sock, t_client_request req)
 {
     int n = 0;
 
-    if((n = recv(sock, &req, sizeof(req) - 1, 0)) < 0) {
+    if ((n = recv(sock, &req, sizeof(req) - 1, 0)) < 0)
+    {
         perror("recv()");
         /* if recv error we disonnect the client */
         n = 0;
@@ -218,18 +260,20 @@ int read_player(SOCKET sock, t_client_request req)
     return n;
 }
 
-void send_game_to_all_players(int actual, t_game game)
+void send_game_to_all_players(int actual, t_game *game)
 {
     int i = 0;
 
-    for(i = 0; i < actual; i++) {
-        write_player(game.player_infos[i].socket, game);
+    for (i = 0; i < actual; i++)
+    {
+        write_player(game->player_infos[i].socket, game);
     }
 }
 
-void write_player(SOCKET sock, t_game game)
+void write_player(SOCKET sock, t_game *game)
 {
-    if(send(sock, &game, sizeof(game), 0) < 0) {
+    if (send(sock, game, sizeof(game), 0) < 0)
+    {
         perror("send()");
         exit(errno);
     }
