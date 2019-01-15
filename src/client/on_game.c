@@ -61,7 +61,7 @@ int on_game(char *ip_text)
         exit(errno);
     }
 
-    for (int i = 0; i < 4; i++)
+    for (i = 0; i < 4; i++)
     {
         game->player_infos[i] = malloc(sizeof(t_player_infos));
     }
