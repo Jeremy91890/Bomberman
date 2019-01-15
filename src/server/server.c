@@ -10,6 +10,8 @@
 t_bomb_timers bomb_timers;
 t_flam_timers flam_timers;
 
+size_t game_buff_length;
+
 void *main_server()
 {
     SOCKET sock = init_connection();
@@ -27,6 +29,7 @@ void *main_server()
     game = malloc(sizeof(t_game));
     if (game == NULL)
         return NULL;
+    game_buff_length += sizeof(t_game);
 
     game->player_infos = malloc(4 * sizeof(t_player_infos));
     if (game->player_infos == NULL)
@@ -34,6 +37,7 @@ void *main_server()
         free(game);
         return NULL;
     }
+    game_buff_length += 4 * sizeof(t_player_infos);
 
     // state à 0 pour dire que la partie n'a pas encore commencé
     game->game_state = 0;
@@ -272,7 +276,7 @@ void send_game_to_all_players(int actual, t_game *game)
 
 void write_player(SOCKET sock, t_game *game)
 {
-    if (send(sock, game, sizeof(game), 0) < 0)
+    if (send(sock, game, game_buff_length, 0) < 0)
     {
         perror("send()");
         exit(errno);
