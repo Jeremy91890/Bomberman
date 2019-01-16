@@ -47,7 +47,7 @@ void init_globals()
     FONT = TTF_OpenFont("./resources/polices/04B_30__.TTF", 32);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     int run = 1;
     int NEXT_ACTION = GO_MENU;
