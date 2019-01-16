@@ -17,7 +17,22 @@ int on_game(char *ip_text)
     int i;
     int running;
     int n;
-    t_game game;
+
+    size_t game_buff_length = 0;
+    t_game *game;
+    game = malloc(sizeof(t_game));
+    if (game == NULL)
+        return -1;
+    game_buff_length += sizeof(t_game);
+
+    game->player_infos = malloc(4 * sizeof(t_player_infos));
+    if (game->player_infos == NULL)
+    {
+        free(game);
+        return -1;
+    }
+    game_buff_length += 4 * sizeof(t_player_infos);
+
     t_player_infos player;
 
     running = 1;
@@ -56,32 +71,32 @@ int on_game(char *ip_text)
         exit(errno);
     }
 
-    if ((n = recv(sock, &game, sizeof(game), 0)) < 0)
+    if ((n = recv(sock, game, game_buff_length, 0)) < 0)
     {
         perror("recv()");
         exit(errno);
     }
     init_sprites();
-    display_map(game.map);
-    display_character(game.player_infos);
+    display_map(game->map);
+    display_character(game->player_infos);
     //A terme la fonction draw_map va devoir afficher tout quelque soit l'élement
 
     for (i = 0; i < 4; i++)
     {
         // je fais sock + 1 juste pour que ça marche que pour le joueur 1 et pas rester bloqué,
         //il faut trouver le problème des sockets stockées dans la struct player_info
-        if (game.player_infos[i].socket != 0)
+        if (game->player_infos[i].socket != 0)
         {
             actual_index = i;
         }
     }
 
-    player = game.player_infos[actual_index];
+    player = game->player_infos[actual_index];
 
     t_thread_params *args = malloc(sizeof(t_thread_params));
     args->sock = sock;
-    args->game = &game;
-    args->game_size = sizeof(game);
+    args->game = game;
+    args->game_size = game_buff_length;
     args->player = &player;
     args->actual_index = actual_index;
 
@@ -151,35 +166,41 @@ int on_game(char *ip_text)
 
 void enter_pressed(int sock, t_player_infos *player)
 {
-    t_client_request client_request;
-    client_request.command = 2;
-    client_request.magic = player->socket;
-    client_request.x_pos = player->x_pos;
-    client_request.y_pos = player->y_pos;
-    client_request.dir = player->current_dir;
+    t_client_request *client_request;
+    client_request = malloc(sizeof(t_client_request));
+    client_request->command = 2;
+    client_request->magic = player->socket;
+    client_request->x_pos = player->x_pos;
+    client_request->y_pos = player->y_pos;
+    client_request->dir = player->current_dir;
 
-    if (send(sock, &client_request, sizeof(client_request), 0) < 0)
+    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()");
         exit(errno);
     }
+
+    free(client_request);
 }
 
 void bomb_pressed(int sock, t_player_infos *player)
 {
     // si le perso ne regarde deja dans direction on le fait avancer
-    t_client_request client_request;
-    client_request.x_pos = player->x_pos;
-    client_request.y_pos = player->y_pos;
-    client_request.dir = player->current_dir;
-    client_request.magic = player->socket;
-    client_request.command = 1;
+    t_client_request *client_request;
+    client_request = malloc(sizeof(t_client_request));
+    client_request->x_pos = player->x_pos;
+    client_request->y_pos = player->y_pos;
+    client_request->dir = player->current_dir;
+    client_request->magic = player->socket;
+    client_request->command = 1;
 
-    if (send(sock, &client_request, sizeof(client_request), 0) < 0)
+    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()");
         exit(errno);
     }
+
+    free(client_request);
 }
 
 // Quand une flèche est pressée
@@ -190,17 +211,20 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
     {
         move(player, dir);
     }
-    t_client_request client_request;
-    client_request.x_pos = player->x_pos;
-    client_request.y_pos = player->y_pos;
-    client_request.dir = player->current_dir;
-    client_request.magic = player->socket;
+    t_client_request *client_request;
+    client_request = malloc(sizeof(t_client_request));
+    client_request->x_pos = player->x_pos;
+    client_request->y_pos = player->y_pos;
+    client_request->dir = player->current_dir;
+    client_request->magic = player->socket;
 
-    if (send(sock, &client_request, sizeof(client_request), 0) < 0)
+    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()");
         exit(errno);
     }
+
+    free(client_request);
 }
 
 // retourne 1 si la direction a changée

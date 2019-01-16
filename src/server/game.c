@@ -2,7 +2,7 @@
 #include "../headers/server.h"
 #include "../headers/map.h"
 
-void go_logique_server(t_game *game, int actual, t_client_request req)
+void go_logique_server(t_game *game, int actual, t_client_request *req)
 {
     t_player_infos pi = game->player_infos[actual];
 
@@ -10,35 +10,35 @@ void go_logique_server(t_game *game, int actual, t_client_request req)
     {
         if (game->game_state == 1)
         {
-            if (req.dir != 0 && req.dir != pi.current_dir)
+            if (req->dir != 0 && req->dir != pi.current_dir)
             {
                 turn_player(game, actual, req);
             }
-            else if (req.x_pos != pi.x_pos || req.y_pos != pi.y_pos)
+            else if (req->x_pos != pi.x_pos || req->y_pos != pi.y_pos)
             {
                 move_player(game, actual, req);
             }
-            else if (req.command == 1)
+            else if (req->command == 1)
             {
                 place_bomb(game, actual, req);
             }
         }
-        else if (req.command == 2 && actual == 0 && game->game_state == 0)
+        else if (req->command == 2 && actual == 0 && game->game_state == 0)
         {
             start_game(game);
         }
     }
 }
 
-void turn_player(t_game *game, int actual, t_client_request req)
+void turn_player(t_game *game, int actual, t_client_request *req)
 {
-    game->player_infos[actual].current_dir = req.dir;
+    game->player_infos[actual].current_dir = req->dir;
 }
 
-void move_player(t_game *game, int actual, t_client_request req)
+void move_player(t_game *game, int actual, t_client_request *req)
 {
-    int wanted_x = req.x_pos;
-    int wanted_y = req.y_pos;
+    int wanted_x = req->x_pos;
+    int wanted_y = req->y_pos;
     int wanted_index = NB_BLOCS_WIDTH * wanted_y + wanted_x;
 
     if (game->map[wanted_index] != 0b01100111 && game->map[wanted_index] != 0b01000111 && game->map[wanted_index] != 0b00010111)
@@ -48,7 +48,7 @@ void move_player(t_game *game, int actual, t_client_request req)
     }
 }
 
-void place_bomb(t_game *game, int actual, t_client_request req)
+void place_bomb(t_game *game, int actual, t_client_request *req)
 {
     int wanted_bomb_index = NB_BLOCS_WIDTH * game->player_infos[actual].y_pos + game->player_infos[actual].x_pos;
 

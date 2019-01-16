@@ -23,7 +23,8 @@ void *main_server()
     flam_timers.number_of_flams = 0;
 
     fd_set rdfs;
-    t_client_request req;
+    t_client_request *req;
+    req = malloc(sizeof(t_client_request));
 
     t_game *game;
     game = malloc(sizeof(t_game));
@@ -127,7 +128,7 @@ void *main_server()
                 if (FD_ISSET(game->player_infos[i].socket, &rdfs))
                 {
                     int n = 0;
-                    if ((n = recv(game->player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0)
+                    if ((n = recv(game->player_infos[i].socket, req, sizeof(t_client_request) - 1, 0)) < 0)
                     {
                         perror("recv()");
                         /* if recv error we disonnect the client */
@@ -250,11 +251,11 @@ int init_connection()
     return sock;
 }
 
-int read_player(SOCKET sock, t_client_request req)
+int read_player(SOCKET sock, t_client_request *req)
 {
     int n = 0;
 
-    if ((n = recv(sock, &req, sizeof(req) - 1, 0)) < 0)
+    if ((n = recv(sock, req, sizeof(t_client_request) - 1, 0)) < 0)
     {
         perror("recv()");
         /* if recv error we disonnect the client */
