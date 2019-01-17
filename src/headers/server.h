@@ -3,14 +3,18 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <unistd.h>
+
 #define HAVE_STRUCT_TIMESPEC
 #include <pthread.h>
-#include <sys/types.h>
+
 
 #ifdef __WIN32__
 # include <winsock2.h>
+# include <WS2tcpip.h>
+# include <Windows.h>
 #else
+# include <unistd.h>
+# include <sys/types.h>
 # include <sys/socket.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>

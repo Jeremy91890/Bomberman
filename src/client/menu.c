@@ -47,12 +47,14 @@ void switch_menu_color(int menu_selection)
 
 int get_menu_event(int menu_selection)
 {
+    printf("Enter get menu event\n");
     int running;
     SDL_Event event;
 
     running = 1;
 
     while (running){
+        printf("while (running) wait event\n");
         SDL_WaitEvent(&event);
         switch(event.type) {
             case SDL_QUIT:
@@ -97,6 +99,7 @@ void free_menu(SDL_Surface *img_title, SDL_Surface *MENU_TEXT_PLAY, SDL_Surface 
 
 int on_menu()
 {
+    printf("Enter on menu\n");
     SDL_Surface *img_title = NULL;
     SDL_Rect pos_title;
 
@@ -104,6 +107,7 @@ int on_menu()
     int menu_selection = 0;
 
     SDL_FillRect(SCREEN, NULL, 0x000000);
+    printf("after fill rect\n");
 
     pos_title.x = ((SCREEN_WIDTH / 2) - (320 / 2));
     pos_title.y = 20;
@@ -111,6 +115,7 @@ int on_menu()
     TTF_SizeText(FONT, "Play", &width_text_play, NULL);
     POS_MENU_TEXT_PLAY.x = ((SCREEN_WIDTH / 2) - (width_text_play / 2));
     POS_MENU_TEXT_PLAY.y = 160;
+    printf("after ttf size text\n");
 
     TTF_SizeText(FONT, "Server", &width_text_server, NULL);
     POS_MENU_TEXT_SERVER.x = ((SCREEN_WIDTH / 2) - (width_text_server / 2));
@@ -121,7 +126,9 @@ int on_menu()
     POS_MENU_TEXT_QUIT.y = 240;
 
     img_title = IMG_Load("./resources/images/bomberman_title_320.png");
+    printf("after img load\n");
     SDL_BlitSurface(img_title, NULL, SCREEN, &pos_title);
+    printf("after blitz surface\n");
 
     MENU_TEXT_PLAY = TTF_RenderText_Blended(FONT, "Play", COLOR_TEXT_SELECTED);
     SDL_BlitSurface(MENU_TEXT_PLAY, NULL, SCREEN, &POS_MENU_TEXT_PLAY);
@@ -133,6 +140,7 @@ int on_menu()
     SDL_BlitSurface(MENU_TEXT_QUIT, NULL, SCREEN, &POS_MENU_TEXT_QUIT);
 
     SDL_Flip(SCREEN);
+    printf("after flip\n");
 
     menu_selection = get_menu_event(menu_selection);
 

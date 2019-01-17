@@ -3,21 +3,18 @@
 
 #ifdef __WIN32__
 # include <winsock2.h>
+# include <WS2tcpip.h>
+# include <Windows.h>
 #else
 # include <sys/socket.h>
+# include <sys/types.h>
+# define closesocket(s) close(s)
 # define INVALID_SOCKET -1
 # define SOCKET_ERROR -1
 typedef int SOCKET;
-#endif
-
-#include <sys/types.h>
-#define closesocket(s) close(s)
-
-
-
-
 typedef struct sockaddr_in SOCKADDR_IN;
 typedef struct sockaddr SOCKADDR;
 typedef struct in_addr IN_ADDR;
+#endif
 
 #endif

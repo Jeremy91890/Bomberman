@@ -53,7 +53,7 @@ int on_game(char *ip_text)
         exit(errno);
     }
 
-    if((n = recv(sock, &game, sizeof(game), 0)) < 0) {
+    if((n = recv(sock, (char*)&game, sizeof(game), 0)) < 0) {
         perror("recv()");
         exit(errno);
     }
@@ -149,7 +149,7 @@ void enter_pressed(int sock, t_player_infos *player)
     client_request.y_pos = player->y_pos;
     client_request.dir = player->current_dir;
 
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0) {
+    if(send(sock, (char*)&client_request, sizeof(client_request), 0) < 0) {
         perror("send()");
         exit(errno);
     }
@@ -165,7 +165,7 @@ void bomb_pressed(int sock, t_player_infos *player)
     client_request.magic = player->socket;
     client_request.command = 1;
 
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0) {
+    if(send(sock, (char*)&client_request, sizeof(client_request), 0) < 0) {
         perror("send()");
         exit(errno);
     }
@@ -184,7 +184,7 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
     client_request.dir = player->current_dir;
     client_request.magic = player->socket;
 
-    if(send(sock, &client_request, sizeof(client_request), 0) < 0) {
+    if(send(sock, (char*)&client_request, sizeof(client_request), 0) < 0) {
         perror("send()");
         exit(errno);
     }
@@ -241,7 +241,7 @@ void *map_update_process(void *args)
 
         if (FD_ISSET(actual_args->sock, &rdfs)) {
             int n = 0;
-            if((n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0)) < 0) {
+            if((n = recv(actual_args->sock, (char*)actual_args->game, actual_args->game_size, 0)) < 0) {
                 perror("recv()");
                 exit(errno);
             }

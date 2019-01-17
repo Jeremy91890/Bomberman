@@ -1,9 +1,9 @@
 ifdef OS
 	CC := gcc
-	RM := del -f
+	RM := del
 	LN_F = ln -f
 
-	CFLAGS := -c -Wall -g3 -Werror -lSDL -lSDL_image -lSDL_ttf
+	CFLAGS := -Wall -g3 -Werror -lSDL -lSDL_image -lSDL_ttf
 
 	EXE_NAME := BombermanExe
 	SRCDIRS := src src\client src\server
@@ -14,12 +14,12 @@ ifdef OS
 
 	SRC_FILES :=
 	SRCS := $(foreach dir,$(SRCDIRS), $(wildcard $(dir)\*.c)) $(SRC_FILES)
-	OBJS := $(SRCS:%.c=$(OBJDIR)/%.o)
+	OBJS := $(SRCS:%.c=$(OBJDIR)\%.o)
 
-	create_out_directory := $(shell mkdir -p build)
-	create_out_directory := $(shell mkdir -p $(BINDIR))
-    create_out_directory := $(shell mkdir -p $(OBJDIR))
-    create_out_directory := $(foreach dir,  $(SRCDIRS),   $(shell mkdir -p $(OBJDIR)\$(dir)))
+	create_out_directory := $(shell mkdir build)
+	create_out_directory := $(shell mkdir $(BINDIR))
+    create_out_directory := $(shell mkdir $(OBJDIR))
+    create_out_directory := $(foreach dir,  $(SRCDIRS),   $(shell mkdir $(OBJDIR)\$(dir)))
 else
    ifeq ($(shell uname), Linux)
     CC := gcc

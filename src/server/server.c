@@ -10,8 +10,31 @@
 t_bomb_timers bomb_timers;
 t_flam_timers flam_timers;
 
+static void init(void)
+{
+#ifdef WIN32
+    printf("Enter init winsock server\n");
+    WSADATA wsa;
+    int err = WSAStartup(MAKEWORD(2, 2), &wsa);
+    if(err < 0)
+    {
+        puts("WSAStartup failed !");
+        exit(EXIT_FAILURE);
+    }
+#endif
+}
+
+static void end(void)
+{
+#ifdef WIN32
+    printf("Enter end winsock server\n");
+    WSACleanup();
+#endif
+}
+
 void *main_server()
 {
+    init();
     SOCKET sock = init_connection();
     /* the index for the array */
     int actual = 0;
@@ -56,8 +79,8 @@ void *main_server()
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        if(select(max + 1, &rdfs, NULL, NULL, &tv) == -1) {
-            perror("select()");
+        if(select(max + 1, &rdfs, NULL, NULL, &tv) == SOCKET_ERROR) {
+            printf("select() returned with error %d\n", WSAGetLastError());
             exit(errno);
         }
 
@@ -97,7 +120,7 @@ void *main_server()
                 /* a client is talking */
                 if(FD_ISSET(game.player_infos[i].socket, &rdfs)) {
                     int n = 0;
-                    if((n = recv(game.player_infos[i].socket, &req, sizeof(req) - 1, 0)) < 0) {
+                    if((n = recv(game.player_infos[i].socket, (char*)&req, sizeof(req) - 1, 0)) < 0) {
                         perror("recv()");
                         /* if recv error we disonnect the client */
                         n = 0;
@@ -175,6 +198,7 @@ void *main_server()
     }
 
     //destroy the warning
+    end();
     pthread_exit(NULL);
 }
 
@@ -209,7 +233,7 @@ int read_player(SOCKET sock, t_client_request req)
 {
     int n = 0;
 
-    if((n = recv(sock, &req, sizeof(req) - 1, 0)) < 0) {
+    if((n = recv(sock, (char*)&req, sizeof(req) - 1, 0)) < 0) {
         perror("recv()");
         /* if recv error we disonnect the client */
         n = 0;
@@ -229,7 +253,7 @@ void send_game_to_all_players(int actual, t_game game)
 
 void write_player(SOCKET sock, t_game game)
 {
-    if(send(sock, &game, sizeof(game), 0) < 0) {
+    if(send(sock, (char*)&game, sizeof(game), 0) < 0) {
         perror("send()");
         exit(errno);
     }

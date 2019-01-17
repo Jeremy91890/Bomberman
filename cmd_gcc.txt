@@ -1,0 +1,34 @@
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\client\infos.c" -o "build\obj\src\client\infos.o"
+
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\client\menu.c" -o "build\obj\src\client\menu.o"
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\client\enter_ip.c" -o "build\obj\src\client\enter_ip.o"
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\client\main.c" -o "build\obj\src\client\main.o"
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\client\map.c" -o "build\obj\src\client\map.o"
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\server\player.c" -o "build\obj\src\server\player.o"
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\server\game.c" -o "build\obj\src\server\game.o"
+gcc -c -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf "src\server\generate_map.c" -o "build\obj\src\server\generate_map.o"
+
+
+
+
+gcc -c -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf -lws2_32 "src\server\server.c" -o "build\obj\src\server\server.o"
+
+
+gcc -c -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf -lws2_32 "src\client\on_game.c" -o "build\obj\src\client\on_game.o"
+
+
+gcc 
+build\obj\src\client\infos.o 
+build\obj\src\client\on_game.o 
+build\obj\src\client\menu.o 
+build\obj\src\client\enter_ip.o 
+build\obj\src\client\main.o 
+build\obj\src\client\map.o 
+build\obj\src\server\player.o 
+build\obj\src\server\game.o 
+build\obj\src\server\generate_map.o 
+build\obj\src\server\server.o -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf -lws2_32 -o "BombermanExe"
+
+
+
+
