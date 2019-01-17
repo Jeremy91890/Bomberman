@@ -25,13 +25,7 @@ int on_game(char *ip_text)
         return -1;
     game_buff_length += sizeof(t_game);
 
-    game->player_infos = malloc(4 * sizeof(t_player_infos));
-    if (game->player_infos == NULL)
-    {
-        free(game);
-        return -1;
-    }
-    game_buff_length += 4 * sizeof(t_player_infos);
+    //game_buff_length += sizeof(t_player_infos);
 
     t_player_infos player;
 

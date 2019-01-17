@@ -32,13 +32,7 @@ void *main_server()
         return NULL;
     game_buff_length += sizeof(t_game);
 
-    game->player_infos = malloc(4 * sizeof(t_player_infos));
-    if (game->player_infos == NULL)
-    {
-        free(game);
-        return NULL;
-    }
-    game_buff_length += 4 * sizeof(t_player_infos);
+    //game_buff_length += sizeof(t_player_infos);
 
     // state à 0 pour dire que la partie n'a pas encore commencé
     game->game_state = 0;

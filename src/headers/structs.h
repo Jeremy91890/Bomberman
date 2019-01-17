@@ -73,7 +73,7 @@ typedef char t_map[MAP_SIZE];
 
 typedef struct s_game
 {
-    t_player_infos *player_infos;
+    t_player_infos player_infos[MAX_PLAYERS];
     t_map map;
     int game_state;
     int time;
