@@ -32,6 +32,7 @@ int connect_to_server(char *ip_text) {
     else
     {
         printf("impossible to connect\n");
+        exit(1);
     }
     
     return s;
