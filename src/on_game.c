@@ -11,6 +11,33 @@
 
 pthread_t MAP_THREAD;
 
+
+int connect_to_server(char *ip_text) {
+    SOCKADDR_IN sin = {0};
+    int s;
+
+    s = socket(AF_INET, SOCK_STREAM, 0);
+ 
+    /* Configuration de la connexion */
+    sin.sin_addr.s_addr = inet_addr(ip_text);
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(PORT);
+
+    /* Si l'on a réussi à se connecter */
+    if(connect(s, (SOCKADDR*)&sin, sizeof(sin)) != SOCKET_ERROR)
+    {
+        printf("connect %s on %d\n", inet_ntoa(sin.sin_addr), htons(sin.sin_port));
+    }
+    /* sinon, on affiche "Impossible de se connecter" */
+    else
+    {
+        printf("impossible to connect\n");
+    }
+    
+    return s;
+}
+
+
 int on_game(char *ip_text)
 {
     int actual_index;
@@ -32,43 +59,9 @@ int on_game(char *ip_text)
     running = 1;
     n = 0;
 
-    SOCKET sock;
+    int sock;
 
-    // creation du socket client
-    do {
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-    } while (errno == EINTR);
-
-    if (sock == INVALID_SOCKET)
-    {
-        perror("socket()");
-        exit(errno);
-    }
-
-    //Connection au server
-    struct hostent *hostinfo = NULL;
-    SOCKADDR_IN sin = {0}; /* initialise la structure avec des 0 */
-    //ICI METTRE IP_TEXT POUR UTILISER L'IP ENTREE PAR LE USER
-    const char *hostname = ip_text;
-
-    /* on récupère les informations de l'hôte auquel on veut se connecter */
-    hostinfo = gethostbyname(hostname);
-    /* l'hôte n'existe pas */
-    if (hostinfo == NULL)
-    {
-        fprintf(stderr, "Unknown host %s.\n", hostname);
-        exit(EXIT_FAILURE);
-    }
-
-    sin.sin_addr = *(IN_ADDR *)hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
-    sin.sin_port = htons(PORT);                  /* on utilise htons pour le port */
-    sin.sin_family = AF_INET;
-
-    if (connect(sock, (SOCKADDR *)&sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
-    {
-        perror("connect()");
-        exit(errno);
-    }
+    sock = connect_to_server(ip_text);
 
     n = recv(sock, game, game_buff_length, 0);
 
