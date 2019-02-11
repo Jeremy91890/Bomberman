@@ -4,14 +4,28 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <pthread.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <netdb.h>
 #include <errno.h>
+
 #include "socket.h"
+
+# ifdef __WIN32__
+# include <windows.h>
+# include <WS2tcpip.h>
+# include <winsock2.h>
+# include <winsock.h>
+# undef _WIN32_WINNT
+# define _WIN32_WINNT _WIN32_WINNT_WIN8
+# else
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <netdb.h>
+# endif
+
+#define HAVE_STRUCT_TIMESPEC
+#include <pthread.h>
+
 
 #define PORT 8083
 
