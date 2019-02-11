@@ -18,7 +18,7 @@ void init() {
         int error = WSAStartup(MAKEWORD(2,2), &WSAData);
     if (error) {
         printf("error on wsastartup\n");
-        exit(1)
+        exit(1);
     }
     #endif
 }
@@ -68,8 +68,7 @@ void init_globals()
     FONT = TTF_OpenFont("./resources/polices/04B_30__.TTF", 32);
 }
 
-int main(int argc, char *argv[])
-{
+int launch() {
     init();
 
     int run = 1;
@@ -121,4 +120,13 @@ int main(int argc, char *argv[])
     end();
 
     return EXIT_SUCCESS;
+}
+
+int main(int argc, char *argv[])
+{
+    launch();
+}
+
+int APIENTRY WinMain(HINSTANCE hi1, HINSTANCE hi2, LPSTR lp, int i) {
+    launch();
 }

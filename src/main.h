@@ -13,6 +13,7 @@
 
 void        init();
 void        end();
+int         launch();
 void        init_globals();
 int         on_server();
 void        init_sprites();

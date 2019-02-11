@@ -1,7 +1,7 @@
 CC =			gcc
 SRCS =			$(wildcard src/*.c)
 OBJS =			$(SRCS:%.c=%.o)
-CFLAGS =		-g3 -Wall -Werror
+CFLAGS =		-g3 -Wall -Werror -Wno-return-type
 SDLFLAGS = 		-lSDL -lSDL_image -lSDL_ttf
 OTHERFLAGS = 	-lpthread
 

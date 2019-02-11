@@ -71,15 +71,8 @@ void *main_server()
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        int selectResult;
-
-        do {
-            selectResult = select(max + 1, &rdfs, NULL, NULL, &tv);
-        } while (errno == EINTR);
-
-        if (selectResult == -1)
-        {
-            perror("select()");
+        if(select(max + 1, &rdfs, NULL, NULL, &tv) == SOCKET_ERROR) {
+            printf("select() returned with error %d\n", WSAGetLastError());
             exit(errno);
         }
 
@@ -129,7 +122,7 @@ void *main_server()
                 {
                     int n = 0;
 
-                    n = recv(game->player_infos[i].socket, req, sizeof(t_client_request) - 1, 0);
+                    n = recv(game->player_infos[i].socket, (char *)req, sizeof(t_client_request) - 1, 0);
 
                     if (n < 0)
                     {
@@ -264,7 +257,7 @@ int read_player(SOCKET sock, t_client_request *req)
 {
     int n = 0;
 
-    n = recv(sock, req, sizeof(t_client_request) - 1, 0);
+    n = recv(sock, (char *)req, sizeof(t_client_request) - 1, 0);
 
     if (n < 0)
     {
@@ -288,7 +281,7 @@ void send_game_to_all_players(int actual, t_game *game)
 
 void write_player(SOCKET sock, t_game *game)
 {
-    if (send(sock, game, game_buff_length, 0) < 0)
+    if (send(sock, (char *)game, game_buff_length, 0) < 0)
     {
         perror("send()");
         exit(errno);

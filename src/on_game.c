@@ -63,7 +63,7 @@ int on_game(char *ip_text)
 
     sock = connect_to_server(ip_text);
 
-    n = recv(sock, game, game_buff_length, 0);
+    n = recv(sock, (char *)game, game_buff_length, 0);
 
     if (n < 0)
     {
@@ -168,7 +168,7 @@ void enter_pressed(int sock, t_player_infos *player)
     client_request->y_pos = player->y_pos;
     client_request->dir = player->current_dir;
 
-    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
+    if (send(sock, (char *)client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()");
         exit(errno);
@@ -188,7 +188,7 @@ void bomb_pressed(int sock, t_player_infos *player)
     client_request->magic = player->socket;
     client_request->command = 1;
 
-    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
+    if (send(sock, (char *)client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()bomb_pressed");
         exit(errno);
@@ -212,7 +212,7 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
     client_request->dir = player->current_dir;
     client_request->magic = player->socket;
 
-    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
+    if (send(sock, (char *)client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()dir_pressed");
         exit(errno);
@@ -268,13 +268,7 @@ void *map_update_process(void *args)
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        int selectResult;
-
-        do {
-            selectResult = select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv);
-        } while (errno == EINTR);
-
-        if (selectResult == -1) {
+        if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
             perror("select()");
             exit(errno);
         }
@@ -283,7 +277,7 @@ void *map_update_process(void *args)
         {
             int n = 0;
 
-            n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0);
+            n = recv(actual_args->sock, (char *)actual_args->game, actual_args->game_size, 0);
 
             if (n < 0)
             {
@@ -324,6 +318,6 @@ void *map_update_process(void *args)
 void current_timestamp(char *s) {
     struct timeval te; 
     gettimeofday(&te, NULL); // get current time
-    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-    printf("%s %lld\n", s, milliseconds);
+    //long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+    //printf("%s %lld\n", s, milliseconds);
 }
