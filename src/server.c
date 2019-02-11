@@ -14,7 +14,7 @@ size_t game_buff_length;
 
 void *main_server()
 {
-    SOCKET sock = init_connection();
+    int sock = init_connection();
     /* the index for the array */
     int actual = 0;
     int max = sock;
@@ -226,37 +226,38 @@ void *main_server()
 
 int init_connection()
 {
-    SOCKET sock;
+    int s;
+	struct sockaddr_in sin;
 
-    do {
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-    } while (errno == EINTR);
-
-    SOCKADDR_IN sin = {0};
-
-    if (sock == INVALID_SOCKET)
-    {
-        perror("socket()");
-        exit(errno);
-    }
-
-    sin.sin_addr.s_addr = htonl(INADDR_ANY);
-    sin.sin_port = htons(PORT);
-    sin.sin_family = AF_INET;
-
-    if (bind(sock, (SOCKADDR *)&sin, sizeof sin) == SOCKET_ERROR)
-    {
-        perror("bind()");
-        exit(errno);
-    }
-
-    if (listen(sock, MAX_PLAYERS) == SOCKET_ERROR)
-    {
-        perror("listen()");
-        exit(errno);
-    }
-
-    return sock;
+	if ((s = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
+		printf("error on socket\n");
+		return (0);
+	}
+	# ifdef __WIN32__
+		if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+				   &(char){ 1 }, sizeof(int)) < 0) {
+		printf("error on win setsockopt\n");
+		return (0);
+	}
+	# else
+	if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+				   &(int){ 1 }, sizeof(int)) < 0) {
+		printf("error on linux or mac setsockopt\n");
+		return (0);
+	}
+	# endif
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(PORT);
+	sin.sin_addr.s_addr = INADDR_ANY;
+	if (bind(s, (struct sockaddr *) &sin, sizeof(sin)) == -1) {
+		printf("error on bind\n");
+		return (0);
+	}
+	if (listen(s, 10) == -1) {
+		printf("error on listen\n");
+		return (0);
+	}
+	return s;
 }
 
 int read_player(SOCKET sock, t_client_request *req)
