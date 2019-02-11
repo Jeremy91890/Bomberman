@@ -55,7 +55,6 @@ void display_map(char map[])
     SDL_FillRect(SCREEN, NULL, 0x000000);
 
     int n = 0;
-
     
 	for(i=0;i<195;i+= 15)
 	{
@@ -90,7 +89,6 @@ void display_map(char map[])
 		}
         n++;
 	}
-	SDL_Flip(SCREEN);
 }
 
 void display_character(t_player_infos *player_infos)
@@ -230,5 +228,4 @@ void display_character(t_player_infos *player_infos)
         }
         i = i + 1;
     }
-    SDL_Flip(SCREEN);
 }

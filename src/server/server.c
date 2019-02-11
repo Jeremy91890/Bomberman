@@ -71,7 +71,13 @@ void *main_server()
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        if (select(max + 1, &rdfs, NULL, NULL, &tv) == -1)
+        int selectResult;
+
+        do {
+            selectResult = select(max + 1, &rdfs, NULL, NULL, &tv);
+        } while (errno == EINTR);
+
+        if (selectResult == -1)
         {
             perror("select()");
             exit(errno);
@@ -122,7 +128,10 @@ void *main_server()
                 if (FD_ISSET(game->player_infos[i].socket, &rdfs))
                 {
                     int n = 0;
-                    if ((n = recv(game->player_infos[i].socket, req, sizeof(t_client_request) - 1, 0)) < 0)
+
+                    n = recv(game->player_infos[i].socket, req, sizeof(t_client_request) - 1, 0);
+
+                    if (n < 0)
                     {
                         perror("recv()");
                         /* if recv error we disonnect the client */
@@ -217,7 +226,12 @@ void *main_server()
 
 int init_connection()
 {
-    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    SOCKET sock;
+
+    do {
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+    } while (errno == EINTR);
+
     SOCKADDR_IN sin = {0};
 
     if (sock == INVALID_SOCKET)
@@ -249,7 +263,9 @@ int read_player(SOCKET sock, t_client_request *req)
 {
     int n = 0;
 
-    if ((n = recv(sock, req, sizeof(t_client_request) - 1, 0)) < 0)
+    n = recv(sock, req, sizeof(t_client_request) - 1, 0);
+
+    if (n < 0)
     {
         perror("recv()");
         /* if recv error we disonnect the client */

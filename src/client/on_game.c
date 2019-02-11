@@ -32,8 +32,13 @@ int on_game(char *ip_text)
     running = 1;
     n = 0;
 
+    SOCKET sock;
+
     // creation du socket client
-    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    do {
+        sock = socket(AF_INET, SOCK_STREAM, 0);
+    } while (errno == EINTR);
+
     if (sock == INVALID_SOCKET)
     {
         perror("socket()");
@@ -65,7 +70,9 @@ int on_game(char *ip_text)
         exit(errno);
     }
 
-    if ((n = recv(sock, game, game_buff_length, 0)) < 0)
+    n = recv(sock, game, game_buff_length, 0);
+
+    if (n < 0)
     {
         perror("recv()");
         exit(errno);
@@ -108,43 +115,43 @@ int on_game(char *ip_text)
         SDL_WaitEvent(&event);
         switch (event.type)
         {
-        case SDL_QUIT:
-            pthread_cancel(MAP_THREAD);
-            closesocket(sock);
-            return GO_QUIT;
-
-        case SDL_KEYDOWN:
-            switch (event.key.keysym.sym)
-            {
-            case SDLK_UP:
-                dir_pressed(sock, &player, TOP);
+            case SDL_QUIT:
+                pthread_cancel(MAP_THREAD);
+                closesocket(sock);
+                return GO_QUIT;
                 break;
 
-            case SDLK_DOWN:
-                dir_pressed(sock, &player, DOWN);
-                break;
+            case SDL_KEYDOWN:
+                switch (event.key.keysym.sym)
+                {
+                    case SDLK_UP:
+                        dir_pressed(sock, &player, TOP);
+                        break;
 
-            case SDLK_LEFT:
-                dir_pressed(sock, &player, LEFT);
-                break;
+                    case SDLK_DOWN:
+                        dir_pressed(sock, &player, DOWN);
+                        break;
 
-            case SDLK_RIGHT:
-                dir_pressed(sock, &player, RIGHT);
-                break;
+                    case SDLK_LEFT:
+                        dir_pressed(sock, &player, LEFT);
+                        break;
 
-            case SDLK_SPACE:
-                bomb_pressed(sock, &player);
-                break;
+                    case SDLK_RIGHT:
+                        dir_pressed(sock, &player, RIGHT);
+                        break;
 
-            case SDLK_RETURN:
-                enter_pressed(sock, &player);
-                break;
+                    case SDLK_SPACE:
+                        bomb_pressed(sock, &player);
+                        break;
 
-            default:
-                break;
-            }
+                    case SDLK_RETURN:
+                        enter_pressed(sock, &player);
+                        break;
 
-            break;
+                    default:
+                        break;
+                }
+                break;
         }
     }
 
@@ -190,7 +197,7 @@ void bomb_pressed(int sock, t_player_infos *player)
 
     if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
     {
-        perror("send()");
+        perror("send()bomb_pressed");
         exit(errno);
     }
 
@@ -214,7 +221,7 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
 
     if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
     {
-        perror("send()");
+        perror("send()dir_pressed");
         exit(errno);
     }
 
@@ -268,8 +275,13 @@ void *map_update_process(void *args)
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1)
-        {
+        int selectResult;
+
+        do {
+            selectResult = select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv);
+        } while (errno == EINTR);
+
+        if (selectResult == -1) {
             perror("select()");
             exit(errno);
         }
@@ -277,20 +289,48 @@ void *map_update_process(void *args)
         if (FD_ISSET(actual_args->sock, &rdfs))
         {
             int n = 0;
-            if ((n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0)) < 0)
+
+            n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0);
+
+            if (n < 0)
             {
                 perror("recv()");
                 exit(errno);
             }
             *actual_args->player = actual_args->game->player_infos[actual_args->actual_index];
+            
+            current_timestamp("begin");
+
             display_map(actual_args->game->map);
+
+            current_timestamp("display_map");
+
             display_character(actual_args->game->player_infos);
+
+            current_timestamp("display_character");
+
             display_bomb_left(actual_args->player);
+
+            current_timestamp("display_bomb_left");
+
             display_game_state(actual_args->game);
+
+            current_timestamp("display_game_state");
+
             display_result_fight(actual_args->game, actual_args->player);
+
+            current_timestamp("display_result_fight");
+            printf("%s\n", "end");
         }
     }
 
     free(actual_args);
     pthread_exit(NULL);
+}
+
+void current_timestamp(char *s) {
+    struct timeval te; 
+    gettimeofday(&te, NULL); // get current time
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+    printf("%s %lld\n", s, milliseconds);
 }

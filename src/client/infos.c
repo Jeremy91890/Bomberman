@@ -28,8 +28,6 @@ void display_bomb_left(t_player_infos *player_infos)
 
     INFO_TEXT_BOMB_LEFT = TTF_RenderText_Blended(FONT, text_to_display, COLOR_TEXT_INPUT);
     SDL_BlitSurface(INFO_TEXT_BOMB_LEFT, NULL, SCREEN, &POS_INFO_TEXT_BOMB_LEFT);
-
-    SDL_Flip(SCREEN);
 }
 
 void display_game_state(t_game *game)
@@ -50,8 +48,6 @@ void display_game_state(t_game *game)
 
     INFO_TEXT_GAME_STATE = TTF_RenderText_Blended(FONT, text_to_display, COLOR_TEXT_INPUT);
     SDL_BlitSurface(INFO_TEXT_GAME_STATE, NULL, SCREEN, &POS_INFO_TEXT_GAME_STATE);
-
-    SDL_Flip(SCREEN);
 }
 
 void display_result_fight(t_game *game, t_player_infos *player_infos)

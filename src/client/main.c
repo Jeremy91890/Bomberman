@@ -63,30 +63,30 @@ int main(int argc, char *argv[])
     {
         switch (NEXT_ACTION)
         {
-        case GO_MENU:
-            NEXT_ACTION = on_menu();
-            break;
+            case GO_MENU:
+                NEXT_ACTION = on_menu();
+                break;
 
-        case GO_ENTER_IP:
-            NEXT_ACTION = on_enter_ip(ip_text);
-            break;
+            case GO_ENTER_IP:
+                NEXT_ACTION = on_enter_ip(ip_text);
+                break;
 
-        case GO_GAME_JOIN:
-            NEXT_ACTION = on_game(ip_text);
-            break;
+            case GO_GAME_JOIN:
+                NEXT_ACTION = on_game(ip_text);
+                break;
 
-        case GO_GAME_HOST:
-            NEXT_ACTION = on_game("127.0.0.1");
-            break;
+            case GO_GAME_HOST:
+                NEXT_ACTION = on_game("127.0.0.1");
+                break;
 
-        case GO_SERVER:
-            NEXT_ACTION = on_server();
-            break;
+            case GO_SERVER:
+                NEXT_ACTION = on_server();
+                break;
 
-        case GO_QUIT:
-            pthread_cancel(SERVER_THREAD);
-            run = 0;
-            break;
+            case GO_QUIT:
+                pthread_cancel(SERVER_THREAD);
+                run = 0;
+                break;
         }
     }
     if (pthread_join(SERVER_THREAD, NULL))
