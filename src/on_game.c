@@ -269,7 +269,11 @@ void *map_update_process(void *args)
         tv.tv_usec = 1;
 
         if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
-            perror("select()");
+            #if defined WIN32
+                printf("select() returned with error %d\n", WSAGetLastError());
+            #else
+                printf("select() returned with error");
+            #endif
             exit(errno);
         }
 

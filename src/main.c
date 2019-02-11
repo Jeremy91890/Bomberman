@@ -127,6 +127,8 @@ int main(int argc, char *argv[])
     launch();
 }
 
+#if defined WIN32    
 int APIENTRY WinMain(HINSTANCE hi1, HINSTANCE hi2, LPSTR lp, int i) {
     launch();
 }
+#endif

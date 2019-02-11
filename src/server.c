@@ -72,7 +72,11 @@ void *main_server()
         tv.tv_usec = 1;
 
         if(select(max + 1, &rdfs, NULL, NULL, &tv) == SOCKET_ERROR) {
-            printf("select() returned with error %d\n", WSAGetLastError());
+            #if defined WIN32
+                printf("select() returned with error %d\n", WSAGetLastError());
+            #else
+                printf("select() returned with error");
+            #endif
             exit(errno);
         }
 
