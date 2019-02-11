@@ -1,5 +1,5 @@
-#include "../headers/menu.h"
-#include "../headers/globals.h"
+#include "menu.h"
+#include "globals.h"
 
 //Global menu variables
 SDL_Surface *MENU_TEXT_PLAY = NULL, *MENU_TEXT_SERVER = NULL, *MENU_TEXT_QUIT = NULL;

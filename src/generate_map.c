@@ -1,5 +1,5 @@
-#include "../headers/generate_map.h"
-#include "../headers/server.h"
+#include "generate_map.h"
+#include "server.h"
 
 char get_random_destructable_bloc()
 {

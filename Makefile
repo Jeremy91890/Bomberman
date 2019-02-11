@@ -1,40 +1,33 @@
-CC := gcc
-RM := rm -f
-LN_F = ln -f
+CC =			gcc
+SRCS =			$(wildcard src/*.c)
+OBJS =			$(SRCS:%.c=%.o)
+CFLAGS =		-g3 -Wall -Werror
+SDLFLAGS = 		-lSDL -lSDL_image -lSDL_ttf
+OTHERFLAGS = 	-lpthread
 
-CFLAGS := -Wall -g3 -Werror -lpthread -lSDL -lSDL_image -lSDL_ttf
 
-EXE_NAME := BombermanExe
-SRCDIRS := src src/client src/server
-OBJDIR := build/obj
-BINDIR := build/bin
+ifeq ($(OS),Windows_NT)
+	NAME =  	bomberman.exe
+	RMOBJS = 	del $(subst /,\,$(OBJS))
+	RM =		del
+	WINLIBS =  	-lws2_32 -lwsock32
+else
+	NAME =  	bomberman
+	RMOBJS = 	rm -f $(OBJS)
+	RM = 		rm
+endif
 
-TARGET := $(BINDIR)/$(EXE_NAME)
+all:		$(NAME)
 
-SRC_FILES :=
-SRCS := $(foreach dir,$(SRCDIRS), $(wildcard $(dir)/*.c)) $(SRC_FILES)
-OBJS := $(SRCS:%.c=$(OBJDIR)/%.o)
-
-create_out_directory := $(shell mkdir -p build)
-create_out_directory := $(shell mkdir -p $(BINDIR))
-create_out_directory := $(shell mkdir -p $(OBJDIR))
-create_out_directory := $(foreach dir,  $(SRCDIRS),   $(shell mkdir -p $(OBJDIR)/$(dir)))
-
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	$(CC) $(OBJS) $(CFLAGS) -o "$(TARGET)"
-	$(LN_F) $(TARGET) $(EXE_NAME)
-
-$(OBJDIR)/%.o: %.c
-	$(CC) -c $(CFLAGS) "$<" -o "$@"
+$(NAME):	$(OBJS)
+		$(CC) $(OBJS) $(CFLAGS) $(SDLFLAGS) $(OTHERFLAGS) $(WINLIBS) -o $(NAME)
 
 clean:
-	$(RM) $(OBJS)
+	$(RMOBJS)
 
 fclean: clean
-	$(RM) $(EXE_NAME) $(TARGET) $(OBJS)
+	$(RM) $(NAME)
 
-re: fclean all
+re:	fclean all
 
-.PHONY: all%
+.PHONY: fclean all clean

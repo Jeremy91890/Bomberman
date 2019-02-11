@@ -1,11 +1,11 @@
-#include "../headers/server.h"
+#include "server.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "../headers/socket.h"
-#include "../headers/generate_map.h"
-#include "../headers/game.h"
+#include "socket.h"
+#include "generate_map.h"
+#include "game.h"
 
 t_bomb_timers bomb_timers;
 t_flam_timers flam_timers;

@@ -1,11 +1,11 @@
-#include "../headers/menu.h"
-#include "../headers/globals.h"
-#include "../headers/map.h"
+#include "menu.h"
+#include "globals.h"
+#include "map.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "../headers/generate_map.h"
-#include "../headers/structs.h"
+#include "generate_map.h"
+#include "structs.h"
 
 SDL_Surface *INFO_TEXT_BOMB_LEFT = NULL, *INFO_TEXT_GAME_STATE = NULL, *INFO_TEXT_RESULT_FIGHT = NULL;
 SDL_Rect POS_INFO_TEXT_BOMB_LEFT, POS_INFO_TEXT_GAME_STATE, POS_INFO_TEXT_RESULT_FIGHT;

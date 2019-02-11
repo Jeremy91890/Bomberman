@@ -1,12 +1,12 @@
-#include "../headers/main.h"
-#include "../headers/globals.h"
-#include "../headers/menu.h"
-#include "../headers/enter_ip.h"
-#include "../headers/structs.h"
-#include "../headers/server.h"
-#include "../headers/map.h"
-#include "../headers/socket.h"
-#include "../headers/on_game.h"
+#include "main.h"
+#include "globals.h"
+#include "menu.h"
+#include "enter_ip.h"
+#include "structs.h"
+#include "server.h"
+#include "map.h"
+#include "socket.h"
+#include "on_game.h"
 
 SDL_Surface *SCREEN;
 TTF_Font *FONT;

@@ -1,6 +1,6 @@
-#include "../headers/game.h"
-#include "../headers/server.h"
-#include "../headers/map.h"
+#include "game.h"
+#include "server.h"
+#include "map.h"
 
 void go_logique_server(t_game *game, int actual, t_client_request *req)
 {
@@ -20,7 +20,7 @@ void go_logique_server(t_game *game, int actual, t_client_request *req)
             }
             else if (req->command == 1)
             {
-                place_bomb(game, actual, req);
+                place_bomb(game, actual);
             }
         }
         else if (req->command == 2 && actual == 0 && game->game_state == 0)
@@ -48,7 +48,7 @@ void move_player(t_game *game, int actual, t_client_request *req)
     }
 }
 
-void place_bomb(t_game *game, int actual, t_client_request *req)
+void place_bomb(t_game *game, int actual)
 {
     int wanted_bomb_index = NB_BLOCS_WIDTH * game->player_infos[actual].y_pos + game->player_infos[actual].x_pos;
 
@@ -89,13 +89,13 @@ int get_nb_players(t_game *game)
 void display_explosion(int bomb_index, char *map, int nb_case)
 {
     // ajout de chaque direction
-    add_flames(bomb_index, map, nb_case, -nb_case, -1);
-    add_flames(bomb_index, map, nb_case, nb_case, 1);
-    add_flames(bomb_index, map, nb_case, nb_case * (-15), -15);
-    add_flames(bomb_index, map, nb_case, nb_case * 15, 15);
+    add_flames(bomb_index, map, -nb_case, -1);
+    add_flames(bomb_index, map, nb_case, 1);
+    add_flames(bomb_index, map, nb_case * (-15), -15);
+    add_flames(bomb_index, map, nb_case * 15, 15);
 }
 
-void add_flames(int bomb_index, char *map, int nb_case, int max_index, int iterator)
+void add_flames(int bomb_index, char *map, int max_index, int iterator)
 {
     int i;
 

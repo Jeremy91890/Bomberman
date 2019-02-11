@@ -1,5 +1,5 @@
-#include "../headers/enter_ip.h"
-#include "../headers/globals.h"
+#include "enter_ip.h"
+#include "globals.h"
 
 SDL_Surface *ENTER_IP_TEXT_IP = NULL, *ENTER_IP_TEXT_PLAY = NULL, *ENTER_IP_TEXT_BACK = NULL;
 SDL_Rect POS_ENTER_IP_TEXT_IP, POS_ENTER_IP_TEXT_PLAY, POS_ENTER_IP_TEXT_BACK;

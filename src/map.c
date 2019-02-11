@@ -1,11 +1,11 @@
-#include "../headers/menu.h"
-#include "../headers/globals.h"
-#include "../headers/map.h"
+#include "menu.h"
+#include "globals.h"
+#include "map.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
-#include "../headers/generate_map.h"
-#include "../headers/structs.h"
+#include "generate_map.h"
+#include "structs.h"
 
 SDL_Surface *background_tile, *explodable_block, *solid_block, *bomb_block, *fire_block;
 
