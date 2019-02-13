@@ -9,6 +9,7 @@
 #include "server.h"
 #include "structs.h"
 
+int         connect_to_server(char *ip_text);
 int         on_game(char *ip_text);
 void        read_server(SOCKET sock, t_game *game);
 int         change_dir(t_player_infos *player, int dir);

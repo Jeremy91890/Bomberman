@@ -11,6 +11,34 @@
 
 pthread_t MAP_THREAD;
 
+
+int connect_to_server(char *ip_text) {
+    SOCKADDR_IN sin = {0};
+    int s;
+
+    s = socket(AF_INET, SOCK_STREAM, 0);
+ 
+    /* Configuration de la connexion */
+    sin.sin_addr.s_addr = inet_addr(ip_text);
+    sin.sin_family = AF_INET;
+    sin.sin_port = htons(PORT);
+
+    /* Si l'on a réussi à se connecter */
+    if(connect(s, (SOCKADDR*)&sin, sizeof(sin)) != SOCKET_ERROR)
+    {
+        printf("connect %s on %d\n", inet_ntoa(sin.sin_addr), htons(sin.sin_port));
+    }
+    /* sinon, on affiche "Impossible de se connecter" */
+    else
+    {
+        printf("impossible to connect\n");
+        exit(1);
+    }
+    
+    return s;
+}
+
+
 int on_game(char *ip_text)
 {
     int actual_index;
@@ -32,45 +60,11 @@ int on_game(char *ip_text)
     running = 1;
     n = 0;
 
-    SOCKET sock;
+    int sock;
 
-    // creation du socket client
-    do {
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-    } while (errno == EINTR);
+    sock = connect_to_server(ip_text);
 
-    if (sock == INVALID_SOCKET)
-    {
-        perror("socket()");
-        exit(errno);
-    }
-
-    //Connection au server
-    struct hostent *hostinfo = NULL;
-    SOCKADDR_IN sin = {0}; /* initialise la structure avec des 0 */
-    //ICI METTRE IP_TEXT POUR UTILISER L'IP ENTREE PAR LE USER
-    const char *hostname = ip_text;
-
-    /* on récupère les informations de l'hôte auquel on veut se connecter */
-    hostinfo = gethostbyname(hostname);
-    /* l'hôte n'existe pas */
-    if (hostinfo == NULL)
-    {
-        fprintf(stderr, "Unknown host %s.\n", hostname);
-        exit(EXIT_FAILURE);
-    }
-
-    sin.sin_addr = *(IN_ADDR *)hostinfo->h_addr; /* l'adresse se trouve dans le champ h_addr de la structure hostinfo */
-    sin.sin_port = htons(PORT);                  /* on utilise htons pour le port */
-    sin.sin_family = AF_INET;
-
-    if (connect(sock, (SOCKADDR *)&sin, sizeof(SOCKADDR)) == SOCKET_ERROR)
-    {
-        perror("connect()");
-        exit(errno);
-    }
-
-    n = recv(sock, game, game_buff_length, 0);
+    n = recv(sock, (char *)game, game_buff_length, 0);
 
     if (n < 0)
     {
@@ -175,7 +169,7 @@ void enter_pressed(int sock, t_player_infos *player)
     client_request->y_pos = player->y_pos;
     client_request->dir = player->current_dir;
 
-    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
+    if (send(sock, (char *)client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()");
         exit(errno);
@@ -195,7 +189,7 @@ void bomb_pressed(int sock, t_player_infos *player)
     client_request->magic = player->socket;
     client_request->command = 1;
 
-    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
+    if (send(sock, (char *)client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()bomb_pressed");
         exit(errno);
@@ -219,7 +213,7 @@ void dir_pressed(int sock, t_player_infos *player, int dir)
     client_request->dir = player->current_dir;
     client_request->magic = player->socket;
 
-    if (send(sock, client_request, sizeof(t_client_request), 0) < 0)
+    if (send(sock, (char *)client_request, sizeof(t_client_request), 0) < 0)
     {
         perror("send()dir_pressed");
         exit(errno);
@@ -275,14 +269,12 @@ void *map_update_process(void *args)
         tv.tv_sec = 0;
         tv.tv_usec = 1;
 
-        int selectResult;
-
-        do {
-            selectResult = select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv);
-        } while (errno == EINTR);
-
-        if (selectResult == -1) {
-            perror("select()");
+        if (select(actual_args->sock + 1, &rdfs, NULL, NULL, &tv) == -1) {
+            #if defined WIN32
+                printf("select() returned with error %d\n", WSAGetLastError());
+            #else
+                printf("select() returned with error");
+            #endif
             exit(errno);
         }
 
@@ -290,7 +282,7 @@ void *map_update_process(void *args)
         {
             int n = 0;
 
-            n = recv(actual_args->sock, actual_args->game, actual_args->game_size, 0);
+            n = recv(actual_args->sock, (char *)actual_args->game, actual_args->game_size, 0);
 
             if (n < 0)
             {
@@ -326,11 +318,12 @@ void *map_update_process(void *args)
 
     free(actual_args);
     pthread_exit(NULL);
+    return (NULL);
 }
 
 void current_timestamp(char *s) {
     struct timeval te; 
     gettimeofday(&te, NULL); // get current time
-    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
-    printf("%s %lld\n", s, milliseconds);
+    //long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+    //printf("%s %lld\n", s, milliseconds);
 }

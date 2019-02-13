@@ -14,7 +14,7 @@ size_t game_buff_length;
 
 void *main_server()
 {
-    SOCKET sock = init_connection();
+    int sock = init_connection();
     /* the index for the array */
     int actual = 0;
     int max = sock;
@@ -23,6 +23,7 @@ void *main_server()
     flam_timers.number_of_flams = 0;
 
     fd_set rdfs;
+    fd_set wdfs;
     t_client_request *req;
     req = malloc(sizeof(t_client_request));
 
@@ -49,17 +50,22 @@ void *main_server()
     {
         int i = 0;
         FD_ZERO(&rdfs);
+        FD_ZERO(&wdfs);
+
 
         /* add STDIN_FILENO */
-        FD_SET(STDIN_FILENO, &rdfs);
+        //FD_SET(STDIN_FILENO, &rdfs);
+        //FD_SET(STDIN_FILENO, &wdfs);
 
         /* add the connection socket */
         FD_SET(sock, &rdfs);
+        FD_SET(sock, &wdfs);
 
         /* add socket of each client */
         for (i = 0; i < actual; i++)
         {
             FD_SET(game->player_infos[i].socket, &rdfs);
+            FD_SET(game->player_infos[i].socket, &wdfs);
             // Check si le joueur est sur une flamme il meurt
             if (game->map[15 * game->player_infos[i].y_pos + game->player_infos[i].x_pos] == 0)
             {
@@ -67,19 +73,17 @@ void *main_server()
             }
         }
 
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 1;
+        /*struct timeval tv;
+        tv.tv_sec = 60;
+        tv.tv_usec = 0;*/
+        struct timeval tv = {60, 0};
 
-        int selectResult;
-
-        do {
-            selectResult = select(max + 1, &rdfs, NULL, NULL, &tv);
-        } while (errno == EINTR);
-
-        if (selectResult == -1)
-        {
-            perror("select()");
+        if(select(max + 1, &rdfs, &wdfs, NULL, &tv) == SOCKET_ERROR) {
+            #if defined WIN32
+                printf("select() returned with error %d\n", WSAGetLastError());
+            #else
+                printf("select() returned with error");
+            #endif
             exit(errno);
         }
 
@@ -129,7 +133,7 @@ void *main_server()
                 {
                     int n = 0;
 
-                    n = recv(game->player_infos[i].socket, req, sizeof(t_client_request) - 1, 0);
+                    n = recv(game->player_infos[i].socket, (char *)req, sizeof(t_client_request) - 1, 0);
 
                     if (n < 0)
                     {
@@ -222,48 +226,51 @@ void *main_server()
 
     //destroy the warning
     pthread_exit(NULL);
+    return (NULL);
 }
 
 int init_connection()
 {
-    SOCKET sock;
+    int s;
+	struct sockaddr_in sin;
+    
 
-    do {
-        sock = socket(AF_INET, SOCK_STREAM, 0);
-    } while (errno == EINTR);
-
-    SOCKADDR_IN sin = {0};
-
-    if (sock == INVALID_SOCKET)
-    {
-        perror("socket()");
-        exit(errno);
-    }
-
-    sin.sin_addr.s_addr = htonl(INADDR_ANY);
-    sin.sin_port = htons(PORT);
-    sin.sin_family = AF_INET;
-
-    if (bind(sock, (SOCKADDR *)&sin, sizeof sin) == SOCKET_ERROR)
-    {
-        perror("bind()");
-        exit(errno);
-    }
-
-    if (listen(sock, MAX_PLAYERS) == SOCKET_ERROR)
-    {
-        perror("listen()");
-        exit(errno);
-    }
-
-    return sock;
+	if ((s = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
+		printf("error on socket\n");
+		return (0);
+	}
+	# ifdef __WIN32__
+		if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+				   &(char){ 1 }, sizeof(int)) < 0) {
+		printf("error on win setsockopt\n");
+		return (0);
+	}
+	# else
+	if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR,
+				   &(int){ 1 }, sizeof(int)) < 0) {
+		printf("error on linux or mac setsockopt\n");
+		return (0);
+	}
+	# endif
+	sin.sin_family = AF_INET;
+	sin.sin_port = htons(PORT);
+	sin.sin_addr.s_addr = INADDR_ANY;
+	if (bind(s, (struct sockaddr *) &sin, sizeof(sin)) == -1) {
+		printf("error on bind\n");
+		return (0);
+	}
+	if (listen(s, 10) == -1) {
+		printf("error on listen\n");
+		return (0);
+	}
+	return s;
 }
 
 int read_player(SOCKET sock, t_client_request *req)
 {
     int n = 0;
 
-    n = recv(sock, req, sizeof(t_client_request) - 1, 0);
+    n = recv(sock, (char *)req, sizeof(t_client_request) - 1, 0);
 
     if (n < 0)
     {
@@ -287,7 +294,7 @@ void send_game_to_all_players(int actual, t_game *game)
 
 void write_player(SOCKET sock, t_game *game)
 {
-    if (send(sock, game, game_buff_length, 0) < 0)
+    if (send(sock, (char *)game, game_buff_length, 0) < 0)
     {
         perror("send()");
         exit(errno);

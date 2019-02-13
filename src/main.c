@@ -12,6 +12,23 @@ SDL_Surface *SCREEN;
 TTF_Font *FONT;
 pthread_t SERVER_THREAD;
 
+void init() {
+    #if defined WIN32
+        WSADATA WSAData;
+        int error = WSAStartup(MAKEWORD(2,2), &WSAData);
+    if (error) {
+        printf("error on wsastartup\n");
+        exit(1);
+    }
+    #endif
+}
+
+void end() {
+    #if defined WIN32
+        WSACleanup();
+    #endif
+}
+
 int on_server()
 {
     if (pthread_create(&SERVER_THREAD, NULL, main_server, NULL))
@@ -51,8 +68,9 @@ void init_globals()
     FONT = TTF_OpenFont("./resources/polices/04B_30__.TTF", 32);
 }
 
-int main(int argc, char *argv[])
-{
+int launch() {
+    init();
+
     int run = 1;
     int NEXT_ACTION = GO_MENU;
     char ip_text[16] = "\0";
@@ -99,5 +117,20 @@ int main(int argc, char *argv[])
     TTF_Quit();
     SDL_Quit();
 
+    end();
+
     return EXIT_SUCCESS;
 }
+
+int main(int argc, char *argv[])
+{
+    launch();
+    return 0;
+}
+
+#if defined WIN32    
+int APIENTRY WinMain(HINSTANCE hi1, HINSTANCE hi2, LPSTR lp, int i) {
+    launch();
+    return 0;
+}
+#endif
