@@ -318,6 +318,7 @@ void *map_update_process(void *args)
 
     free(actual_args);
     pthread_exit(NULL);
+    return (NULL);
 }
 
 void current_timestamp(char *s) {

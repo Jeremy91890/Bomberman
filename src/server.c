@@ -226,6 +226,7 @@ void *main_server()
 
     //destroy the warning
     pthread_exit(NULL);
+    return (NULL);
 }
 
 int init_connection()
