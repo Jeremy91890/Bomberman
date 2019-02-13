@@ -23,6 +23,7 @@ void *main_server()
     flam_timers.number_of_flams = 0;
 
     fd_set rdfs;
+    fd_set wdfs;
     t_client_request *req;
     req = malloc(sizeof(t_client_request));
 
@@ -49,17 +50,22 @@ void *main_server()
     {
         int i = 0;
         FD_ZERO(&rdfs);
+        FD_ZERO(&wdfs);
+
 
         /* add STDIN_FILENO */
-        FD_SET(STDIN_FILENO, &rdfs);
+        //FD_SET(STDIN_FILENO, &rdfs);
+        //FD_SET(STDIN_FILENO, &wdfs);
 
         /* add the connection socket */
         FD_SET(sock, &rdfs);
+        FD_SET(sock, &wdfs);
 
         /* add socket of each client */
         for (i = 0; i < actual; i++)
         {
             FD_SET(game->player_infos[i].socket, &rdfs);
+            FD_SET(game->player_infos[i].socket, &wdfs);
             // Check si le joueur est sur une flamme il meurt
             if (game->map[15 * game->player_infos[i].y_pos + game->player_infos[i].x_pos] == 0)
             {
@@ -67,11 +73,12 @@ void *main_server()
             }
         }
 
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = 1;
+        /*struct timeval tv;
+        tv.tv_sec = 60;
+        tv.tv_usec = 0;*/
+        struct timeval tv = {60, 0};
 
-        if(select(max + 1, &rdfs, NULL, NULL, &tv) == SOCKET_ERROR) {
+        if(select(max + 1, &rdfs, &wdfs, NULL, &tv) == SOCKET_ERROR) {
             #if defined WIN32
                 printf("select() returned with error %d\n", WSAGetLastError());
             #else
@@ -225,6 +232,7 @@ int init_connection()
 {
     int s;
 	struct sockaddr_in sin;
+    
 
 	if ((s = socket(PF_INET, SOCK_STREAM, 0)) == -1) {
 		printf("error on socket\n");
