@@ -291,28 +291,28 @@ void *map_update_process(void *args)
             }
             *actual_args->player = actual_args->game->player_infos[actual_args->actual_index];
             
-            current_timestamp("begin");
+            //current_timestamp("begin");
 
             display_map(actual_args->game->map);
 
-            current_timestamp("display_map");
+            //current_timestamp("display_map");
 
             display_character(actual_args->game->player_infos);
 
-            current_timestamp("display_character");
+            //current_timestamp("display_character");
 
             display_bomb_left(actual_args->player);
 
-            current_timestamp("display_bomb_left");
+            //current_timestamp("display_bomb_left");
 
             display_game_state(actual_args->game);
 
-            current_timestamp("display_game_state");
+            //current_timestamp("display_game_state");
 
             display_result_fight(actual_args->game, actual_args->player);
 
-            current_timestamp("display_result_fight");
-            printf("%s\n", "end");
+            //current_timestamp("display_result_fight");
+            //printf("%s\n", "end");
         }
     }
 
@@ -322,8 +322,8 @@ void *map_update_process(void *args)
 }
 
 void current_timestamp(char *s) {
-    struct timeval te; 
-    gettimeofday(&te, NULL); // get current time
+    //struct timeval te; 
+    //gettimeofday(&te, NULL); // get current time
     //long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
     //printf("%s %lld\n", s, milliseconds);
 }
